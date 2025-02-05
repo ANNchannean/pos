@@ -1,6 +1,5 @@
 /* Custom Button Colors */
 
-
 /* input:user-invalid {
   box-shadow: 0px 0px 0px 1px #ff0000;
   -webkit-transition: none;
@@ -29,47 +28,46 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background: transparent; 
 } */
 
-
 .form-control:focus,
 .form-select:focus,
 .input-group-text:focus {
-    /* box-shadow: none; */
-    /* box-shadow:3px #005169; */
-    box-shadow: 0px 0px 0px 2px #bfd9f7;
-    border: 0.5px solid #0072f5;
-    -webkit-transition: none;
-    -moz-transition: none;
-    transition: none;
+	/* box-shadow: none; */
+	/* box-shadow:3px #005169; */
+	box-shadow: 0px 0px 0px 2px #bfd9f7;
+	border: 0.5px solid #0072f5;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
 }
 
 .form-check-input:focus {
-    /* box-shadow: none; */
-    /* box-shadow:3px #005169; */
-    box-shadow: none;
-    -webkit-transition: none;
-    -moz-transition: none;
-    transition: none;
+	/* box-shadow: none; */
+	/* box-shadow:3px #005169; */
+	box-shadow: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
 }
 
 .has-search .form-control {
-    padding-left: 2.375rem;
+	padding-left: 2.375rem;
 }
 
 .btn-close:focus,
 .btn:focus {
-    box-shadow: none;
-    -webkit-transition: none;
-    -moz-transition: none;
-    transition: none;
+	box-shadow: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
 }
 
-input[type="checkbox"] {
-    transform: scale(1.1);
+input[type='checkbox'] {
+	transform: scale(1.1);
 }
 
 @font-face {
-    font-family: 'Kantumruy';
-    src: url(/font/KantumruyPro-VariableFont_wght.ttf);
+	font-family: 'Kantumruy';
+	src: url(/font/KantumruyPro-VariableFont_wght.ttf);
 }
 
 /* @font-face {
@@ -93,8 +91,8 @@ input[type="checkbox"] {
 } */
 
 * {
-    font-family: 'Kantumruy', serif;
-    font-optical-sizing: auto;
+	font-family: 'Kantumruy', serif;
+	font-optical-sizing: auto;
 }
 
 /* body {
@@ -102,34 +100,32 @@ input[type="checkbox"] {
   font-size: 16px;
 } */
 
-
 .kh_font_muol_light {
-    font-family: 'KhmerOSMuolLight';
+	font-family: 'KhmerOSMuolLight';
 }
 
 .kh_font_muol {
-    font-family: 'KhmerOSMuol';
+	font-family: 'KhmerOSMuol';
 }
 
 .kh_font_battambang {
-    font-family: 'KhmerOSBattambang';
+	font-family: 'KhmerOSBattambang';
 }
 
 .en_font_times_new_roman {
-    font-family: 'TimesNewRoman';
+	font-family: 'TimesNewRoman';
 }
 
-
 .note-editor .dropdown-toggle::after {
-    all: unset;
+	all: unset;
 }
 
 .note-editor .note-dropdown-menu {
-    box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 .note-editor .note-modal-footer {
-    box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 /* tbody {
@@ -145,90 +141,89 @@ tbody tr {
 } */
 td,
 th {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 /* Style the scrollbar */
 ::-webkit-scrollbar {
-    width: 6px;
-    /* Width of the vertical scrollbar */
-    height: 6px;
-    /* Height of the horizontal scrollbar */
+	width: 6px;
+	/* Width of the vertical scrollbar */
+	height: 6px;
+	/* Height of the horizontal scrollbar */
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background-color: darkgrey;
-    /* Color of the scrollbar handle */
-    border-radius: 10px;
-    /* Rounded corners for the handle */
+	background-color: darkgrey;
+	/* Color of the scrollbar handle */
+	border-radius: 10px;
+	/* Rounded corners for the handle */
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    /* Background of the scrollbar track */
+	background: #f1f1f1;
+	/* Background of the scrollbar track */
 }
 
 /* Optional: Add hover effect */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    /* Color on hover */
+	background: #555;
+	/* Color on hover */
 }
 
 .separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
+	display: flex;
+	align-items: center;
+	text-align: center;
 }
 
 .separator::before,
 .separator::after {
-    content: '';
-    flex: 1;
-    border-bottom: 2px solid blue;
+	content: '';
+	flex: 1;
+	border-bottom: 2px solid blue;
 }
 
 .sun-editor .se-resizing-bar {
-    display: none !important;
+	display: none !important;
 }
 
 .dropdown-menu {
-    z-index: 1050;
+	z-index: 1050;
 }
 
 thead {
-    z-index: 1050;
+	z-index: 1050;
 }
 
-
 @media print {
-    body {
-        width: 282mm;
-    }
+	body {
+		width: 282mm;
+	}
 
-    @page {
-        size: a4;
-        margin: 5mm;
-        margin-left: 7.5mm;
-    }
+	@page {
+		size: a4;
+		margin: 5mm;
+		margin-left: 7.5mm;
+	}
 
-    /* img
+	/* img
    {
     page-break-inside: avoid;
   } */
-    .sun-editor {
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+	.sun-editor {
+		border: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
 
-    .sun-editor .se-resizing-bar {
-        display: none !important;
-    }
+	.sun-editor .se-resizing-bar {
+		display: none !important;
+	}
 
-    .sun-editor-editable {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+	.sun-editor-editable {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
 }

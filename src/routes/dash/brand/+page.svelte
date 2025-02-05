@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
@@ -29,13 +30,35 @@
 		<tr>
 			<th scope="col">ID#</th>
 			<th scope="col">ឈ្មេាះម៉ាកទំនិញ</th>
+			<th>ការកែប្រែ</th>
 		</tr>
 	</thead>
 	<tbody>
-		{#each get_brands as brand}
+		{#each get_brands as brand, index}
 			<tr>
-				<td>{brand.id} </td>
+				<td> {index + 1} </td>
 				<td> {brand.name} </td>
+
+				<td>
+					<div class="row">
+						<div class="col-auto">
+							<form action="?/delete" use:enhance method="post">
+								<input type="hidden" name="brand_id" value={brand.id} />
+								<button
+									onclick={(e) =>
+										confirm('are you ok') ? e.currentTarget.form?.requestSubmit() : undefined}
+									class="btn btn-danger"
+									type="button">លុប</button
+								>
+							</form>
+						</div>
+						<div class="col">
+							<a class="btn btn-outline-warning" href="/dash/brand/create?brand_id={brand.id}"
+								>កែសម្រួល</a
+							>
+						</div>
+					</div>
+				</td>
 			</tr>
 		{/each}
 	</tbody>

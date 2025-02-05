@@ -2,8 +2,6 @@
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 	import { page } from '$app/state';
-	import { json } from '@sveltejs/kit';
-
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
@@ -25,17 +23,25 @@
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
 					<a
-						class:active={page.url.pathname.includes('/dash/product')}
+						class:text-warning={page.url.pathname.includes('/dash/product')}
 						class="nav-link"
 						aria-current="page"
 						href="/dash/product"><i class="fa-solid fa-cart-plus"></i> ផលិតផល់</a
 					>
 				</li>
 				<li class="nav-item">
-					<a class:active={page.url.pathname.includes('/dash/brand')} class="nav-link" href="/dash/brand">ម៉ាកទំនិញ</a>
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/brand')}
+						class="nav-link"
+						href="/dash/brand">ម៉ាកទំនិញ</a
+					>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="/dash/category">ប្រភេទទំនិញ</a>
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/category')}
+						class="nav-link"
+						href="/dash/category">ប្រភេទទំនិញ</a
+					>
 				</li>
 				<li class="nav-item dropdown">
 					<a
@@ -58,10 +64,10 @@
 					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
 				</li>
 			</ul>
-			<form class="d-flex" role="search">
+			<!-- <form class="d-flex" role="search">
 				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
 				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
+			</form> -->
 		</div>
 	</div>
 </nav>

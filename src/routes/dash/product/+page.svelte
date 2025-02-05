@@ -33,7 +33,5 @@
 			<th scope="col">ម៉ាកទំនិញ</th>
 		</tr>
 	</thead>
-	<tbody>
-	
-	</tbody>
+	<tbody> </tbody>
 </table>
