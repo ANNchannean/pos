@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_brands } = $derived(data);
 	let q = $state('');
+	let q_brands = $derived(get_brands.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
 </script>
 
 <h4>បញ្ជីម៉ាកទំនិញ</h4>
@@ -35,7 +35,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each get_brands as brand, index}
+		{#each q_brands as brand, index}
 			<tr>
 				<td> {index + 1} </td>
 				<td> {brand.name} </td>
@@ -56,5 +56,11 @@
 				</td>
 			</tr>
 		{/each}
+		{#if q_brands.length === 0}
+			<tr>
+				<td colspan="3" class="text-center">គ្មានទិន្ន័យទេ</td>
+			</tr>
+			
+		{/if}
 	</tbody>
 </table>

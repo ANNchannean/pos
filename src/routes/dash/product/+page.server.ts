@@ -5,9 +5,15 @@ import { category } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
 export const load = (async () => {
-	const get_categoryies = await db.query.category.findMany();
+	const get_products = await db.query.product.findMany({
+		with:{
+			brand:true,
+			category:true,
+			unit:true
+		}
+	});
 	return {
-		get_categoryies
+		get_products
 	};
 }) satisfies PageServerLoad;
 

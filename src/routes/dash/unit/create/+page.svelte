@@ -1,27 +1,26 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	import type { PageServerData } from './$types';
-	//  មានតួនាទីចាប់ទិន្ន័យពី Server
 	let { data }: { data: PageServerData } = $props();
-	let { get_category } = $derived(data);
+	let { get_unit } = $derived(data);
+	let q = $state('');
 </script>
 
 <h4>បង្កើតម៉ាកថ្មី</h4>
 <hr />
-
-<!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
-<form use:enhance action="?/create_category" method="post">
+<form use:enhance action="?/create_unit" method="post">
 	<div class="mb-3">
 		<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះម៉ាកទំនិញ</label>
-		{#if get_category?.id}
-			<input type="hidden" name="category_id" value={get_category.id} />
+		{#if get_unit?.id}
+			<input type="hidden" name="unit_id" value={get_unit.id} />
 		{/if}
 		<input
-			value={get_category?.name}
+			value={get_unit?.name}
 			type="text"
 			class="form-control"
-			name="category_name"
-			id="category_name"
+			name="unit_name"
+			id="unit_name"
 			placeholder="បញ្ជូលឈ្មេាះម៉ាកទំនិញ"
 		/>
 	</div>

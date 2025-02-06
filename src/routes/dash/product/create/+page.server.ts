@@ -25,7 +25,7 @@ export const actions: Actions = {
 	create_category: async ({ request }) => {
 		const body = await request.formData();
 
-		const { category_name, category_id } = Object.fromEntries(body) as Record<string, string>;
+		const { category_name, category_id, } = Object.fromEntries(body) as Record<string, string>;
 		if (category_id) {
 			await db
 				.update(category)

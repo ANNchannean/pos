@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_categoryies } = $derived(data);
 	let q = $state('');
+	let q_categories = $derived(get_categoryies?.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
 </script>
 
 <h4>បញ្ជីប្រភេទទំនិញ</h4>
@@ -35,7 +35,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each get_categoryies as category, index}
+		{#each q_categories as category, index}
 			<tr>
 				<td> {index + 1} </td>
 				<td> {category.name} </td>
@@ -60,5 +60,11 @@
 				</td>
 			</tr>
 		{/each}
+		{#if q_categories.length === 0}
+			<tr>
+				<td colspan="3" class="text-center">គ្មានទិន្ន័យទេ</td>
+			</tr>
+			
+		{/if}
 	</tbody>
 </table>
