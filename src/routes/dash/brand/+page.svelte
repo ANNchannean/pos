@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
+	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_brands } = $derived(data);
@@ -44,17 +45,12 @@
 						<div class="col-auto">
 							<form action="?/delete" use:enhance method="post">
 								<input type="hidden" name="brand_id" value={brand.id} />
-								<button
-									onclick={(e) =>
-										confirm('are you ok') ? e.currentTarget.form?.requestSubmit() : undefined}
-									class="btn btn-danger"
-									type="button">លុប</button
-								>
+								<AlertDelete />
 							</form>
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/brand/create?brand_id={brand.id}"
-								>កែសម្រួល</a
+								><i class="fa-solid fa-edit"></i> កែសម្រួល</a
 							>
 						</div>
 					</div>

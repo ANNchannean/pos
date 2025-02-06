@@ -19,8 +19,8 @@
 		>
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+		<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+			<ul class="navbar-nav">
 				<li class="nav-item">
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/product')}
@@ -33,17 +33,17 @@
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/brand')}
 						class="nav-link"
-						href="/dash/brand">ម៉ាកទំនិញ</a
+						href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ម៉ាកទំនិញ</a
 					>
 				</li>
 				<li class="nav-item">
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/category')}
 						class="nav-link"
-						href="/dash/category">ប្រភេទទំនិញ</a
+						href="/dash/category"><i class="fa-solid fa-tags"></i> ប្រភេទទំនិញ</a
 					>
 				</li>
-				<li class="nav-item dropdown">
+				<!-- <li class="nav-item dropdown">
 					<a
 						class="nav-link dropdown-toggle"
 						href="#"
@@ -59,18 +59,16 @@
 						<li><hr class="dropdown-divider" /></li>
 						<li><a class="dropdown-item" href="#">Something else here</a></li>
 					</ul>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link disabled" aria-disabled="true">Disabled</a>
-				</li>
+				</li> -->
 			</ul>
-			<!-- <form class="d-flex" role="search">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form> -->
 		</div>
+		<!-- <form class="d-flex" role="search">
+			<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+			<button class="btn btn-outline-success" type="submit">Search</button>
+		</form> -->
 	</div>
 </nav>
+
 <div class="container pt-3">
 	{@render children()}
 </div>

@@ -19,7 +19,13 @@ export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
 
+
 export const brand = mysqlTable('brand', {
+	id: int('id').primaryKey().autoincrement(),
+	name: varchar('name', { length: 50 })
+});
+
+export const category = mysqlTable('category', {
 	id: int('id').primaryKey().autoincrement(),
 	name: varchar('name', { length: 50 })
 });

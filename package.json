@@ -13,7 +13,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"db:push": "drizzle-kit push",
-		"db:migrate": "drizzle-kit migrate",
+		"db:mig": "drizzle-kit migrate",
+		"db:gen": "drizzle-kit generate",
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
