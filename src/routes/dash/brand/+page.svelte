@@ -39,7 +39,6 @@
 			<tr>
 				<td> {index + 1} </td>
 				<td> {brand.name} </td>
-
 				<td>
 					<div class="row">
 						<div class="col-auto">
