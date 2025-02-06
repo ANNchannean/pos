@@ -7,11 +7,11 @@
 	let q = $state('');
 </script>
 
-<h4>បង្កើតម៉ាកថ្មី</h4>
+<h4>បង្កើតខ្នាតថ្មី</h4>
 <hr />
 <form use:enhance action="?/create_unit" method="post">
 	<div class="mb-3">
-		<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះម៉ាកទំនិញ</label>
+		<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះខ្នាតទំនិញ</label>
 		{#if get_unit?.id}
 			<input type="hidden" name="unit_id" value={get_unit.id} />
 		{/if}
@@ -21,7 +21,7 @@
 			class="form-control"
 			name="unit_name"
 			id="unit_name"
-			placeholder="បញ្ជូលឈ្មេាះម៉ាកទំនិញ"
+			placeholder="បញ្ជូលឈ្មេាះខ្នាតទំនិញ"
 		/>
 	</div>
 	<div>

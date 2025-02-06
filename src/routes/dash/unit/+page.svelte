@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
+	import NoData from '$lib/component/NoData.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_units } = $derived(data);
@@ -56,11 +57,6 @@
 				</td>
 			</tr>
 		{/each}
-		{#if q_units.length === 0}
-			<tr>
-				<td colspan="3" class="text-center">គ្មានទិន្ន័យទេ</td>
-			</tr>
-			
-		{/if}
+		<NoData colspan={3} items={q_units.length} />
 	</tbody>
 </table>

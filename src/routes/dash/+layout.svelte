@@ -43,6 +43,13 @@
 						href="/dash/category"><i class="fa-solid fa-tags"></i> ប្រភេទទំនិញ</a
 					>
 				</li>
+				<li class="nav-item">
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/unit')}
+						class="nav-link"
+						href="/dash/unit"><i class="fa-solid fa-circle-nodes"></i> ខ្នាត</a
+					>
+				</li>
 				<!-- <li class="nav-item dropdown">
 					<a
 						class="nav-link dropdown-toggle"
