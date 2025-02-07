@@ -2,6 +2,8 @@ services:
   svelte:
     container_name: svelte
     restart: always
+    ports:
+      - 5173-5173
     depends_on:
       db:
         condition: service_started
@@ -17,7 +19,6 @@ services:
   db:
     image: mysql:8.0
     container_name: db
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: coffeelake
