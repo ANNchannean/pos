@@ -1,0 +1,12 @@
+:8000 {
+	reverse_proxy adminer:8080
+}
+:80 {
+	handle {
+		reverse_proxy svelte:5173
+	}
+	handle_path /uploads* {
+		root * /uploads
+		file_server browse
+	}
+}
