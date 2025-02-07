@@ -46,7 +46,7 @@ services:
 
     volumes:
       - ./Caddyfile-dev:/etc/caddy/Caddyfile
-      - ./static/uploads:/uploads
+      - ./static:/uploads
 
 networks:
   clinic_system:

@@ -27,4 +27,4 @@ COPY . .
 EXPOSE 5173
 # ENV NODE_ENV=production
 # Define the command to run the application
-CMD ["pnpm", "dev --host"]
+CMD ["pnpm", "dev" ]
