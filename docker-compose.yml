@@ -42,7 +42,7 @@ services:
       - 8000:8000
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./static:/uploads
+      - ./static/uploads:/uploads
 
 networks:
   clinic_system:
