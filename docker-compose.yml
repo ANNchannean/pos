@@ -19,7 +19,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: coffeelake
-      MYSQL_DATABASE: db
+      MYSQL_DATABASE: pos
     volumes:
       - ./mysql-data:/var/lib/mysql:rw
     networks:
