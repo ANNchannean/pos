@@ -12,7 +12,7 @@
 }
 :8000 {
 	handle {
-		reverse_proxy adminer:80
+		reverse_proxy adminer:8080
 	}
 	
 }
