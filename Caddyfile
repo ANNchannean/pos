@@ -3,7 +3,7 @@
 }
 :80 {
 	handle {
-		reverse_proxy svelte:3000
+		reverse_proxy svelte:5173
 	}
 	handle_path /uploads* {
 		root * /uploads
