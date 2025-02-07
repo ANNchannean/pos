@@ -10,9 +10,6 @@
 		file_server browse
 	}
 }
-:8000 {
-	handle {
-		reverse_proxy adminer:8080
-	}
-	
+:8080 {
+	reverse_proxy adminer:8080
 }

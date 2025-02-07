@@ -21,10 +21,10 @@ RUN pnpm install
 # Copy the rest of the application code to the working directory
 COPY . .
 RUN pnpm run build
-# RUN pnpm prune --prod
+RUN pnpm prune --prod
 # Build the SvelteKit application
 # Expose the port the app runs on
 EXPOSE 3000
 ENV NODE_ENV=production
 # Define the command to run the application
-CMD ["node", "build"]
+CMD ["node", "--env-file=.env", "build"]
