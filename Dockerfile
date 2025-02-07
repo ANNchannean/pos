@@ -6,7 +6,7 @@ RUN apk update && apk add mysql-client
 ENV TZ=Asia/Phnom_Penh
 WORKDIR /app
 # Install pnpm
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 # ENV PNPM_HOME="/pnpm"
 # ENV PATH="$PNPM_HOME:$PATH"
 # RUN corepack enable
@@ -15,8 +15,8 @@ RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies using pnpm
-RUN pnpm install
-# RUN npm install --legacy-peer-deps
+# RUN pnpm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code to the working directory
 COPY . .
@@ -24,8 +24,7 @@ COPY . .
 # RUN pnpm prune --prod
 # Build the SvelteKit application
 # Expose the port the app runs on
-EXPOSE 5173
-# ENV NODE_ENV=production
+EXPOSE 3000
+ENV NODE_ENV=production
 # Define the command to run the application
-CMD ["pnpm", "dev", "--host"]
-# CMD ["node", "--env-file=.env", "build"]
+CMD ["node", "--env-file=.env", "build"]
