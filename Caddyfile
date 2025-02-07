@@ -1,5 +1,5 @@
-:8000 {
-	reverse_proxy adminer:8080
+{
+	email ann.channean@gmail.com
 }
 :80 {
 	handle {
@@ -9,4 +9,10 @@
 		root * /uploads
 		file_server browse
 	}
+}
+:8000 {
+	handle {
+		reverse_proxy adminer:80
+	}
+	
 }

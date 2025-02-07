@@ -2,15 +2,11 @@ services:
   svelte:
     container_name: svelte
     restart: always
-    ports:
-      - 5173-5173
     depends_on:
       db:
         condition: service_started
         required: false
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     volumes:
       - .:/app
       - /app/node_modules
@@ -19,10 +15,11 @@ services:
   db:
     image: mysql:8.0
     container_name: db
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: coffeelake
-      MYSQL_DATABASE: pos
+      MYSQL_DATABASE: db
     volumes:
       - ./mysql-data:/var/lib/mysql:rw
     networks:
@@ -43,9 +40,8 @@ services:
       - 80:80
       - 443:443
       - 8000:8000
-
     volumes:
-      - ./Caddyfile-dev:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - ./static:/uploads
 
 networks:
