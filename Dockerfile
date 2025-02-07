@@ -1,8 +1,10 @@
 # Use an official Node.js runtime as a parent image
-FROM node:22-alpine AS builder
+FROM node:22-slim AS base
+
+FROM base AS builder
 # Set the working directory
 # Install MySQL client tools
-RUN apk update && apk add mysql-client
+RUN apt update && apt install default-mysql-client -y
 ENV TZ=Asia/Phnom_Penh
 WORKDIR /app
 # Install pnpm
@@ -17,7 +19,7 @@ COPY package.json pnpm-lock.yaml ./
 # Install dependencies using pnpm
 # RUN pnpm install
 RUN npm install --legacy-peer-deps
-
+# RUN npm ci
 # Copy the rest of the application code to the working directory
 COPY . .
 # RUN pnpm run build
