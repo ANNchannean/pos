@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Env Vars
 REPO_URL="https://github.com/ANNchannean/pos.git"  
 # Script Vars"
