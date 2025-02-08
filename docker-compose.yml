@@ -14,7 +14,7 @@ services:
       - /app/node_modules
       - /app/build
     networks:
-      - clinic_system
+      - pos_network
   db:
     image: mysql:8.0
     container_name: db
@@ -30,19 +30,19 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
     networks:
-      - clinic_system
+      - pos_network
   adminer:
     container_name: adminer
     image: adminer
     restart: always
     networks:
-      - clinic_system
+      - pos_network
   caddy:
     container_name: caddy
     image: caddy:2.8.4-alpine
     restart: always
     networks:
-      - clinic_system
+      - pos_network
     ports:
       - 80:80
       - 443:443
@@ -52,5 +52,5 @@ services:
       - ./static/uploads:/uploads
 
 networks:
-  clinic_system:
+  pos_network:
     driver: bridge
