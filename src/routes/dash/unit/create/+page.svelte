@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import type { PageServerData } from './$types';
-	let { data }: { data: PageServerData } = $props();
+	import type { PageServerData, Snapshot, ActionData } from './$types';
+	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_unit } = $derived(data);
-	let q = $state('');
+
+	let unit_name = $state(data?.get_unit?.name ?? '');
+	export const snapshot: Snapshot<string> = {
+		capture: () => unit_name,
+		restore: (value) => (unit_name = value)
+	};
 </script>
 
 <h4>បង្កើតខ្នាតថ្មី</h4>
@@ -23,6 +28,9 @@
 			id="unit_name"
 			placeholder="បញ្ជូលឈ្មេាះខ្នាតទំនិញ"
 		/>
+		<p class="text-danger">
+			{form?.message}
+		</p>
 	</div>
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>

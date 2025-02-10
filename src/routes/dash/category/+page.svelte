@@ -7,6 +7,7 @@
 	let { get_categoryies } = $derived(data);
 	let q = $state('');
 	let q_categories = $derived(get_categoryies?.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
+	
 </script>
 
 <h4>បញ្ជីប្រភេទទំនិញ</h4>
