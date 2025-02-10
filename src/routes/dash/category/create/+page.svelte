@@ -21,7 +21,10 @@
 		{#if get_category?.id}
 			<input type="hidden" name="category_id" value={get_category.id} />
 		{/if}
+		<!-- svelte-ignore a11y_autofocus -->
 		<input
+			autocomplete="off"
+			autofocus
 			bind:value={category_name}
 			type="text"
 			class="form-control"

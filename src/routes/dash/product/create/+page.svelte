@@ -61,13 +61,18 @@
 		<label for="unit_id" class="form-label">ខ្នាត</label>
 		<select value={get_product?.unit_id} class="form-control" name="unit_id" id="unit_id">
 			{#each get_units as item}
-				<option class="form-control" value={item.id}>{item.name}</option>
+				<option class="form-control" value={item.id}> {item.name}</option>
 			{/each}
 		</select>
 	</div>
 	<div class="mb-2">
 		<label for="category_id" class="form-label">ប្រភេទទំនិញ</label>
-		<select value={get_product?.category_id} class="form-control" name="category_id" id="category_id">
+		<select
+			value={get_product?.category_id}
+			class="form-control"
+			name="category_id"
+			id="category_id"
+		>
 			{#each get_categories as item}
 				<option class="form-control" value={item.id}>{item.name}</option>
 			{/each}
@@ -76,6 +81,7 @@
 	<div class="mb-2">
 		<label for="brand_id" class="form-label">ប្រេនទំនិញ</label>
 		<select value={get_product?.brand_id} class="form-control" name="brand_id" id="brand_id">
+			<option class="form-control" value="">None</option>
 			{#each get_brands as item}
 				<option class="form-control" value={item.id}>{item.name}</option>
 			{/each}

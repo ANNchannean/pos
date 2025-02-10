@@ -30,12 +30,7 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	create_product: async ({ request }) => {
 		const body = await request.formData();
-
-		const { product_name, product_id, barcode,
-			price,
-			stock,
-			category_id,
-			brand_id, unit_id } = Object.fromEntries(body) as Record<string, string>;
+		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id } = Object.fromEntries(body) as Record<string, string>;
 		if (product_id) {
 			await db
 				.update(product)
@@ -45,7 +40,7 @@ export const actions: Actions = {
 					price: price,
 					stock: +stock,
 					category_id: +category_id,
-					brand_id: +brand_id,
+					brand_id: brand_id ? +brand_id : null,
 					unit_id: +unit_id
 
 				})
@@ -58,7 +53,7 @@ export const actions: Actions = {
 				price: price,
 				stock: +stock,
 				category_id: +category_id,
-				brand_id: +brand_id,
+				brand_id: brand_id ? +brand_id : null,
 				unit_id: +unit_id
 
 			});
