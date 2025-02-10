@@ -9,7 +9,7 @@
 	let q_brands = $derived(get_brands.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
 </script>
 
-<h4>បញ្ជីម៉ាកទំនិញ</h4>
+<h4>បញ្ជីប្រេនទំនិញ</h4>
 <hr />
 <div class="row">
 	<div class="col-4">
@@ -31,7 +31,7 @@
 	<thead>
 		<tr>
 			<th scope="col">ID#</th>
-			<th scope="col">ឈ្មេាះម៉ាកទំនិញ</th>
+			<th scope="col">ឈ្មេាះប្រេនទំនិញ</th>
 			<th>ការកែប្រែ</th>
 		</tr>
 	</thead>

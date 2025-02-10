@@ -74,7 +74,7 @@
 		</select>
 	</div>
 	<div class="mb-2">
-		<label for="brand_id" class="form-label">ម៉ាកទំនិញ</label>
+		<label for="brand_id" class="form-label">ប្រេនទំនិញ</label>
 		<select value={get_product?.brand_id} class="form-control" name="brand_id" id="brand_id">
 			{#each get_brands as item}
 				<option class="form-control" value={item.id}>{item.name}</option>

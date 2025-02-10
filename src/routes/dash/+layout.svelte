@@ -5,7 +5,7 @@
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
 	<div class="container">
 		<a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a>
 		<button
@@ -33,7 +33,7 @@
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/brand')}
 						class="nav-link"
-						href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ម៉ាកទំនិញ</a
+						href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ប្រេនទំនិញ</a
 					>
 				</li>
 				<li class="nav-item">

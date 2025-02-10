@@ -39,7 +39,7 @@
 			<th scope="col">ចំនួន</th>
 
 			<th scope="col">ប្រភេទទំនិញ</th>
-			<th colspan="2" scope="col">ម៉ាកទំនិញ</th>
+			<th colspan="2" scope="col">ប្រេនទំនិញ</th>
 		</tr>
 	</thead>
 	<tbody>

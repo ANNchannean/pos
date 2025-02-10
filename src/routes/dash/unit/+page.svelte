@@ -31,7 +31,7 @@
 	<thead>
 		<tr>
 			<th scope="col">ID#</th>
-			<th scope="col">ឈ្មេាះម៉ាកទំនិញ</th>
+			<th scope="col">ឈ្មេាះប្រេនទំនិញ</th>
 			<th>ការកែប្រែ</th>
 		</tr>
 	</thead>

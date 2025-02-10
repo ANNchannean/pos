@@ -23,20 +23,20 @@ export type User = typeof user.$inferSelect;
 
 export const brand = mysqlTable('brand', {
 	id: int('id').primaryKey().autoincrement(),
-	name: varchar('name', { length: 50 })
+	name: varchar('name', { length: 50 }).unique()
 });
 export const category = mysqlTable('category', {
 	id: int('id').primaryKey().autoincrement(),
-	name: varchar('name', { length: 50 })
+	name: varchar('name', { length: 50 }).unique()
 });
 export const unit = mysqlTable('unit', {
 	id: int('id').primaryKey().autoincrement(),
-	name: varchar('name', { length: 50 })
+	name: varchar('name', { length: 50 }).unique()
 });
 
 export const product = mysqlTable('product', {
 	id: int('id').primaryKey().autoincrement(),
-	name: varchar('name', { length: 255 }).notNull(),
+	name: varchar('name', { length: 255 }).notNull().unique(),
 	brand_id: int('brand_id').references(() => brand.id),
 	category_id: int('category_id').references(() => category.id).notNull(),
 	unit_id: int('unit_id').references(() => unit.id).notNull(),
