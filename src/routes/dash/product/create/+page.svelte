@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { PageServerData } from './$types';
-	let { data }: { data: PageServerData } = $props();
-	let { get_product, get_categories, get_brands, get_units } = $derived(data);
+	import type { PageServerData,ActionData } from './$types';
+	let { data,form }: { data: PageServerData,form:ActionData } = $props();
+	let { get_product, get_categories, get_brands,get_units } = $derived(data);
 </script>
 
 <h4>បង្កើតផលិតផលថ្មី</h4>
@@ -22,6 +22,9 @@
 			id="product_name"
 			placeholder="បញ្ជូលឈ្មេាះផលិតផល"
 		/>
+		{#if form?.product_name}
+			<p class="text-danger">ឈ្មេាះទំនិញត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="barcode" class="form-label">បាកូដ</label>
@@ -33,6 +36,9 @@
 			id="barcode"
 			placeholder="បញ្ជូលបាកូដ(មិនអាចដូចគ្នា)"
 		/>
+		{#if form?.barcode}
+		<p class="text-danger">បាកូដត្រូវតែមាន</p>
+	{/if}
 	</div>
 	<div class="mb-2">
 		<label for="price" class="form-label">តម្លៃ</label>

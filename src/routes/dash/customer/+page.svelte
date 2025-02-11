@@ -52,12 +52,12 @@
 					<div class="row">
 						<div class="col-auto">
 							<form action="?/delete" use:enhance method="post">
-								<input type="hidden" name="unit_id" value={item.id} />
+								<input type="hidden" name="customer_id" value={item.id} />
 								<AlertDelete />
 							</form>
 						</div>
 						<div class="col">
-							<a class="btn btn-outline-warning" href="/dash/customer/create?unit_id={item.id}"
+							<a class="btn btn-outline-warning" href="/dash/customer/create?customer_id={item.id}"
 								><i class="fa-solid fa-edit"></i> កែសម្រួល</a
 							>
 						</div>

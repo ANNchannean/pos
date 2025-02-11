@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { redirect, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { product } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
@@ -30,7 +30,17 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	create_product: async ({ request }) => {
 		const body = await request.formData();
-		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id,description } = Object.fromEntries(body) as Record<string, string>;
+		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id, description } = Object.fromEntries(body) as Record<string, string>;
+		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
+		const validProduct = {
+			product_name: false,
+			barcode:false
+
+		}
+		if (!product_name) validProduct.product_name = true
+		if(!barcode) validProduct.barcode = true
+		if (Object.values(validProduct).includes(true)) return fail(400, validProduct); // ហាមប៉ះពាល
+		// បញ្ជប់ការពិនិ្យ
 		if (product_id) {
 			await db
 				.update(product)
@@ -42,7 +52,7 @@ export const actions: Actions = {
 					category_id: +category_id,
 					brand_id: brand_id ? +brand_id : null,
 					unit_id: +unit_id,
-					description:description
+					description: description
 
 				})
 				.where(eq(product.id, Number(product_id)));
@@ -56,7 +66,7 @@ export const actions: Actions = {
 				category_id: +category_id,
 				brand_id: brand_id ? +brand_id : null,
 				unit_id: +unit_id,
-				description:description
+				description: description
 
 			});
 		}
