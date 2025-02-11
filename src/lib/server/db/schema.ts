@@ -60,3 +60,11 @@ export const productRelations = relations(product, ({ one }) => ({
 		fields: [product.category_id]
 	}),
 }));
+
+export const customer = mysqlTable('customer', {
+	id: int('id').primaryKey().autoincrement(),
+	name: varchar('name', { length: 50 }),
+	picture: varchar('picture', { length: 255 }),
+	address: varchar('address', { length: 100 }),
+	contact: varchar('contact', { length: 20 })
+});

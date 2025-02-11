@@ -50,6 +50,13 @@
 						href="/dash/unit"><i class="fa-solid fa-circle-nodes"></i> ខ្នាត</a
 					>
 				</li>
+				<li class="nav-item">
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/customer')}
+						class="nav-link"
+						href="/dash/customer"><i class="fa-solid fa-user-group"></i> អតិថិជន</a
+					>
+				</li>
 				<!-- <li class="nav-item dropdown">
 					<a
 						class="nav-link dropdown-toggle"
