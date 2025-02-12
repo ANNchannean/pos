@@ -68,3 +68,10 @@ export const customer = mysqlTable('customer', {
 	address: varchar('address', { length: 100 }),
 	contact: varchar('contact', { length: 20 })
 });
+export const supplier = mysqlTable('supplier', {
+	id: int('id').primaryKey().autoincrement(),
+	name: varchar('name', { length: 50 }),
+	contact: varchar('contact', { length: 255 }),
+	address: varchar('address', { length: 100 }),
+	company_name: varchar('company_name', { length: 20 })
+});

@@ -69,6 +69,13 @@
 						href="/dash/customer"><i class="fa-solid fa-user-group"></i> អតិថិជន</a
 					>
 				</li>
+				<li class="nav-item">
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/supplier')}
+						class="nav-link"
+						href="/dash/supplier"><i class="fa-solid fa-address-book"></i> អ្នកផ្គត់ផ្គង់</a
+					>
+				</li>
 				<!-- <li class="nav-item dropdown">
 					<a
 						class="nav-link dropdown-toggle"
