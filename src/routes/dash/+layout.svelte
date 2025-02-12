@@ -19,7 +19,7 @@
 
 <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
 	<div class="container">
-		<a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a>
+		<!-- <a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a> -->
 		<button
 			class="navbar-toggler"
 			type="button"
@@ -33,6 +33,12 @@
 		</button>
 		<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
 			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class:text-warning={page.url.pathname === "/dash"} class="nav-link" href="/dash"
+						><i class="fa-solid fa-house"></i> ទំព័រដើម
+					</a>
+				</li>
+
 				<li class="nav-item dropdown">
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/product') ||
