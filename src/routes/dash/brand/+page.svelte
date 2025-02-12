@@ -17,7 +17,7 @@
 			<input
 				bind:value={q}
 				name="q"
-				placeholder="ស្វែងរកតាមរយឈ្មេាះ..."
+				placeholder="ស្វែងរកតាមរយឈ្មោះ..."
 				type="search"
 				class="form-control"
 			/>
@@ -31,7 +31,7 @@
 	<thead>
 		<tr>
 			<th scope="col">ID#</th>
-			<th scope="col">ឈ្មេាះប្រេនទំនិញ</th>
+			<th scope="col">ឈ្មោះប្រេនទំនិញ</th>
 			<th>ការកែប្រែ</th>
 		</tr>
 	</thead>

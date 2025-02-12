@@ -23,7 +23,7 @@
 <form enctype="multipart/form-data" use:enhance action="?/create_customer" method="post">
 	<div class="mb-3">
 		<div class="mb-2">
-			<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះអតិថិជន</label>
+			<label for="exampleFormControlInput1" class="form-label">ឈ្មោះអតិថិជន</label>
 			{#if get_customer?.id}
 				<input type="hidden" name="customer_id" value={get_customer.id} />
 			{/if}
@@ -36,10 +36,10 @@
 				class="form-control"
 				name="customer_name"
 				id="customer_name"
-				placeholder="បញ្ជូលឈ្មេាះអតិថិជន"
+				placeholder="បញ្ជូលឈ្មោះអតិថិជន"
 			/>
 			{#if form?.name}
-				<p class="text-danger">សូមបញ្ជូលឈ្មេាះអតិថិជន</p>
+				<p class="text-danger">សូមបញ្ជូលឈ្មោះអតិថិជន</p>
 			{/if}
 		</div>
 		<div class="mb-2">
@@ -76,14 +76,12 @@
 		</div>
 		<label for="exampleFormControlInput1" class="form-label">រូបភាព</label>
 		<input
-			autocomplete="off"
-			bind:value={form_customer.name}
 			type="file"
 			accept="image/*"
 			class="form-control"
 			name="picture"
 			id="picture"
-			placeholder="បញ្ជូលឈ្មេាះអតិថិជន"
+			placeholder="បញ្ជូលឈ្មោះអតិថិជន"
 		/>
 	</div>
 	<div>

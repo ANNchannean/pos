@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { PageServerData,ActionData } from './$types';
-	let { data,form }: { data: PageServerData,form:ActionData } = $props();
-	let { get_product, get_categories, get_brands,get_units } = $derived(data);
+	import type { PageServerData, ActionData } from './$types';
+	let { data, form }: { data: PageServerData; form: ActionData } = $props();
+	let { get_product, get_categories, get_brands, get_units } = $derived(data);
 </script>
 
 <h4>បង្កើតផលិតផលថ្មី</h4>
@@ -13,17 +13,17 @@
 		<input type="hidden" name="product_id" value={get_product?.id} />
 	{/if}
 	<div class="mb-2">
-		<label for="product_name" class="form-label">ឈ្មេាះផលិតផល</label>
+		<label for="product_name" class="form-label">ឈ្មោះផលិតផល</label>
 		<input
 			value={get_product?.name}
 			type="text"
 			class="form-control"
 			name="product_name"
 			id="product_name"
-			placeholder="បញ្ជូលឈ្មេាះផលិតផល"
+			placeholder="បញ្ជូលឈ្មោះផលិតផល"
 		/>
 		{#if form?.product_name}
-			<p class="text-danger">ឈ្មេាះទំនិញត្រូវតែមាន</p>
+			<p class="text-danger">ឈ្មោះទំនិញត្រូវតែមាន</p>
 		{/if}
 	</div>
 	<div class="mb-2">
@@ -37,8 +37,8 @@
 			placeholder="បញ្ជូលបាកូដ(មិនអាចដូចគ្នា)"
 		/>
 		{#if form?.barcode}
-		<p class="text-danger">បាកូដត្រូវតែមាន</p>
-	{/if}
+			<p class="text-danger">បាកូដត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="price" class="form-label">តម្លៃ</label>
@@ -51,6 +51,9 @@
 			id="price"
 			placeholder="តម្លៃត្រូវតែធំជាងសូន្យ"
 		/>
+		{#if form?.price}
+			<p class="text-danger">តម្លៃត្រូវតែធំជាងសូន្យ</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="stock" class="form-label">ចំនួន</label>
@@ -62,14 +65,21 @@
 			id="stock"
 			placeholder="ចំនួនបានទិញចូល"
 		/>
+		{#if form?.stock}
+			<p class="text-danger">ចំនួនត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="unit_id" class="form-label">ខ្នាត</label>
 		<select value={get_product?.unit_id} class="form-control" name="unit_id" id="unit_id">
+			<option class="form-control" value="">None</option>
 			{#each get_units as item}
 				<option class="form-control" value={item.id}> {item.name}</option>
 			{/each}
 		</select>
+		{#if form?.unit_id}
+			<p class="text-danger">ខ្នាតត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="category_id" class="form-label">ប្រភេទទំនិញ</label>
@@ -79,10 +89,14 @@
 			name="category_id"
 			id="category_id"
 		>
+			<option class="form-control" value="">None</option>
 			{#each get_categories as item}
 				<option class="form-control" value={item.id}>{item.name}</option>
 			{/each}
 		</select>
+		{#if form?.category_id}
+			<p class="text-danger">ប្រភេទទំនិញត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="brand_id" class="form-label">ប្រេនទំនិញ</label>
@@ -92,6 +106,9 @@
 				<option class="form-control" value={item.id}>{item.name}</option>
 			{/each}
 		</select>
+		{#if form?.brand_id}
+			<p class="text-danger">ប្រេនទំនិញត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div class="mb-2">
 		<label for="description" class="form-label">ការបរិយាយ</label>
@@ -101,6 +118,9 @@
 			name="description"
 			id="description"
 		></textarea>
+		{#if form?.description}
+			<p class="text-danger">ការបរិយាយត្រូវតែមាន</p>
+		{/if}
 	</div>
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>

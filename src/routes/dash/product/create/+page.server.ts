@@ -34,11 +34,23 @@ export const actions: Actions = {
 		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
 		const validProduct = {
 			product_name: false,
-			barcode:false
+			barcode: false,
+			price: false,
+			stock: false,
+			category_id: false,
+			brand_id: false,
+			unit_id: false,
+			description: false,
 
 		}
 		if (!product_name) validProduct.product_name = true
-		if(!barcode) validProduct.barcode = true
+		if (!barcode) validProduct.barcode = true
+		if (!price) validProduct.price = true
+		if (!stock) validProduct.stock = true
+		if (!category_id) validProduct.category_id = true
+		if (!brand_id) validProduct.brand_id = true
+		if (!unit_id) validProduct.unit_id = true
+		if (!description) validProduct.description = true
 		if (Object.values(validProduct).includes(true)) return fail(400, validProduct); // ហាមប៉ះពាល
 		// បញ្ជប់ការពិនិ្យ
 		if (product_id) {

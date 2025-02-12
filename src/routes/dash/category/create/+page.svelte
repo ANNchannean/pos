@@ -17,7 +17,7 @@
 <!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
 <form use:enhance action="?/create_category" method="post">
 	<div class="mb-3">
-		<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះប្រេនទំនិញ</label>
+		<label for="exampleFormControlInput1" class="form-label">ឈ្មោះប្រេនទំនិញ</label>
 		{#if get_category?.id}
 			<input type="hidden" name="category_id" value={get_category.id} />
 		{/if}
@@ -30,7 +30,7 @@
 			class="form-control"
 			name="category_name"
 			id="category_name"
-			placeholder="បញ្ជូលឈ្មេាះប្រេនទំនិញ"
+			placeholder="បញ្ជូលឈ្មោះប្រេនទំនិញ"
 		/>
 		<p class="text-danger">
 			{form?.message}

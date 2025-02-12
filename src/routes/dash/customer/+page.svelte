@@ -11,7 +11,7 @@
 	);
 </script>
 
-<h4>បញ្ជីឈ្មេាះអតិថិជន</h4>
+<h4>បញ្ជីឈ្មោះអតិថិជន</h4>
 <hr />
 <div class="row">
 	<div class="col-4">
@@ -19,7 +19,7 @@
 			<input
 				bind:value={q}
 				name="q"
-				placeholder="ស្វែងរកតាមរយឈ្មេាះ..."
+				placeholder="ស្វែងរកតាមរយឈ្មោះ..."
 				type="search"
 				class="form-control"
 			/>
@@ -33,7 +33,7 @@
 	<thead>
 		<tr>
 			<th scope="col">ID#</th>
-			<th scope="col">ឈ្មេាះអតិថិជន</th>
+			<th scope="col">ឈ្មោះអតិថិជន</th>
 			<th scope="col">រូបភាព</th>
 			<th scope="col">អាស័យដ្នាន</th>
 			<th scope="col">ទំនាក់ទំនង</th>

@@ -16,7 +16,7 @@
 <hr />
 <form use:enhance action="?/create_brand" method="post">
 	<div class="mb-3">
-		<label for="exampleFormControlInput1" class="form-label">ឈ្មេាះប្រេនទំនិញ</label>
+		<label for="exampleFormControlInput1" class="form-label">ឈ្មោះប្រេនទំនិញ</label>
 		{#if get_brand?.id}
 			<input type="hidden" name="brand_id" value={get_brand.id} />
 		{/if}
@@ -26,7 +26,7 @@
 			class="form-control"
 			name="brand_name"
 			id="brand_name"
-			placeholder="បញ្ជូលឈ្មេាះប្រេនទំនិញ"
+			placeholder="បញ្ជូលឈ្មោះប្រេនទំនិញ"
 		/>
 		<p class="text-danger">
 			{form?.message}
