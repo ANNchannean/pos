@@ -33,34 +33,51 @@
 		</button>
 		<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
 			<ul class="navbar-nav">
-				<li class="nav-item">
+				<li class="nav-item dropdown">
 					<a
-						class:text-warning={page.url.pathname.includes('/dash/product')}
-						class="nav-link"
-						aria-current="page"
-						href="/dash/product"><i class="fa-solid fa-cart-plus"></i> ផលិតផល់</a
+						class:text-warning={page.url.pathname.includes('/dash/product') ||
+							page.url.pathname.includes('/dash/brand') ||
+							page.url.pathname.includes('/dash/category') ||
+							page.url.pathname.includes('/dash/unit')}
+						class="nav-link dropdown-toggle"
+						href={'#'}
+						role="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
 					>
-				</li>
-				<li class="nav-item">
-					<a
-						class:text-warning={page.url.pathname.includes('/dash/brand')}
-						class="nav-link"
-						href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ប្រេនទំនិញ</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class:text-warning={page.url.pathname.includes('/dash/category')}
-						class="nav-link"
-						href="/dash/category"><i class="fa-solid fa-tags"></i> ប្រភេទទំនិញ</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class:text-warning={page.url.pathname.includes('/dash/unit')}
-						class="nav-link"
-						href="/dash/unit"><i class="fa-solid fa-circle-nodes"></i> ខ្នាត</a
-					>
+						<i class="fa-solid fa-folder-tree"></i> ក្រុមផលិតផល់
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/product')}
+								aria-current="page"
+								href="/dash/product"><i class="fa-solid fa-cart-plus"></i> ផលិតផល់</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/brand')}
+								href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ប្រេនទំនិញ</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/category')}
+								href="/dash/category"><i class="fa-solid fa-tags"></i> ប្រភេទទំនិញ</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/unit')}
+								href="/dash/unit"><i class="fa-solid fa-circle-nodes"></i> ខ្នាត</a
+							>
+						</li>
+					</ul>
 				</li>
 				<li class="nav-item">
 					<a
@@ -76,23 +93,6 @@
 						href="/dash/supplier"><i class="fa-solid fa-address-book"></i> អ្នកផ្គត់ផ្គង់</a
 					>
 				</li>
-				<!-- <li class="nav-item dropdown">
-					<a
-						class="nav-link dropdown-toggle"
-						href="#"
-						role="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						Dropdown
-					</a>
-					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="#">Action</a></li>
-						<li><a class="dropdown-item" href="#">Another action</a></li>
-						<li><hr class="dropdown-divider" /></li>
-						<li><a class="dropdown-item" href="#">Something else here</a></li>
-					</ul>
-				</li> -->
 			</ul>
 		</div>
 		<!-- <form class="d-flex" role="search">
