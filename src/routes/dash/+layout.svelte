@@ -2,6 +2,18 @@
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 	import { page } from '$app/state';
+	import { onNavigate } from '$app/navigation';
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
