@@ -1,6 +1,3 @@
-{
-	email ann.channean@gmail.com
-}
 ndcomputer.net {
 	handle {
 		reverse_proxy svelte:3000
