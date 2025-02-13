@@ -1,11 +1,13 @@
 import { relations } from 'drizzle-orm';
 import { mysqlTable, int, varchar, decimal, text, datetime } from 'drizzle-orm/mysql-core';
-
 export const user = mysqlTable('user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
-	age: int('age'),
 	username: varchar('username', { length: 32 }).notNull().unique(),
-	passwordHash: varchar('password_hash', { length: 255 }).notNull()
+	passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+	address: varchar('address', { length: 255 }),
+	contact: varchar('contact', { length: 20 }),
+	role: varchar('role', { length: 20 }).notNull().default('admin').$type<'user' | 'admin' | 'cashier'>(),
+	created_at: datetime('created_at'),
 });
 
 export const session = mysqlTable('session', {
@@ -75,3 +77,49 @@ export const supplier = mysqlTable('supplier', {
 	address: varchar('address', { length: 100 }),
 	company_name: varchar('company_name', { length: 20 })
 });
+
+export const productOrder = mysqlTable('product_order', {
+	id: int('id').primaryKey().autoincrement(),
+	product_id: int('product_id').references(() => product.id).notNull(),
+	unit_id: int('unit_id').references(() => unit.id).notNull(),
+	quantity: int('quantity').notNull().default(1),
+	price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+	total: decimal('total', { precision: 10, scale: 2 }).notNull(),
+	disc_value: decimal('discount', { precision: 10, scale: 2 }),
+	invoice_id: int('invoice_id').references(() => invoice.id).notNull(),
+	disc_pecent: int('discount_percent'),
+});
+export const productOrderRelations = relations(productOrder, ({ one }) => ({
+	product: one(product, {
+		references: [product.id],
+		fields: [productOrder.product_id]
+	}),
+	unit: one(unit, {
+		references: [unit.id],
+		fields: [productOrder.unit_id]
+	}),
+	invoice: one(invoice, {
+		references: [invoice.id],
+		fields: [productOrder.invoice_id]
+	}),
+}));
+
+export const invoice = mysqlTable('invoice', {
+	id: int('id').primaryKey().autoincrement(),
+	customer_id: int('customer_id').references(() => customer.id),
+	status: varchar('status', { length: 20 }).notNull().default('pending').$type<'paid' | "pending" | "partial">(),
+	amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+	disc_value: decimal('discount', { precision: 10, scale: 2 }),
+	disc_pecent: int('discount_percent'),
+	total: decimal('total', { precision: 10, scale: 2 }).notNull(),
+	amount_paid: decimal('amount_paid', { precision: 10, scale: 2 }).notNull().default("0"),
+	return: decimal('return', { precision: 10, scale: 2 }),
+	created_at: datetime('created_at').notNull(),
+});
+export const invoiceRelations = relations(invoice, ({ one, many }) => ({
+	customer: one(customer, {
+		references: [customer.id],
+		fields: [invoice.customer_id]
+	}),
+	productOrders: many(productOrder)
+}));

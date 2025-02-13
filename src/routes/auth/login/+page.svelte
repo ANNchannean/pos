@@ -1,6 +1,57 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+	import { enhance } from '$app/forms';
+	import type { ActionData } from './$types';
 
-    let { data }: { data: PageData } = $props();
+	let { form }: { form: ActionData } = $props();
+	let show = $state(false);
 </script>
-<h1>Login</h1>
+
+<div class="row justify-content-center" style=" margin-top: 10%;">
+	<div class="card w-25 m-0 p-0">
+		<div class="card-header">
+			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
+		</div>
+		<div class="card-body">
+			<form use:enhance action="?/login" method="post">
+				<label for="username">ឈ្មោះអ្នកប្រើប្រព័ន្ធ</label>
+				{#if form?.username}
+					<span class="text-danger">បញ្ជូលឈ្មោះអ្នកប្រើប្រព័ន្ធ</span>
+				{/if}
+
+				<div class="input-group">
+					<label class="input-group-text" for="username"><i class="fa-regular fa-user"></i></label>
+					<input type="text" name="username" class="form-control" id="" />
+				</div>
+				<br />
+				<label for="username">ពាក្យសម្ងាត់</label>
+				{#if form?.password}
+					<span class="text-danger">បញ្ជូលពាក្យសម្ងាត់</span>
+				{/if}
+				<div class="mb-3 input-group">
+					<label class="input-group-text" for="username"><i class="fa-solid fa-lock"></i></label>
+					<input type={show ? 'text' : 'password'} name="password" class="form-control" id="" />
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label
+						aria-label="Show password"
+						onclick={() => (show = !show)}
+						class={show ? ' input-group-text' : 'input-group-text'}
+					>
+						{#if show}
+							<i class="fa-regular fa-eye"></i>
+						{:else}
+							<i class="fa-regular fa-eye-slash"></i>
+						{/if}
+					</label>
+				</div>
+				<span class="text-danger">
+					{form?.message}
+				</span>
+				<button class="btn btn-warning float-end btn-block"
+					><i class="fa-solid fa-right-to-bracket"></i> ចូលប្រើប្រព័ន្ធ</button
+				>
+			</form>
+		</div>
+	</div>
+</div>
