@@ -6,10 +6,11 @@ import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
+import { session } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
-		return redirect(302, '/demo/lucia');
+		return redirect(302, '/dash');
 	}
 	return {};
 };
@@ -52,12 +53,12 @@ export const actions: Actions = {
 		if (!validPassword) {
 			return fail(400, { message: 'ឈ្មោះឫពាក្យសម្ងាត់មិនត្រឹមត្រូវ' });
 		}
-
+		await db.delete(session).where(eq(session.userId, existingUser.id));
 		const sessionToken = auth.generateSessionToken();
-		const session = await auth.createSession(sessionToken, existingUser.id);
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+		const session_ = await auth.createSession(sessionToken, existingUser.id);
+		auth.setSessionTokenCookie(event, sessionToken, session_.expiresAt);
 
-		return redirect(302, '/demo/lucia');
+		return redirect(302, '/dash');
 	},
 	register: async (event) => {
 		const formData = await event.request.formData();
@@ -90,7 +91,7 @@ export const actions: Actions = {
 			console.log(e)
 			return fail(500, { message: 'An error has occurred' });
 		}
-		return redirect(302, '/demo/lucia');
+		return redirect(302, '/dash');
 	}
 };
 

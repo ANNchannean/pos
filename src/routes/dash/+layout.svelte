@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { LayoutData } from './$types';
+	import type { LayoutServerData } from './$types';
 	import { page } from '$app/state';
 	import { onNavigate } from '$app/navigation';
+	import { enhance } from '$app/forms';
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -14,7 +15,8 @@
 			});
 		});
 	});
-	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+	let { data, children }: { data: LayoutServerData; children: Snippet } = $props();
+	let { user } = $derived(data);
 </script>
 
 <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
@@ -34,7 +36,7 @@
 		<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class:text-warning={page.url.pathname === "/dash"} class="nav-link" href="/dash"
+					<a class:text-warning={page.url.pathname === '/dash'} class="nav-link" href="/dash"
 						><i class="fa-solid fa-house"></i> ទំព័រដើម
 					</a>
 				</li>
@@ -101,10 +103,35 @@
 				</li>
 			</ul>
 		</div>
-		<!-- <form class="d-flex" role="search">
-			<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-			<button class="btn btn-outline-success" type="submit">Search</button>
-		</form> -->
+		<div  class="d-flex dropdown" >
+			<button
+				aria-label="navbardopwdown"
+				class="btn btn-warning btn-sm"
+				type="button"
+				data-bs-toggle="dropdown"
+				aria-expanded="false"
+				><i class="fas fa-user fa-fw"></i>
+				{user?.username}
+			</button>
+			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+				<li>
+					<a class="dropdown-item" href="/user/create/?user_id={user.id}"
+						><i class="fa-regular fa-user"></i> អ្នកប្រើប្រាស់ : {user?.username}</a
+					>
+				</li>
+				<li>
+					<a class="dropdown-item" href="/user/create/?user_id={user.id}"
+						><i class="fa-solid fa-shield-halved"></i> សិទ្ធជា : {user.role}
+					</a>
+				</li>
+				<li><hr class="dropdown-divider" /></li>
+				<li>
+					<a data-sveltekit-preload-data="off" class="dropdown-item" href="/auth/logout"
+						><i class="fa-solid fa-right-from-bracket"></i> ចាកចេញ</a
+					>
+				</li>
+			</ul>
+		</div>
 	</div>
 </nav>
 

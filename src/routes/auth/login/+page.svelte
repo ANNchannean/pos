@@ -7,7 +7,7 @@
 </script>
 
 <div class="row justify-content-center" style=" margin-top: 10%;">
-	<div class="card w-25 m-0 p-0">
+	<div style="width: 450px;" class="card m-0 p-0">
 		<div class="card-header">
 			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
 		</div>
@@ -48,9 +48,14 @@
 				<span class="text-danger">
 					{form?.message}
 				</span>
-				<button class="btn btn-warning float-end btn-block"
-					><i class="fa-solid fa-right-to-bracket"></i> ចូលប្រើប្រព័ន្ធ</button
-				>
+				<div class="">
+					<button class="btn btn-warning float-end btn-block"
+						><i class="fa-solid fa-right-to-bracket"></i> ចូលប្រើប្រព័ន្ធ</button
+					>
+					<button class="btn btn-outline-warning" formaction="?/register"
+						><i class="fa-solid fa-fingerprint"></i> បង្កើតគណនីថ្មី</button
+					>
+				</div>
 			</form>
 		</div>
 	</div>
