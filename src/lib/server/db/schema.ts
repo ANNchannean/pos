@@ -1,21 +1,21 @@
 import { relations } from 'drizzle-orm';
-import { mysqlTable, int, varchar, decimal, text, datetime } from 'drizzle-orm/mysql-core';
-export const user = mysqlTable('user', {
-	id: varchar({ length: 255 }).primaryKey(),
-	username: varchar({ length: 32 }).notNull().unique(),
-	passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-	address: varchar({ length: 255 }),
-	contact: varchar({ length: 20 }),
-	role: varchar({ length: 20 }).notNull().default('admin').$type<'user' | 'admin' | 'cashier'>(),
-	created_at: datetime(),
+import * as t from 'drizzle-orm/mysql-core';
+export const user = t.mysqlTable('user', {
+	id: t.varchar({ length: 255 }).primaryKey(),
+	username: t.varchar({ length: 32 }).notNull().unique(),
+	passwordHash: t.varchar('password_hash', { length: 255 }).notNull(),
+	address: t.varchar({ length: 255 }),
+	contact: t.varchar({ length: 20 }),
+	role: t.varchar({ length: 20 }).notNull().default('admin').$type<'user' | 'admin' | 'cashier'>(),
+	created_at: t.datetime(),
 });
 
-export const session = mysqlTable('session', {
-	id: varchar({ length: 255 }).primaryKey(),
-	userId: varchar('user_id', { length: 255 })
+export const session = t.mysqlTable('session', {
+	id: t.varchar({ length: 255 }).primaryKey(),
+	userId: t.varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expiresAt: datetime('expires_at').notNull()
+	expiresAt: t.datetime('expires_at').notNull()
 });
 
 export type Session = typeof session.$inferSelect;
@@ -23,32 +23,32 @@ export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
 
 
-export const brand = mysqlTable('brand', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 50 }).unique()
+export const brand = t.mysqlTable('brand', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 50 }).unique()
 });
-export const category = mysqlTable('category', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 50 }).unique()
+export const category = t.mysqlTable('category', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 50 }).unique()
 });
-export const unit = mysqlTable('unit', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 50 }).unique()
-});
-
-export const product = mysqlTable('product', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 255 }).notNull().unique(),
-	brand_id: int().references(() => brand.id),
-	category_id: int().references(() => category.id).notNull(),
-	unit_id: int().references(() => unit.id).notNull(),
-	price: decimal({ precision: 10, scale: 2 }).notNull(),
-	stock: int().notNull().default(0),
-	barcode: varchar({ length: 255 }).unique(),
-	description: text(),
+export const unit = t.mysqlTable('unit', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 50 }).unique()
 });
 
-export const productRelations = relations(product, ({ one }) => ({
+export const product = t.mysqlTable('product', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 255 }).notNull().unique(),
+	brand_id: t.int().references(() => brand.id),
+	category_id: t.int().references(() => category.id).notNull(),
+	unit_id: t.int().references(() => unit.id).notNull(), // ប្រើលក់រាយ
+	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	stock: t.int().notNull().default(0),
+	barcode: t.varchar({ length: 255 }).unique(),
+	description: t.text(),
+});
+
+export const productRelations = relations(product, ({ one, many }) => ({
 	unit: one(unit, {
 		references: [unit.id],
 		fields: [product.unit_id]
@@ -61,33 +61,35 @@ export const productRelations = relations(product, ({ one }) => ({
 		references: [category.id],
 		fields: [product.category_id]
 	}),
+	inventory: many(inventory),
+	subUnit: many(subUnit)
 }));
 
-export const customer = mysqlTable('customer', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 50 }),
-	picture: varchar({ length: 255 }),
-	address: varchar({ length: 100 }),
-	contact: varchar({ length: 20 })
+export const customer = t.mysqlTable('customer', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 50 }),
+	picture: t.varchar({ length: 255 }),
+	address: t.varchar({ length: 100 }),
+	contact: t.varchar({ length: 20 })
 });
-export const supplier = mysqlTable('supplier', {
-	id: int().primaryKey().autoincrement(),
-	name: varchar({ length: 50 }),
-	contact: varchar({ length: 255 }),
-	address: varchar({ length: 100 }),
-	company_name: varchar({ length: 20 })
+export const supplier = t.mysqlTable('supplier', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 50 }),
+	contact: t.varchar({ length: 255 }),
+	address: t.varchar({ length: 100 }),
+	company_name: t.varchar({ length: 20 })
 });
 
-export const productOrder = mysqlTable('product_order', {
-	id: int().primaryKey().autoincrement(),
-	product_id: int().references(() => product.id).notNull(),
-	unit_id: int().references(() => unit.id).notNull(),
-	quantity: int().notNull().default(1),
-	price: decimal({ precision: 10, scale: 2 }).notNull(),
-	total: decimal({ precision: 10, scale: 2 }).notNull(),
-	disc_value: decimal({ precision: 10, scale: 2 }),
-	invoice_id: int().references(() => invoice.id).notNull(),
-	disc_pecent: int(),
+export const productOrder = t.mysqlTable('product_order', {
+	id: t.int().primaryKey().autoincrement(),
+	product_id: t.int().references(() => product.id).notNull(),
+	unit_id: t.int().references(() => unit.id).notNull(),
+	quantity: t.int().notNull().default(1),
+	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	disc_value: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
+	invoice_id: t.int().references(() => invoice.id).notNull(),
+	disc_pecent: t.int(),
 });
 export const productOrderRelations = relations(productOrder, ({ one }) => ({
 	product: one(product, {
@@ -104,17 +106,17 @@ export const productOrderRelations = relations(productOrder, ({ one }) => ({
 	}),
 }));
 
-export const invoice = mysqlTable('invoice', {
-	id: int().primaryKey().autoincrement(),
-	customer_id: int().references(() => customer.id),
-	status: varchar({ length: 20 }).notNull().default('pending').$type<'paid' | "pending" | "partial">(),
-	amount: decimal({ precision: 10, scale: 2 }).notNull(),
-	disc_value: decimal({ precision: 10, scale: 2 }),
-	disc_pecent: int(),
-	total: decimal({ precision: 10, scale: 2 }).notNull(),
-	amount_paid: decimal({ precision: 10, scale: 2 }).notNull(),
-	return: decimal({ precision: 10, scale: 2 }),
-	created_at: datetime().notNull(),
+export const invoice = t.mysqlTable('invoice', {
+	id: t.int().primaryKey().autoincrement(),
+	customer_id: t.int().references(() => customer.id),
+	status: t.varchar({ length: 20 }).notNull().default('pending').$type<'paid' | "pending" | "partial">(),
+	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	disc_value: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
+	disc_pecent: t.int(),
+	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	amount_paid: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	return: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
+	created_at: t.datetime().notNull(),
 });
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
@@ -122,4 +124,82 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 		fields: [invoice.customer_id]
 	}),
 	productOrders: many(productOrder)
+}));
+
+export const exspend = t.mysqlTable('exspend', {
+	id: t.int().primaryKey().autoincrement(),
+	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	reason: t.varchar({ length: 255 }).notNull(),
+	created_at: t.datetime().notNull(),
+	user_id: t.varchar({ length: 255 }).references(() => user.id).notNull()
+});
+export const exspendRelations = relations(exspend, ({ one }) => ({
+	user: one(user, {
+		fields: [exspend.user_id],
+		references: [user.id]
+	}),
+	inventory: one(inventory)
+}));
+
+
+export const inventory = t.mysqlTable('inventory', {
+	id: t.int().primaryKey().autoincrement(),
+	product_id: t.int().references(() => product.id).notNull(),
+	cost_unit_id: t.int().references(() => unit.id, { onDelete: 'set null' }),
+	exspend_id: t.int().references(() => exspend.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade'
+	}),
+	cost: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
+	total_expense: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
+	is_outstock: t.boolean().default(false).notNull(),
+	is_expire: t.boolean().default(false).notNull(),
+	is_close_inventory: t.boolean().default(false).notNull(),
+	qty_bought: t.int().default(0).notNull(),
+	qty_available: t.int().default(0).notNull(),
+	old_qty_available: t.int().default(0).notNull(),
+	old_qty_price: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>(),
+	is_count_stock: t.boolean().default(false).notNull(),
+	datetime_expire: t.datetime({ mode: 'string' }),
+	datetime_buy: t.datetime({ mode: 'string' }),
+	datetime_outstock: t.datetime({ mode: 'string' })
+});
+export const inventoryRelations = relations(inventory, ({ one }) => ({
+	product: one(product, {
+		fields: [inventory.product_id],
+		references: [product.id]
+	}),
+	constUnit: one(unit, {
+		fields: [inventory.cost_unit_id],
+		references: [unit.id]
+	}),
+	exspend: one(exspend, {
+		fields: [inventory.exspend_id],
+		references: [exspend.id]
+	}),
+
+}))
+
+
+export const subUnit = t.mysqlTable('sub_unit', {
+	id: t.int().primaryKey().autoincrement(),
+	qty_per_unit: t.int().notNull().default(0),
+	price: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
+	unit_id: t.int()
+		.references(() => unit.id)
+		.notNull(),
+	product_id: t.int().references(() => product.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade'
+	})
+});
+export const subUnitRelations = relations(subUnit, ({ one }) => ({
+	unit: one(unit, {
+		fields: [subUnit.unit_id],
+		references: [unit.id]
+	}),
+	product: one(product, {
+		fields: [subUnit.product_id],
+		references: [product.id]
+	})
 }));
