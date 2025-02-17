@@ -6,17 +6,14 @@
 	let show = $state(false);
 </script>
 
-<div class="row justify-content-center" style=" margin-top: 10%;">
-	<div style="width: 450px;" class="card m-0 p-0">
+<div class="center">
+	<div class="card">
 		<div class="card-header">
 			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
 		</div>
 		<div class="card-body">
 			<form use:enhance action="?/login" method="post">
 				<label for="username">ឈ្មោះអ្នកប្រើប្រព័ន្ធ</label>
-				{#if form?.username}
-					<span class="text-danger">បញ្ជូលឈ្មោះអ្នកប្រើប្រព័ន្ធ</span>
-				{/if}
 
 				<div class="input-group">
 					<label class="input-group-text" for="username"><i class="fa-regular fa-user"></i></label>
@@ -24,9 +21,7 @@
 				</div>
 				<br />
 				<label for="username">ពាក្យសម្ងាត់</label>
-				{#if form?.password}
-					<span class="text-danger">បញ្ជូលពាក្យសម្ងាត់</span>
-				{/if}
+
 				<div class="mb-3 input-group">
 					<label class="input-group-text" for="username"><i class="fa-solid fa-lock"></i></label>
 					<input type={show ? 'text' : 'password'} name="password" class="form-control" id="" />
@@ -45,7 +40,7 @@
 						{/if}
 					</label>
 				</div>
-				<span class="text-danger">
+				<span class="text-danger p-2">
 					{form?.message}
 				</span>
 				<div class="">
@@ -60,3 +55,12 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.center {
+		margin: auto;
+		width: 550px;
+		padding: 10px;
+		margin-top: 10%;
+	}
+</style>
