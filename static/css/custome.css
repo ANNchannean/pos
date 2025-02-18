@@ -227,3 +227,6 @@ thead {
 		margin: 0 !important;
 	}
 }
+.text-break {
+	white-space: pre-line;
+}

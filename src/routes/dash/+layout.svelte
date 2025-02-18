@@ -40,6 +40,11 @@
 						><i class="fa-solid fa-house"></i> ទំព័រដើម
 					</a>
 				</li>
+				<li class="nav-item">
+					<a class:text-warning={page.url.pathname === '/dash/pos'} class="nav-link" href="/dash/pos"
+						><i class="fa-solid fa-barcode"></i> លក់ទំនិញ
+					</a>
+				</li>
 
 				<li class="nav-item dropdown">
 					<a
@@ -53,15 +58,23 @@
 						data-bs-toggle="dropdown"
 						aria-expanded="false"
 					>
-						<i class="fa-solid fa-folder-tree"></i> ក្រុមផលិតផល់
+						<i class="fa-solid fa-folder-tree"></i> សារពើភ័ណ្ឌ
 					</a>
 					<ul class="dropdown-menu">
 						<li>
 							<a
 								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/inventory')}
+								aria-current="page"
+								href="/dash/inventory"><i class="fa-brands fa-shopify"></i> ទិញចូល</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/product')}
 								aria-current="page"
-								href="/dash/product"><i class="fa-solid fa-cart-plus"></i> ផលិតផល់</a
+								href="/dash/product"><i class="fa-solid fa-cart-shopping"></i> ផលិតផល់</a
 							>
 						</li>
 						<li>
@@ -99,6 +112,13 @@
 						class:text-warning={page.url.pathname.includes('/dash/supplier')}
 						class="nav-link"
 						href="/dash/supplier"><i class="fa-solid fa-address-book"></i> អ្នកផ្គត់ផ្គង់</a
+					>
+				</li>
+				<li class="nav-item">
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/exspend')}
+						class="nav-link"
+						href="/dash/exspend"><i class="fa-solid fa-comment-dollar"></i> ការចំណាយ</a
 					>
 				</li>
 			</ul>

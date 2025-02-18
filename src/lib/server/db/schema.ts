@@ -114,9 +114,9 @@ export const invoice = t.mysqlTable('invoice', {
 	disc_value: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	disc_pecent: t.int(),
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	amount_paid: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	amount_paid: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	return: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
-	created_at: t.datetime().notNull(),
+	created_at: t.datetime({mode:'string'}).notNull(),
 });
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
@@ -129,8 +129,8 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 export const exspend = t.mysqlTable('exspend', {
 	id: t.int().primaryKey().autoincrement(),
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	reason: t.varchar({ length: 255 }).notNull(),
-	created_at: t.datetime().notNull(),
+	reason: t.text(),
+	created_at: t.datetime({mode:'string'}).notNull(),
 	user_id: t.varchar({ length: 255 }).references(() => user.id).notNull()
 });
 export const exspendRelations = relations(exspend, ({ one }) => ({
@@ -150,8 +150,8 @@ export const inventory = t.mysqlTable('inventory', {
 		onDelete: 'cascade',
 		onUpdate: 'cascade'
 	}),
-	cost: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
-	total_expense: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
+	cost: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
+	total_expense: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
 	is_outstock: t.boolean().default(false).notNull(),
 	is_expire: t.boolean().default(false).notNull(),
 	is_close_inventory: t.boolean().default(false).notNull(),
@@ -184,7 +184,7 @@ export const inventoryRelations = relations(inventory, ({ one }) => ({
 export const subUnit = t.mysqlTable('sub_unit', {
 	id: t.int().primaryKey().autoincrement(),
 	qty_per_unit: t.int().notNull().default(0),
-	price: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>().default(0),
+	price: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
 	unit_id: t.int()
 		.references(() => unit.id)
 		.notNull(),
