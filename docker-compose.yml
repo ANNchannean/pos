@@ -28,7 +28,7 @@ services:
       MYSQL_ROOT_PASSWORD: coffeelake
       MYSQL_DATABASE: pos
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ~/mysql-data:/var/lib/mysql
     networks:
       - pos_network
   adminer:

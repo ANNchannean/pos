@@ -13,10 +13,10 @@
 
 <div class="row">
 	<div class="col-md-4">
-		<div class="card bg-light">
+		<div style="height:90vh;overflow-y: scroll;" class="card bg-light">
 			<div class="card-header">
-				<div class="input-group input-group-sm mb-1">
-					<select class="form-select form-select-sm" name="customer_id" id="customer_id">
+				<div class="input-group mb-1">
+					<select class="form-select" name="customer_id" id="customer_id">
 						<option value="">ទូទៅ</option>
 						{#each get_customers as customer}
 							<option value={customer.id}>{customer.name}</option>
@@ -27,12 +27,12 @@
 				<input
 					placeholder="ស្វែងរកផលិតផល ស្កែនបាកូដ"
 					type="search"
-					class="form-control form-control-sm"
+					class="form-control"
 					name="q_product"
 					id=""
 				/>
 			</div>
-			<div style="height:470px;overflow-y: scroll;" class="card-body">
+			<div class="card-body table-responsive p-0 m-0">
 				<table class="table table-light table-active table-sm">
 					<thead>
 						<tr>
@@ -52,7 +52,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="card-footer sticky-bottom">
+			<div class="card-footer">
 				<div class=" border-0 bg-primary-subtle mb-1 w-100">
 					<div class="row">
 						<div class="col text-start mx-2">បញ្ចុះតម្លៃ</div>
@@ -68,16 +68,16 @@
 
 				<div class="row g-2">
 					<div class="col-md-4">
-						<button class="border-0 text-bg-warning h-50 w-100">រក្សាទុក</button>
-						<button class="border-0 text-bg-danger h-50 w-100">បោះបង់</button>
+						<button class="border-0 py-2 text-bg-warning h-50 w-100">រក្សាទុក</button>
+						<button class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button>
 					</div>
 					<div class="col-md-4">
-						<button class="border-0 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
-						<button class="border-0 text-bg-info h-50 w-100">បោះពុម្ភវិក្កយបត្រ</button>
+						<button class="border-0 py-2 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
+						<button class="border-0 py-2 text-bg-info h-50 w-100">បោះពុម្ភវិក្កយបត្រ</button>
 					</div>
 
 					<div class="col-md-4">
-						<button class="border-0 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button>
+						<button class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button>
 					</div>
 				</div>
 			</div>
