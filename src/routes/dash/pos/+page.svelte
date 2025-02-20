@@ -11,9 +11,9 @@
 	);
 </script>
 
-<div class="row">
+<div style="margin-top: 59px;" class="row fixed-top g-0">
 	<div class="col-md-4">
-		<div style="height:90vh;overflow-y: scroll;" class="card bg-light">
+		<div style="height:93vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
 				<div class="input-group mb-1">
 					<select class="form-select" name="customer_id" id="customer_id">
