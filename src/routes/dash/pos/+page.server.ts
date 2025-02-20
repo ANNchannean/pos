@@ -5,8 +5,10 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async () => {
     const get_customers = await db.query.customer.findMany()
+    const get_brands = await db.query.brand.findMany()
+    const get_categories = await db.query.category.findMany()
     const get_products = await db.query.product.findMany()
-    return { get_customers,get_products };
+    return { get_customers,get_products,get_brands,get_categories };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

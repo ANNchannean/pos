@@ -46,7 +46,9 @@
 		{#each get_products as item, index}
 			<tr>
 				<td>{index}</td>
-				<td></td>
+				<td>
+					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="" />
+				</td>
 				<td>{item.name}</td>
 				<td>{item.barcode}</td>
 				<td>$ {item.price}</td>

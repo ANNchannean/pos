@@ -3,6 +3,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { product } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { updateFile, uploadFile } from '$lib/server/fileHandle';
 
 
 // រុញទិន្នន័យទៅ Client  តាមរយៈ Load Function 
@@ -30,7 +31,9 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	create_product: async ({ request }) => {
 		const body = await request.formData();
-		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id, description } = Object.fromEntries(body) as Record<string, string>;
+		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id, description, old_image } = Object.fromEntries(body) as Record<string, string>;
+		const file = body.get('image') as File
+
 		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
 		const validProduct = {
 			product_name: false,
@@ -53,28 +56,33 @@ export const actions: Actions = {
 		if (!description) validProduct.description = true
 		if (Object.values(validProduct).includes(true)) return fail(400, validProduct); // ហាមប៉ះពាល
 		// បញ្ជប់ការពិនិ្យ
+		//ករណី produts មានស្រាប់ ត្រូវ Update
 		if (product_id) {
+
 			await db
 				.update(product)
 				.set({
 					name: product_name,
 					barcode: barcode,
-					price: price,
+					price: +price,
 					stock: +stock,
 					category_id: +category_id,
 					brand_id: brand_id ? +brand_id : null,
 					unit_id: +unit_id,
-					description: description
+					description: description,
+					image: file.size ? await updateFile(file, old_image) : undefined
 
 				})
 				.where(eq(product.id, Number(product_id)));
 		}
 		if (!product_id) {
+			const image = await uploadFile(file)
 			await db.insert(product).values({
 				name: product_name,
 				barcode: barcode,
-				price: price,
+				price: +price,
 				stock: +stock,
+				image: image,
 				category_id: +category_id,
 				brand_id: brand_id ? +brand_id : null,
 				unit_id: +unit_id,

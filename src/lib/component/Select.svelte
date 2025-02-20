@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { EventHandler } from 'svelte/elements';
-	import NoData from './NoData.svelte';
 	interface Props {
 		items: { name: any; id: any }[];
 		name?: string;
@@ -128,7 +127,7 @@
 			<div class="text-decoration-none">
 				{#each data as item}
 					{#if selectType === 'submit'}
-						<form {action} method="post">
+						<form use:enhance {action} method="post">
 							<input type="hidden" value={item.id} {name} />
 							{@render children?.()}
 							<button
@@ -180,7 +179,7 @@
 				{/each}
 				{#if data.length === 0}
 					<button type="button" class="dropdown-item">
-						<i class="fa-solid fa-magnifying-glass"></i>
+						
 						<i class="fa-regular fa-face-sad-cry"></i> គ្មានទិន្ន័យទេ
 					</button>
 				{/if}

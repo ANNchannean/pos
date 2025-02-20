@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import CropImage from '$lib/component/CropImage.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_categories, get_brands, get_units } = $derived(data);
@@ -8,9 +9,10 @@
 <h4>បង្កើតផលិតផលថ្មី</h4>
 <hr />
 
-<form use:enhance action="?/create_product" method="post">
+<form enctype="multipart/form-data" use:enhance action="?/create_product" method="post">
 	{#if get_product?.id}
 		<input type="hidden" name="product_id" value={get_product?.id} />
+		<input type="hidden" name="old_image" value={get_product?.image} />
 	{/if}
 	<div class="mb-2">
 		<label for="product_name" class="form-label">ឈ្មោះផលិតផល</label>
@@ -121,6 +123,10 @@
 		{#if form?.description}
 			<p class="text-danger">ការបរិយាយត្រូវតែមាន</p>
 		{/if}
+	</div>
+	<div class="mb-2">
+		<label for="description" class="form-label">រូបភាព</label>
+		<CropImage name="image" />
 	</div>
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>

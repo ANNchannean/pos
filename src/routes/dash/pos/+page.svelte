@@ -1,38 +1,69 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
+	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
 	import NoData from '$lib/component/NoData.svelte';
-	import type { PageServerData } from './$types';
+	import Select from '$lib/component/Select.svelte';
+	import type { PageServerData, Snapshot } from './$types';
+	interface TForm {
+		id: number;
+		name: string;
+		price: number;
+		qty: number;
+		total: number;
+		unit: number;
+		dis_value: string | null;
+		dis_pecent: number | null;
+	}
 	let { data }: { data: PageServerData } = $props();
-	let { get_customers } = $derived(data);
+	let { get_customers, get_products, get_brands, get_categories } = $derived(data);
 	let q = $state('');
 	let q_customers = $derived(
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
 	);
+	let form_pos: TForm[] = $state([]);
+	export const snapshot: Snapshot<TForm[]> = {
+		capture: () => form_pos,
+		restore: (value) => (form_pos = value)
+	};
+
+	function addProduct(para: TForm) {
+		// ប្រសិនបើមានទំនិញបានបញ្ជូលរូចត្រូវបូកបន្ថែម ១
+		if (form_pos.some((e) => e.id === para.id)) {
+			// Function ស្វែងរកទំនិញដែលមានហើយបូក ១បន្ថែម
+			let obj = form_pos.find((obj) => obj.id === para.id);
+			if (obj) {
+				obj.qty = obj.qty + 1;
+				obj.total = +((obj.qty + 1) * obj.price).toFixed(2);
+			}
+			// modify ទិន្ន័យ form_pos
+			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ form_pos
+			return;
+		}
+		form_pos.push(para);
+	}
+	let total = $derived(form_pos?.reduce((s, e) => s + +e.total, 0).toFixed(2));
 </script>
 
-<div style="margin-top: 59px;" class="row fixed-top g-0">
+<div style="margin-top: 59px;z-index: -1;" class="row fixed-top position-absolute g-0">
 	<div class="col-md-4">
-		<div style="height:93vh;overflow-y: scroll;" class="card rounded-0 bg-light">
+		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
 				<div class="input-group mb-1">
-					<select class="form-select" name="customer_id" id="customer_id">
-						<option value="">ទូទៅ</option>
-						{#each get_customers as customer}
-							<option value={customer.id}>{customer.name}</option>
-						{/each}
-					</select>
-					<label for="customer_id" class="input-group-text">+</label>
+					<Select
+						name="customer_id"
+						displayName="ស្វែងរកអតិថិជន"
+						items={get_customers.map((e) => ({ id: e.id, name: e.name }))}
+					/>
 				</div>
-				<input
-					placeholder="ស្វែងរកផលិតផល ស្កែនបាកូដ"
-					type="search"
-					class="form-control"
-					name="q_product"
-					id=""
+
+				<Select
+					name="product_id"
+					displayName="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
+					items={get_products.map((e) => ({ id: e.id, name: e.name }))}
 				/>
 			</div>
-			<div class="card-body table-responsive p-0 m-0">
+			<div class="card-body table-responsive">
 				<table class="table table-light table-active table-sm">
 					<thead>
 						<tr>
@@ -43,12 +74,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>2</td>
-							<td>3</td>
-							<td>4</td>
-						</tr>
+						{#each form_pos as form}
+							<tr>
+								<td>{form.name}</td>
+								<td>{form.price}</td>
+								<td>{form.qty}</td>
+								<td>{form.total}</td>
+							</tr>
+						{/each}
 					</tbody>
 				</table>
 			</div>
@@ -62,7 +95,9 @@
 				<div class=" border-0 bg-primary-subtle mb-2 w-100">
 					<div class="row">
 						<div class="col text-start mx-2">សរុប</div>
-						<div class="col text-end mx-2">12$</div>
+						<div class="col text-end mx-2">
+							$ {total}
+						</div>
 					</div>
 				</div>
 
@@ -83,5 +118,58 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-8">2</div>
+	<div class="col-md-8">
+		<div class="card rounded-0">
+			<div class="card-header">
+				<HeaderQuery>
+					<div class="row">
+						<div class="col-6">
+							<Select
+								name="brand_id"
+								selectType="param"
+								displayName="ប្រេនទំនិញ"
+								items={get_brands}
+							/>
+						</div>
+						<div class="col-6">
+							<Select
+								name="category_id"
+								selectType="param"
+								displayName="ប្រភេទទំនិញ"
+								items={get_categories}
+							/>
+						</div>
+					</div>
+				</HeaderQuery>
+			</div>
+			<div class="card-body">
+				{#each get_products as product}
+					<div class="card" style="width: 10rem;">
+						<img src="/uploads/{product.image}" class="card-img-top" alt="" />
+						<div class="card-body">
+							<!-- <h5 class="card-title">Card title</h5> -->
+							<p class="card-text text-truncate">
+								{product.name}
+							</p>
+							<button
+								type="button"
+								onclick={() =>
+									addProduct({
+										id: product.id,
+										name: product.name,
+										price: product.price,
+										qty: 1,
+										total: product.price,
+										dis_value: null,
+										dis_pecent: null,
+										unit: product.unit_id
+									})}
+								class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
+							>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	</div>
 </div>

@@ -46,6 +46,7 @@ export const product = t.mysqlTable('product', {
 	stock: t.int().notNull().default(0),
 	barcode: t.varchar({ length: 255 }).unique(),
 	description: t.text(),
+	image: t.varchar({ length: 255 })
 });
 
 export const productRelations = relations(product, ({ one, many }) => ({
@@ -116,7 +117,7 @@ export const invoice = t.mysqlTable('invoice', {
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	amount_paid: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	return: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
-	created_at: t.datetime({mode:'string'}).notNull(),
+	created_at: t.datetime({ mode: 'string' }).notNull(),
 });
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
@@ -130,7 +131,7 @@ export const exspend = t.mysqlTable('exspend', {
 	id: t.int().primaryKey().autoincrement(),
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	reason: t.text(),
-	created_at: t.datetime({mode:'string'}).notNull(),
+	created_at: t.datetime({ mode: 'string' }).notNull(),
 	user_id: t.varchar({ length: 255 }).references(() => user.id).notNull()
 });
 export const exspendRelations = relations(exspend, ({ one }) => ({

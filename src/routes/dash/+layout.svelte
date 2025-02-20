@@ -7,7 +7,6 @@
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
-
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {
 				resolve();
@@ -19,7 +18,7 @@
 	let { user } = $derived(data);
 </script>
 
-<nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-default sticky-top navbar-expand-lg bg-body-tertiary">
 	<div class="container">
 		<!-- <a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a> -->
 		<button
@@ -123,8 +122,9 @@
 				</li>
 			</ul>
 		</div>
-		<div  class="d-flex dropdown" >
+		<div  class="d-flex position-relative dropdown" >
 			<button
+			
 				aria-label="navbardopwdown"
 				class="btn btn-warning btn-sm"
 				type="button"
