@@ -43,9 +43,10 @@
 		form_pos.push(para);
 	}
 	let total = $derived(form_pos?.reduce((s, e) => s + +e.total, 0).toFixed(2));
+	let innerHeight = $derived(window.innerHeight);
 </script>
 
-<div style="margin-top: 59px;z-index: -1;" class="row fixed-top position-absolute g-0">
+<div class="row g-1 w-100">
 	<div class="col-md-4">
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
@@ -142,33 +143,37 @@
 					</div>
 				</HeaderQuery>
 			</div>
-			<div class="card-body">
-				{#each get_products as product}
-					<div class="card" style="width: 10rem;">
-						<img src="/uploads/{product.image}" class="card-img-top" alt="" />
-						<div class="card-body">
-							<!-- <h5 class="card-title">Card title</h5> -->
-							<p class="card-text text-truncate">
-								{product.name}
-							</p>
-							<button
-								type="button"
-								onclick={() =>
-									addProduct({
-										id: product.id,
-										name: product.name,
-										price: product.price,
-										qty: 1,
-										total: product.price,
-										dis_value: null,
-										dis_pecent: null,
-										unit: product.unit_id
-									})}
-								class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
-							>
+			<div style="height: {innerHeight - 130}px; " class="card-body overflow-scroll">
+				<div class="row g-0">
+					{#each get_products as product}
+						<div class="col-md-3">
+							<div class="card" style="width: 10rem;">
+								<img src="/uploads/{product.image}" class="card-img-top" alt="" />
+								<div class="card-body">
+									<!-- <h5 class="card-title">Card title</h5> -->
+									<p class="card-text text-truncate">
+										{product.name}
+									</p>
+									<button
+										type="button"
+										onclick={() =>
+											addProduct({
+												id: product.id,
+												name: product.name,
+												price: product.price,
+												qty: 1,
+												total: product.price,
+												dis_value: null,
+												dis_pecent: null,
+												unit: product.unit_id
+											})}
+										class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
+									>
+								</div>
+							</div>
 						</div>
-					</div>
-				{/each}
+					{/each}
+				</div>
 			</div>
 		</div>
 	</div>

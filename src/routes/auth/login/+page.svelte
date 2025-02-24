@@ -13,7 +13,7 @@
 			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
 		</div>
 		<div class="card-body">
-			<Form  action="?/login" method="POST">
+			<Form showToast={false}  action="?/login" method="POST">
 				<label for="username">ឈ្មោះអ្នកប្រើប្រព័ន្ធ</label>
 
 				<div class="input-group">

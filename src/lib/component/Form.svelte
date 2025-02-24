@@ -4,7 +4,7 @@
 	interface Props {
 		children: import('svelte').Snippet;
 		class?: string;
-		method?: 'GET' | 'POST';
+		method?: 'GET' | 'POST' | 'get' | 'post';
 		enctype?: 'multipart/form-data' | 'text/plain' | 'application/x-www-form-urlencoded';
 		loading?: boolean;
 		reset?: boolean;

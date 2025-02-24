@@ -3,7 +3,6 @@
 	import type { LayoutServerData } from './$types';
 	import { page } from '$app/state';
 	import { onNavigate } from '$app/navigation';
-	import { enhance } from '$app/forms';
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -40,7 +39,10 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class:text-warning={page.url.pathname === '/dash/pos'} class="nav-link" href="/dash/pos"
+					<a
+						class:text-warning={page.url.pathname === '/dash/pos'}
+						class="nav-link"
+						href="/dash/pos"
 						><i class="fa-solid fa-barcode"></i> លក់ទំនិញ
 					</a>
 				</li>
@@ -122,9 +124,8 @@
 				</li>
 			</ul>
 		</div>
-		<div  class="d-flex position-relative dropdown" >
+		<div class="d-flex position-relative dropdown">
 			<button
-			
 				aria-label="navbardopwdown"
 				class="btn btn-warning btn-sm"
 				type="button"
