@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
+	import Form from '$lib/component/Form.svelte';
 	import NoData from '$lib/component/NoData.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
@@ -43,10 +43,10 @@
 				<td>
 					<div class="row">
 						<div class="col-auto">
-							<form action="?/delete" use:enhance method="post">
+							<Form action="?/delete" method="POST">
 								<input type="hidden" name="brand_id" value={brand.id} />
 								<AlertDelete />
-							</form>
+							</Form>
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/brand/create?brand_id={brand.id}"

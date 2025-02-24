@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { localFormat } from '$lib/client/helper';
+	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, Snapshot, ActionData } from './$types';
 	//  មានតួនាទីចាប់ទិន្ន័យពី Server
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -20,7 +20,7 @@
 <hr />
 {get_exspend?.created_at}
 <!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
-<form  use:enhance action="?/create_exspend" method="post">
+<Form action="?/create_exspend" method="POST">
 	<div class="mb-3">
 		<div class="mb-2">
 			<label for="exampleFormControlInput1" class="form-label">ចំនួនទឹកប្រាក់</label>
@@ -76,4 +76,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>

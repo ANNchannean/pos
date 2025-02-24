@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
+	import Form from '$lib/component/Form.svelte';
+
+
 	import type { PageServerData, Snapshot, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_unit } = $derived(data);
@@ -14,7 +15,7 @@
 
 <h4>បង្កើតខ្នាតថ្មី</h4>
 <hr />
-<form use:enhance action="?/create_unit" method="post">
+<Form action="?/create_unit" method="POST">
 	<div class="mb-3">
 		<label for="exampleFormControlInput1" class="form-label">ឈ្មោះខ្នាតទំនិញ</label>
 		{#if get_unit?.id}
@@ -35,4 +36,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>

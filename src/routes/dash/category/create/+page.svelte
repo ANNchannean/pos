@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, Snapshot,ActionData } from './$types';
 	//  មានតួនាទីចាប់ទិន្ន័យពី Server
 	let { data,form }: { data: PageServerData,form:ActionData } = $props();
@@ -15,7 +15,7 @@
 <hr />
 
 <!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
-<form use:enhance action="?/create_category" method="post">
+<Form action="?/create_category" method="POST">
 	<div class="mb-3">
 		<label for="exampleFormControlInput1" class="form-label">ឈ្មោះប្រេនទំនិញ</label>
 		{#if get_category?.id}
@@ -39,4 +39,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>

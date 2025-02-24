@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, Snapshot, ActionData } from './$types';
 	//  មានតួនាទីចាប់ទិន្ន័យពី Server
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -20,7 +20,7 @@
 <hr />
 
 <!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
-<form enctype="multipart/form-data" use:enhance action="?/create_customer" method="post">
+<Form enctype="multipart/form-data" action="?/create_customer" method="POST">
 	<div class="mb-3">
 		<div class="mb-2">
 			<label for="exampleFormControlInput1" class="form-label">ឈ្មោះអតិថិជន</label>
@@ -87,4 +87,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>

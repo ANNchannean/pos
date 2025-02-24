@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Form from '$lib/component/Form.svelte';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
@@ -12,7 +13,7 @@
 			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
 		</div>
 		<div class="card-body">
-			<form use:enhance action="?/login" method="post">
+			<Form  action="?/login" method="POST">
 				<label for="username">ឈ្មោះអ្នកប្រើប្រព័ន្ធ</label>
 
 				<div class="input-group">
@@ -53,7 +54,7 @@
 						><i class="fa-solid fa-fingerprint"></i> បង្កើតគណនីថ្មី</button
 					>
 				</div>
-			</form>
+			</Form>
 		</div>
 	</div>
 </div>

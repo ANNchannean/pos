@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import CropImage from '$lib/component/CropImage.svelte';
+	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_categories, get_brands, get_units } = $derived(data);
@@ -8,8 +8,7 @@
 
 <h4>បង្កើតផលិតផលថ្មី</h4>
 <hr />
-
-<form enctype="multipart/form-data" use:enhance action="?/create_product" method="post">
+<Form action="?/create_product" enctype="multipart/form-data" method="POST">
 	{#if get_product?.id}
 		<input type="hidden" name="product_id" value={get_product?.id} />
 		<input type="hidden" name="old_image" value={get_product?.image} />
@@ -131,4 +130,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>

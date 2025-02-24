@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	import type { Snapshot } from './$types';
 
@@ -14,7 +14,7 @@
 
 <h4>បង្កើតប្រេនថ្មី</h4>
 <hr />
-<form use:enhance action="?/create_brand" method="post">
+<Form action="?/create_brand" method="POST">
 	<div class="mb-3">
 		<label for="exampleFormControlInput1" class="form-label">ឈ្មោះប្រេនទំនិញ</label>
 		{#if get_brand?.id}
@@ -35,4 +35,4 @@
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>
 	</div>
-</form>
+</Form>
