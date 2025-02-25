@@ -97,7 +97,7 @@
 					<div class="row">
 						<div class="col text-start mx-2">សរុប</div>
 						<div class="col text-end mx-2">
-							$ {total}
+							$ 1
 						</div>
 					</div>
 				</div>

@@ -51,13 +51,16 @@
 				<td>{item.name}</td>
 				<td>{item.barcode}</td>
 				<td>$ {item.price}</td>
-				<td>{item.stock} {item.unit.name} </td>
+				<td
+					>{item.stock}
+					<a href="/dash/product/sub-unit?product_id={item.id}">{item.unit.name}</a>
+				</td>
 				<td>{item.category.name}</td>
 				<td>{item.brand?.name}</td>
 				<td>
-					<div class="row">
+					<div class="row g-1">
 						<div class="col-auto">
-							<Form action="?/delete"  method="POST">
+							<Form action="?/delete" method="POST">
 								<input type="hidden" name="product_id" value={item.id} />
 								<AlertDelete />
 							</Form>
