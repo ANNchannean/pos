@@ -9,10 +9,10 @@
 
 <h4>បញ្ជូលខ្នាតលក់ដុំ</h4>
 <hr />
-<div>
+<div class="pb-3">
 	<div class="row">
 		<div class="col-auto">
-			<img class="img-thumbnail" style="height: 90px;" src="/uploads/{get_product?.image}" alt="" />
+			<img class="img-thumbnail" style="height: 200px;" src="/uploads/{get_product?.image}" alt="" />
 		</div>
 		<div class="col">
 			<div>
@@ -32,14 +32,10 @@
 						</span>
 						<span>
 							<input type="hidden" name="sub_unit_id" value={unit.id} />
-							<button
-								type="button"
-								onclick={(e) =>
-									confirm('ទិន្ន័យនឹងត្រូវលុបជារៀងរហូត!')
-										? e.currentTarget.form?.requestSubmit()
-										: undefined}
-								class="btn btn-link text-decoration-none text-danger">លុបខ្នាតដុំ</button
-							>
+							<AlertDelete
+								class="btn btn-link text-decoration-none text-danger"
+								name="លុបខ្នាតដុំ"
+							/>
 						</span><br />
 					</Form>
 				{/each}
@@ -51,7 +47,8 @@
 	<div class="pb-2">
 		<label for="">ខ្នាត</label>
 		<input type="hidden" name="product_id" value={get_product?.id} />
-		<select class="form-control" name="unit_id" id="">
+		<!-- svelte-ignore a11y_autofocus -->
+		<select autofocus class="form-control" name="unit_id" id="">
 			<option value="">សូមជ្រើសទិន្ន័យ</option>
 			{#each get_units as item}
 				<option value={item.id}>{item?.name}</option>
@@ -60,7 +57,7 @@
 	</div>
 	<div class="mb-2">
 		<label for="">ចំនួនគិតជា {get_product?.unit.name} </label>
-		<input name="qty_per_unit" type="number" class="form-control" />
+		<input  placeholder="ខ្លាតពីតូចទៅធំ​" name="qty_per_unit" type="number" class="form-control" />
 	</div>
 	<div>
 		<button class="btn btn-warning float-end" type="submit">រក្សាទុក្ខ</button>

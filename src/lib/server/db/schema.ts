@@ -129,17 +129,17 @@ export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 
 export const exspend = t.mysqlTable('exspend', {
 	id: t.int().primaryKey().autoincrement(),
-	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	amount: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	reason: t.text(),
 	created_at: t.datetime({ mode: 'string' }).notNull(),
 	user_id: t.varchar({ length: 255 }).references(() => user.id).notNull()
 });
-export const exspendRelations = relations(exspend, ({ one }) => ({
+export const exspendRelations = relations(exspend, ({ one,many }) => ({
 	user: one(user, {
 		fields: [exspend.user_id],
 		references: [user.id]
 	}),
-	inventory: one(inventory)
+	inventory: many(inventory)
 }));
 
 
@@ -156,10 +156,10 @@ export const inventory = t.mysqlTable('inventory', {
 	is_outstock: t.boolean().default(false).notNull(),
 	is_expire: t.boolean().default(false).notNull(),
 	is_close_inventory: t.boolean().default(false).notNull(),
-	qty_bought: t.int().default(0).notNull(),
-	qty_available: t.int().default(0).notNull(),
-	old_qty_available: t.int().default(0).notNull(),
-	old_qty_price: t.decimal({ precision: 18, scale: 2 }).notNull().$type<number>(),
+	qty_bought: t.int().default(0),
+	qty_available: t.int().default(0),
+	old_qty_available: t.int().default(0),
+	old_qty_price: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
 	is_count_stock: t.boolean().default(false).notNull(),
 	datetime_expire: t.datetime({ mode: 'string' }),
 	datetime_buy: t.datetime({ mode: 'string' }),

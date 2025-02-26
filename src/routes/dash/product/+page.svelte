@@ -62,7 +62,10 @@
 						<div class="col-auto">
 							<Form action="?/delete" method="POST">
 								<input type="hidden" name="product_id" value={item.id} />
-								<AlertDelete />
+								<AlertDelete  /> 
+
+									
+							
 							</Form>
 						</div>
 						<div class="col">
