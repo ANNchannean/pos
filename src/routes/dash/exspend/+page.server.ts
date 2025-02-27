@@ -6,7 +6,8 @@ import type { Actions, PageServerLoad } from './$types';
 export const load = (async () => {
     const get_exspends = await db.query.exspend.findMany({
         with:{
-            user:true
+            user:true,
+            inventory:true
         }
     })
     return { get_exspends };

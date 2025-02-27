@@ -8,9 +8,12 @@ import { localFormat } from '$lib/client/helper';
 
 // រុញទិន្នន័យទៅ Client  តាមរយៈ Load Function 
 export const load = (async ({ url }) => {
-
 	const product_id = url.searchParams.get('product_id') || '';
+	const inventory_id = url.searchParams.get('inventory_id') || '';
 	const exspend_id = url.searchParams.get('exspend_id') || '';
+	const get_inventory = await db.query.inventory.findFirst({
+		where: eq(inventory.id, +inventory_id)
+	})
 	const get_products = await db.query.product.findMany({
 
 	});
@@ -26,29 +29,29 @@ export const load = (async ({ url }) => {
 		}
 	});
 	const get_exspend = await db.query.exspend.findFirst({
-		where:eq(exspend.id,+exspend_id),
-		with:{
-			inventory:{
-				with:{
-					product:{
-						with:{
-							brand:true,
-							
-							category:true,
-							subUnit:{
-								with:{
-									unit:true
+		where: eq(exspend.id, +exspend_id),
+		with: {
+			inventory: {
+				with: {
+					product: {
+						with: {
+							brand: true,
+							category: true,
+							subUnit: {
+								with: {
+									unit: true
 								}
 							},
-							unit:true
+							unit: true
 						}
-					}
+					},
+					constUnit: true
 				}
 			}
 		}
 	})
 	return {
-		get_product, get_products,get_exspend
+		get_product, get_products, get_exspend, get_inventory
 	};
 }) satisfies PageServerLoad;
 
@@ -65,9 +68,23 @@ export const actions: Actions = {
 			cost_unit_id,
 			count_stock,
 			product_id,
-			exspend_id
+			exspend_id,
+			inventory_id
 		} = Object.fromEntries(body) as Record<string, string>
-
+		
+		if (inventory_id) {
+	
+			console.log("updaste")
+			console.log(body)
+	
+		}
+		if (!inventory_id) {
+	
+			console.log("create")
+			console.log(body)
+	
+		}
+		return
 		if (!cost || !qty_bought || !product_id || !cost_unit_id || !count_stock) return fail(400, { validErr: true })
 		const get_product = await db.query.product.findFirst({
 			where: eq(product.id, +product_id),
@@ -75,7 +92,6 @@ export const actions: Actions = {
 				subUnit: true
 			}
 		})
-
 		let qty_available = +qty_bought
 		const adjust_unit = get_product?.subUnit.find((e) => e.unit_id === +cost_unit_id)
 		if (adjust_unit) {

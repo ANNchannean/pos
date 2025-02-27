@@ -35,25 +35,46 @@
 			<th scope="col">ឈ្មោះទំនិញ</th>
 			<th scope="col">បាកូដ</th>
 			<th scope="col">តម្លៃ</th>
-			<th scope="col">ចំនួន</th>
-
+			<th scope="col">ចំនួនមាន</th>
+			<th scope="col">ខ្នាតដុំ</th>
 			<th scope="col">ប្រភេទទំនិញ</th>
 			<th colspan="2" scope="col">ប្រេនទំនិញ</th>
 		</tr>
 	</thead>
 	<tbody>
 		{#each get_products as item, index}
+			{@const qty_avallable = item.inventory.reduce((s, e) => s + Number(e.qty_available), 0)}
 			<tr>
-				<td>{index}</td>
+				<td>{index+1}</td>
 				<td>
 					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="" />
 				</td>
-				<td>{item.name}</td>
+				<td>
+					<div>
+						<a class="text-decoration-none" href="/dash/product/history?product_id={item.id}">
+							{item.name}
+						</a>
+					</div>
+				</td>
 				<td>{item.barcode}</td>
 				<td>$ {item.price}</td>
-				<td
-					>{item.stock}
-					<a href="/dash/product/sub-unit?product_id={item.id}">{item.unit.name}</a>
+				<td>
+					<div>
+						<a class="text-decoration-none" href="/dash/product/sub-unit?product_id={item.id}">
+							{qty_avallable}
+							{item.unit.name}
+						</a>
+					</div>
+				</td>
+				<td>
+					<div>
+						{#each item.subUnit || [] as sub_unit}
+							{(qty_avallable / sub_unit.qty_per_unit).toFixed()} {sub_unit.unit.name} <br />
+						{/each}
+						{#if !item.subUnit.length}
+							...
+						{/if}
+					</div>
 				</td>
 				<td>{item.category.name}</td>
 				<td>{item.brand?.name}</td>
@@ -62,10 +83,7 @@
 						<div class="col-auto">
 							<Form action="?/delete" method="POST">
 								<input type="hidden" name="product_id" value={item.id} />
-								<AlertDelete  /> 
-
-									
-							
+								<AlertDelete />
 							</Form>
 						</div>
 						<div class="col">

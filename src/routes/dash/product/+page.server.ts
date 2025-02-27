@@ -1,15 +1,29 @@
 import { db } from '$lib/server/db';
 import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import {  product } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import {  inventory, product } from '$lib/server/db/schema';
+import { and, eq } from 'drizzle-orm';
 
 export const load = (async () => {
 	const get_products = await db.query.product.findMany({
 		with:{
 			brand:true,
 			category:true,
-			unit:true
+			unit:true,
+			subUnit:{
+				with:{
+					unit:true
+				}
+			},
+			inventory:{
+				with:{
+					constUnit:true
+				},
+				where:and(
+					eq(inventory.is_outstock,false),
+					eq(inventory.is_close_inventory,false),
+				)
+			}
 		}
 	});
 	return {

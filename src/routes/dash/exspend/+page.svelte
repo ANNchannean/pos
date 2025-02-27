@@ -6,8 +6,6 @@
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_exspends } = $derived(data);
-
-	
 </script>
 
 <h4>បញ្ជីការចំណាយ</h4>
@@ -15,13 +13,7 @@
 <div class="row">
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
-			<input
-			
-				name="q"
-				placeholder="ស្វែងរកតាមរយឈ្មោះ..."
-				type="search"
-				class="form-control"
-			/>
+			<input name="q" placeholder="ស្វែងរកតាមរយឈ្មោះ..." type="search" class="form-control" />
 		</form>
 	</div>
 	<div class="col-4">
@@ -44,15 +36,17 @@
 			<tr>
 				<td> {index + 1} </td>
 				<td> {item.amount} </td>
-				<td> <span class="text-break">
-					{item.reason}
-				</span> </td>
-				<td> 
-				<DatetimeFormat  date={item.created_at} />	
+				<td>
+					<span class="text-break">
+						{item.reason}
+					</span>
+				</td>
+				<td>
+					<DatetimeFormat date={item.created_at} />
 				</td>
 				<td> {item.user.username} </td>
 				<td>
-					<div class="row">
+					<div class="row g-1">
 						<div class="col-auto">
 							<form action="?/delete" use:enhance method="post">
 								<input type="hidden" name="exspend_id" value={item.id} />
@@ -60,9 +54,15 @@
 							</form>
 						</div>
 						<div class="col">
-							<a class="btn btn-outline-warning" href="/dash/exspend/create?exspend_id={item.id}"
-								><i class="fa-solid fa-edit"></i> កែសម្រួល</a
-							>
+							{#if item.inventory.length}
+								<a class="btn btn-outline-warning" href="/dash/inventory?exspend_id={item.id}"
+									><i class="fa-solid fa-edit"></i> កែសម្រួល</a
+								>
+							{:else}
+								<a class="btn btn-outline-warning" href="/dash/exspend/create?exspend_id={item.id}"
+									><i class="fa-solid fa-edit"></i> កែសម្រួល</a
+								>
+							{/if}
 						</div>
 					</div>
 				</td>

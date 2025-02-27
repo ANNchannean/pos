@@ -66,15 +66,13 @@
 							<a
 								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/inventory')}
-								aria-current="page"
-								href="/dash/inventory"><i class="fa-brands fa-shopify"></i> ទិញចូល</a
+								href="/dash/inventory"><i class="fa-solid fa-money-bill-trend-up"></i> ទិញចូល</a
 							>
 						</li>
 						<li>
 							<a
 								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/product')}
-								aria-current="page"
 								href="/dash/product"><i class="fa-solid fa-cart-shopping"></i> ផលិតផល់</a
 							>
 						</li>
@@ -156,6 +154,6 @@
 	</div>
 </nav>
 
-<div class="container pt-3">
+<div class="container-fluid pt-3">
 	{@render children()}
 </div>
