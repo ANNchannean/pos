@@ -7,6 +7,12 @@ ndcomputer.net {
 		file_server browse
 	}
 }
+:80 {
+	handle /uploads* {
+		root * /uploads
+		file_server browse
+	}
+}
 :8080 {
 	reverse_proxy adminer:8080
 }
