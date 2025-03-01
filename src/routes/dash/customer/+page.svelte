@@ -51,10 +51,9 @@
 				<td>
 					<div class="row">
 						<div class="col-auto">
-							<form action="?/delete" use:enhance method="post">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="customer_id" value={item.id} />
-								<AlertDelete />
-							</form>
+							</AlertDelete>
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/customer/create?customer_id={item.id}"

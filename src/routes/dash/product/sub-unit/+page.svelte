@@ -38,22 +38,26 @@
 						<td>
 							<div>
 								{#each get_product?.subUnit || [] as unit}
-									<Form action="?/delete_sub_unit" method="post">
-										<a
-											href="/dash/product/sub-unit?product_id={unit.product_id}&sub_unit_id={unit.id}"
-											class="btn btn-link"
-										>
-											@ 1 {unit.unit.name} មាន {unit.qty_per_unit}
-											{get_product?.unit.name}
-										</a>
-										<span>
-											<input type="hidden" name="sub_unit_id" value={unit.id} />
+									<div class="row">
+										<div class="col-auto">
+											<a
+												href="/dash/product/sub-unit?product_id={unit.product_id}&sub_unit_id={unit.id}"
+												class="btn btn-link"
+											>
+												@ 1 {unit.unit.name} មាន {unit.qty_per_unit}
+												{get_product?.unit.name}
+											</a>
+										</div>
+										<div class="col">
 											<AlertDelete
 												class="btn btn-link text-decoration-none text-danger"
 												name="លុបខ្នាតដុំ"
-											/>
-										</span><br />
-									</Form>
+												action="?/delete_sub_unit"
+											>
+												<input type="hidden" name="sub_unit_id" value={unit.id} />
+											</AlertDelete>
+										</div>
+									</div>
 								{/each}
 							</div>
 						</td>

@@ -71,20 +71,6 @@ export const actions: Actions = {
 			exspend_id,
 			inventory_id
 		} = Object.fromEntries(body) as Record<string, string>
-		
-		if (inventory_id) {
-	
-			console.log("updaste")
-			console.log(body)
-	
-		}
-		if (!inventory_id) {
-	
-			console.log("create")
-			console.log(body)
-	
-		}
-		return
 		if (!cost || !qty_bought || !product_id || !cost_unit_id || !count_stock) return fail(400, { validErr: true })
 		const get_product = await db.query.product.findFirst({
 			where: eq(product.id, +product_id),
@@ -103,14 +89,31 @@ export const actions: Actions = {
 				created_at: localFormat.datetime(new Date()),
 				user_id: user_id,
 			}).$returningId()
-			await createInventory({ cost, cost_unit_id, count_stock, datetime_buy: localFormat.datetime(new Date()), exspend_id: create_exspend[0].id, product_id, qty_available, qty_bought })
+			await createInventory({ cost, cost_unit_id, count_stock, datetime_buy: localFormat.datetime(new Date()), exspend_id: create_exspend[0].id, product_id, qty_available, qty_bought, inventory_id: inventory_id ? +inventory_id : null })
 			redirect(300, `/dash/inventory?exspend_id=${create_exspend[0].id}`)
 		}
 
 		if (exspend_id) {
-			await createInventory({ cost, cost_unit_id, count_stock, datetime_buy: localFormat.datetime(new Date()), exspend_id: +exspend_id, product_id, qty_available, qty_bought })
+			await createInventory({ cost, cost_unit_id, count_stock, datetime_buy: localFormat.datetime(new Date()), exspend_id: +exspend_id, product_id, qty_available, qty_bought, inventory_id: inventory_id ? +inventory_id : null })
 			redirect(300, `/dash/inventory?exspend_id=${exspend_id}`)
 		}
+
+	},
+	delete: async ({ request }) => {
+		const body = await request.formData();
+		const inventory_id = body.get('inventory_id')
+		const exspend_id = body.get('exspend_id')
+		if (!inventory_id || !exspend_id) return fail(400, { validDelete: true })
+		await db.delete(inventory).where(eq(inventory.id, +inventory_id))
+		const get_exspend = await db.query.exspend.findFirst({
+			where: eq(exspend.id, +exspend_id),
+			with: {
+				inventory: true
+			}
+		})
+		await db.update(exspend).set({
+			amount: get_exspend?.inventory.reduce((s, e) => s + Number(e.total_expense) || 0, 0)
+		})
 	}
 };
 interface TCreateINV {
@@ -121,21 +124,36 @@ interface TCreateINV {
 	product_id: string,
 	exspend_id: number,
 	qty_available: number,
-	datetime_buy: string
+	datetime_buy: string,
+	inventory_id: number | null
 }
 async function createInventory(param: TCreateINV) {
 	try {
-		await db.insert(inventory).values({
-			product_id: +param.product_id,
-			cost: +param.cost,
-			cost_unit_id: +param.cost_unit_id,
-			qty_bought: +param.qty_bought,
-			qty_available: +param.qty_available,
-			exspend_id: +param.exspend_id,
-			is_count_stock: param.count_stock === "count_stock" ? true : false,
-			datetime_buy: param.datetime_buy,
-			total_expense: +param.qty_bought * +param.cost,
-		})
+		if (param.inventory_id) {
+			await db.update(inventory).set({
+				product_id: +param.product_id,
+				cost: +param.cost,
+				cost_unit_id: +param.cost_unit_id,
+				qty_bought: +param.qty_bought,
+				qty_available: +param.qty_available,
+				exspend_id: +param.exspend_id,
+				is_count_stock: param.count_stock === "true" ? true : false,
+				datetime_buy: param.datetime_buy,
+				total_expense: +param.qty_bought * +param.cost,
+			}).where(eq(inventory.id, +param.inventory_id))
+		} else {
+			await db.insert(inventory).values({
+				product_id: +param.product_id,
+				cost: +param.cost,
+				cost_unit_id: +param.cost_unit_id,
+				qty_bought: +param.qty_bought,
+				qty_available: +param.qty_available,
+				exspend_id: +param.exspend_id,
+				is_count_stock: param.count_stock === "count_stock" ? true : false,
+				datetime_buy: param.datetime_buy,
+				total_expense: +param.qty_bought * +param.cost,
+			})
+		}
 		const get_exspend = await db.query.exspend.findFirst({
 			where: eq(exspend.id, param.exspend_id),
 			with: {

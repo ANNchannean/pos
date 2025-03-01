@@ -6,8 +6,9 @@
 	let { data }: { data: PageServerData } = $props();
 	let { get_categoryies } = $derived(data);
 	let q = $state('');
-	let q_categories = $derived(get_categoryies?.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
-	
+	let q_categories = $derived(
+		get_categoryies?.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
+	);
 </script>
 
 <h4>បញ្ជីប្រភេទទំនិញ</h4>
@@ -45,10 +46,9 @@
 				<td>
 					<div class="row">
 						<div class="col-auto">
-							<Form action="?/delete"  method="POST">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="category_id" value={category.id} />
-								<AlertDelete/>
-							</Form>
+							</AlertDelete>
 						</div>
 						<div class="col">
 							<a

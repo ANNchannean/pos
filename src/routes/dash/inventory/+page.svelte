@@ -9,6 +9,7 @@
 		Number(page.url.searchParams.get('inventory_id')) || null
 	);
 	let exspend_id: null | number = $derived(Number(page.url.searchParams.get('exspend_id')) || null);
+	let product_id: null | number = $derived(Number(page.url.searchParams.get('product_id')) || null);
 </script>
 
 <h4>ទិញផលិតផល</h4>
@@ -17,8 +18,13 @@
 	<input type="hidden" name="exspend_id" value={exspend_id} />
 	<div class="col-md-12">
 		<div class="mb-2">
-			<label for="inventory_id" class="form-label">ឈ្មោះផលិតផល</label>
-			<select name="inventory_id" id="inventory_id" class="form-control">
+			<label for="product_id" class="form-label">ឈ្មោះផលិតផល</label>
+			<select
+				disabled={inventory_id ? true : false}
+				name="product_id"
+				id="product_id"
+				class="form-control"
+			>
 				{#each get_products as item}
 					<option selected={item.id === get_inventory?.product_id} value={item?.id}
 						>{item?.name ?? ''}</option
@@ -31,6 +37,7 @@
 <Form action="?/create_inventory" method="POST">
 	<input type="hidden" name="inventory_id" value={inventory_id} />
 	<input type="hidden" name="exspend_id" value={exspend_id} />
+	<input type="hidden" name="product_id" value={product_id} />
 	<div class="row mb-2">
 		<div class="col-md-6">
 			<label for="cost">តម្លៃទិញចូល</label>
@@ -70,25 +77,25 @@
 	</div>
 	<div class="form-check">
 		<input
-			value="not_count_stock"
-			class="form-check-input"
-			type="radio"
-			name="count_stock"
-			id="not_count_stock"
-			checked={!get_inventory?.is_count_stock}
-		/>
-		<label class="form-check-label" for="not_count_stock">មិនរាប់ស្តុក</label>
-	</div>
-	<div class="form-check">
-		<input
-			value="count_stock"
+			value="false"
 			class="form-check-input"
 			type="radio"
 			name="count_stock"
 			id="count_stock"
-			checked={get_inventory?.is_count_stock}
+			checked={get_inventory?.is_count_stock ? true : false}
 		/>
-		<label class="form-check-label" for="count_stock"> រាប់ស្តុក </label>
+		<label class="form-check-label" for="count_stock">មិនរាប់ស្តុក</label>
+	</div>
+	<div class="form-check">
+		<input
+			value="true"
+			class="form-check-input"
+			type="radio"
+			name="count_stock"
+			id="not_count_stock"
+			checked={!get_inventory?.is_count_stock ? true : false}
+		/>
+		<label class="form-check-label" for="not_count_stock"> រាប់ស្តុក </label>
 	</div>
 
 	<div>
@@ -128,14 +135,17 @@
 				<td>
 					<div class="row g-1">
 						<div class="col-auto">
-							<Form action="?/delete" method="POST">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="inventory_id" value={item.id} />
-								<AlertDelete />
-							</Form>
+								<input type="hidden" name="exspend_id" value={inventory.exspend_id} />
+							</AlertDelete>
 						</div>
 						<div class="col">
 							<a
-								href="/dash/inventory?inventory_id={inventory.id}&exspend_id={inventory.exspend_id}&product_id={inventory.product_id}"
+								href="/dash/inventory?inventory_id={inventory_id !== inventory.id
+									? inventory.id
+									: ''}&exspend_id={inventory.exspend_id}&product_id={inventory.product_id}"
+								class:active={inventory_id === inventory.id}
 								class="btn btn-outline-warning"><i class="fa-solid fa-edit"></i> កែសម្រួល</a
 							>
 						</div>

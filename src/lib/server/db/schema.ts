@@ -43,7 +43,6 @@ export const product = t.mysqlTable('product', {
 	category_id: t.int().references(() => category.id).notNull(),
 	unit_id: t.int().references(() => unit.id).notNull(), // ប្រើលក់រាយ
 	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	stock: t.int().notNull().default(0),
 	barcode: t.varchar({ length: 255 }).unique(),
 	description: t.text(),
 	image: t.varchar({ length: 255 })

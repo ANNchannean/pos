@@ -52,10 +52,10 @@
 				<td>
 					<div class="row">
 						<div class="col-auto">
-							<Form action="?/delete" method="POST">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="supplier_id" value={item.id} />
-								<AlertDelete />
-							</Form>
+							</AlertDelete>
+							
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/supplier/create?supplier_id={item.id}"

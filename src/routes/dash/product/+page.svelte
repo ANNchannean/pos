@@ -2,16 +2,22 @@
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import Form from '$lib/component/Form.svelte';
 	import NoData from '$lib/component/NoData.svelte';
+	import Paginations from '$lib/component/Paginations.svelte';
 	import type { PageServerData } from './$types';
 
 	let { data }: { data: PageServerData } = $props();
 	let { get_products } = $derived(data);
 	let q = $state('');
+	let n = $state(1);
 </script>
 
 <h4>បញ្ជីផលិតផល</h4>
 <hr />
 <div class="row">
+	<div class="col-auto">
+		<Paginations items={100} {n} />
+	</div>
+
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
 			<input
@@ -45,7 +51,7 @@
 		{#each get_products as item, index}
 			{@const qty_avallable = item.inventory.reduce((s, e) => s + Number(e.qty_available), 0)}
 			<tr>
-				<td>{index+1}</td>
+				<td>{index + 1}</td>
 				<td>
 					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="" />
 				</td>
@@ -81,10 +87,9 @@
 				<td>
 					<div class="row g-1">
 						<div class="col-auto">
-							<Form action="?/delete" method="POST">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="product_id" value={item.id} />
-								<AlertDelete />
-							</Form>
+							</AlertDelete>
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/product/create?product_id={item.id}"

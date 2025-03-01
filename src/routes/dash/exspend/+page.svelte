@@ -48,10 +48,9 @@
 				<td>
 					<div class="row g-1">
 						<div class="col-auto">
-							<form action="?/delete" use:enhance method="post">
+							<AlertDelete action="?/delete">
 								<input type="hidden" name="exspend_id" value={item.id} />
-								<AlertDelete />
-							</form>
+							</AlertDelete>
 						</div>
 						<div class="col">
 							{#if item.inventory.length}

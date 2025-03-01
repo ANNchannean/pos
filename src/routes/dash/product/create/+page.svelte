@@ -127,17 +127,8 @@
 			<p class="text-danger">ការបរិយាយត្រូវតែមាន</p>
 		{/if}
 	</div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="mb-2">
-				<label for="brand_id" class="form-label">ចំនួន</label>
-				<input class="form-control" type="number" name="stock" id="" />
-				{#if form?.stock}
-					<p class="text-danger">ប្រេនទំនិញត្រូវតែមាន</p>
-				{/if}
-			</div>
-		</div>
-		<div class="col-md-6">
+	<div class="row mb-2">
+		<div class="col-md-12">
 			<label for="description" class="form-label">រូបភាព</label>
 			<CropImage name="image" />
 		</div>

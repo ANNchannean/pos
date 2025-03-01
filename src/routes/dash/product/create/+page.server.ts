@@ -31,7 +31,7 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	create_product: async ({ request }) => {
 		const body = await request.formData();
-		const { product_name, product_id, barcode, price, stock, category_id, brand_id, unit_id, description, old_image } = Object.fromEntries(body) as Record<string, string>;
+		const { product_name, product_id, barcode, price, category_id, brand_id, unit_id, description, old_image } = Object.fromEntries(body) as Record<string, string>;
 		const file = body.get('image') as File
 
 		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
@@ -39,7 +39,6 @@ export const actions: Actions = {
 			product_name: false,
 			barcode: false,
 			price: false,
-			stock: false,
 			category_id: false,
 			brand_id: false,
 			unit_id: false,
@@ -49,7 +48,7 @@ export const actions: Actions = {
 		if (!product_name) validProduct.product_name = true
 		if (!barcode) validProduct.barcode = true
 		if (!price) validProduct.price = true
-		if (!stock) validProduct.stock = true
+
 		if (!category_id) validProduct.category_id = true
 		if (!brand_id) validProduct.brand_id = true
 		if (!unit_id) validProduct.unit_id = true
@@ -65,7 +64,6 @@ export const actions: Actions = {
 					name: product_name,
 					barcode: barcode,
 					price: +price,
-					stock: +stock,
 					category_id: +category_id,
 					brand_id: brand_id ? +brand_id : null,
 					unit_id: +unit_id,
@@ -81,7 +79,6 @@ export const actions: Actions = {
 				name: product_name,
 				barcode: barcode,
 				price: +price,
-				stock: +stock,
 				image: image,
 				category_id: +category_id,
 				brand_id: brand_id ? +brand_id : null,
