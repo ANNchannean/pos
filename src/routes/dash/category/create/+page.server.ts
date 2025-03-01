@@ -24,7 +24,7 @@ export const actions: Actions = {
 		const valid_category = await db.query.category.findFirst({
 			where: eq(category.name, category_name)
 		})
-		if (valid_category) return fail(400, { message: 'ប្រភេទទំនិញនេះមានរួចហើយ' });
+		if (valid_category?.name === category_name) return fail(400, { message: 'ប្រភេទទំនិញនេះមានរួចហើយ' });
 		if (category_name === "") return fail(400, { message: 'សូមបំពេញឈ្មោះប្រភេទទំនិញ' });
 		if (category_id) {
 			await db

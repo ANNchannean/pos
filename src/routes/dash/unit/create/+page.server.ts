@@ -24,7 +24,7 @@ export const actions: Actions = {
 		const valid_unit = await db.query.unit.findFirst({
 			where: eq(unit.name, unit_name)
 		})
-		if (valid_unit) return fail(400, { message: 'ខ្នាតនេះមានរួចហើយ' });
+		if (valid_unit?.name === unit_name) return fail(400, { message: 'ខ្នាតនេះមានរួចហើយ' });
 		if (unit_name === "") return fail(400, { message: 'សូមបំពេញឈ្មោះខ្នាត' });
 		if (unit_id) {
 			await db

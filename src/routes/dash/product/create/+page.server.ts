@@ -31,7 +31,8 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	create_product: async ({ request }) => {
 		const body = await request.formData();
-		const { product_name, product_id, barcode, price, category_id, brand_id, unit_id, description, old_image } = Object.fromEntries(body) as Record<string, string>;
+		const { product_name, product_id, barcode, price, category_id, brand_id, unit_id, description, old_image, model,
+			condition } = Object.fromEntries(body) as Record<string, string>;
 		const file = body.get('image') as File
 
 		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
@@ -64,6 +65,8 @@ export const actions: Actions = {
 					name: product_name,
 					barcode: barcode,
 					price: +price,
+					model: model,
+					condition: condition,
 					category_id: +category_id,
 					brand_id: brand_id ? +brand_id : null,
 					unit_id: +unit_id,
@@ -79,6 +82,8 @@ export const actions: Actions = {
 				name: product_name,
 				barcode: barcode,
 				price: +price,
+				model: model,
+				condition: condition,
 				image: image,
 				category_id: +category_id,
 				brand_id: brand_id ? +brand_id : null,

@@ -24,7 +24,7 @@ export const actions: Actions = {
 		const valid_brand = await db.query.brand.findFirst({
 			where: eq(brand.name, brand_name)
 		})
-		if (valid_brand) return fail(400, { message: 'ប្រេននេះមានរួចហើយ' });
+		if (valid_brand?.name === brand_name) return fail(400, { message: 'ប្រេននេះមានរួចហើយ' });
 		if (brand_name === "") return fail(400, { message: 'សូមបំពេញឈ្មោះប្រេន' });
 		if (brand_id) {
 			await db

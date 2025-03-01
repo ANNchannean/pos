@@ -53,12 +53,13 @@
 			<tr>
 				<td>{index + 1}</td>
 				<td>
-					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="" />
+					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="image" />
 				</td>
 				<td>
-					<div>
-						<a class="text-decoration-none" href="/dash/product/history?product_id={item.id}">
-							{item.name}
+					<div class="text-truncate" style="width: 20rem;">
+						<a class="text-decoration-none " href="/dash/product/history?product_id={item.id}">
+							{item.name} <br>
+						
 						</a>
 					</div>
 				</td>
@@ -66,24 +67,34 @@
 				<td>$ {item.price}</td>
 				<td>
 					<div>
-						<a class="text-decoration-none" href="/dash/product/sub-unit?product_id={item.id}">
-							{qty_avallable}
-							{item.unit.name}
-						</a>
+						{qty_avallable}
+						{item.unit.name}
 					</div>
 				</td>
 				<td>
 					<div>
-						{#each item.subUnit || [] as sub_unit}
-							{(qty_avallable / sub_unit.qty_per_unit).toFixed()} {sub_unit.unit.name} <br />
-						{/each}
-						{#if !item.subUnit.length}
-							...
-						{/if}
+						<a class="text-decoration-none" href="/dash/product/sub-unit?product_id={item.id}">
+							{#each item.subUnit || [] as sub_unit}
+								{(qty_avallable / sub_unit.qty_per_unit).toFixed()} {sub_unit.unit.name} <br />
+							{/each}
+							{#if !item.subUnit.length}
+								...
+							{/if}
+						</a>
 					</div>
 				</td>
-				<td>{item.category.name}</td>
-				<td>{item.brand?.name}</td>
+				<td> 
+					<div class="text-truncate" style="width: 10rem;">
+
+						{item.category.name}
+					</div>
+				</td>
+				<td>
+					<div class="text-truncate" style="width: 10rem;">
+						{item.brand?.name}
+
+					</div>
+				</td>
 				<td>
 					<div class="row g-1">
 						<div class="col-auto">

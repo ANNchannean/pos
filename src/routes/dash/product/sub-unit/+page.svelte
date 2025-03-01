@@ -37,14 +37,14 @@
 						<td>:</td>
 						<td>
 							<div>
-								{#each get_product?.subUnit || [] as unit}
+								{#each get_product?.subUnit || [] as sub_unit,index}
 									<div class="row">
 										<div class="col-auto">
 											<a
-												href="/dash/product/sub-unit?product_id={unit.product_id}&sub_unit_id={unit.id}"
+												href="/dash/product/sub-unit?product_id={sub_unit.product_id}&sub_unit_id={sub_unit.id}"
 												class="btn btn-link"
 											>
-												@ 1 {unit.unit.name} មាន {unit.qty_per_unit}
+												@ 1 {sub_unit.unit.name} មាន {sub_unit.qty_per_unit}
 												{get_product?.unit.name}
 											</a>
 										</div>
@@ -54,7 +54,7 @@
 												name="លុបខ្នាតដុំ"
 												action="?/delete_sub_unit"
 											>
-												<input type="hidden" name="sub_unit_id" value={unit.id} />
+												<input type="hidden" name="sub_unit_id" value={sub_unit.id} />
 											</AlertDelete>
 										</div>
 									</div>

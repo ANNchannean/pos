@@ -50,6 +50,34 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div class="mb-2">
+				<label for="price" class="form-label">ម៉ូដែល</label>
+				<input
+					value={get_product?.model}
+					type="text"
+					class="form-control"
+					name="model"
+					id="model"
+				/>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="mb-2">
+				<label for="condition" class="form-label">ល័ក្ខខ័ណ</label>
+				<select value={get_product?.condition} class="form-control" name="condition" id="condition">
+					<option class="form-control" value="NEW">
+						NEW</option
+					>
+					<option class="form-control" value="SECONDHAND">
+						SECONDHAND</option
+					>
+					
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="mb-2">
 				<label for="price" class="form-label">តម្លៃ</label>
 				<input
 					value={get_product?.price}

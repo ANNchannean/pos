@@ -38,12 +38,14 @@ export const unit = t.mysqlTable('unit', {
 
 export const product = t.mysqlTable('product', {
 	id: t.int().primaryKey().autoincrement(),
-	name: t.varchar({ length: 255 }).notNull().unique(),
+	name: t.varchar({ length: 255 }).notNull(),
+	model: t.varchar({ length: 255 }).notNull(),
 	brand_id: t.int().references(() => brand.id),
 	category_id: t.int().references(() => category.id).notNull(),
 	unit_id: t.int().references(() => unit.id).notNull(), // ប្រើលក់រាយ
 	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	barcode: t.varchar({ length: 255 }).unique(),
+	condition: t.varchar({ length: 10 }),
+	barcode: t.varchar({ length: 255 }),
 	description: t.text(),
 	image: t.varchar({ length: 255 })
 });
@@ -133,7 +135,7 @@ export const exspend = t.mysqlTable('exspend', {
 	created_at: t.datetime({ mode: 'string' }).notNull(),
 	user_id: t.varchar({ length: 255 }).references(() => user.id).notNull()
 });
-export const exspendRelations = relations(exspend, ({ one,many }) => ({
+export const exspendRelations = relations(exspend, ({ one, many }) => ({
 	user: one(user, {
 		fields: [exspend.user_id],
 		references: [user.id]
