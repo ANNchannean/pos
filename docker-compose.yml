@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./static/uploads:/home/bun/app/uploads
+      - ./static/uploads:/home/bun/app/static/uploads
       - /app/build
     networks:
       - pos_network
