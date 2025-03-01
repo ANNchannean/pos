@@ -10,8 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/app
-      - /app/node_modules
+      - ./static/uploads:/home/bun/app/uploads
       - /app/build
     networks:
       - pos_network
@@ -29,12 +28,6 @@ services:
       MYSQL_DATABASE: pos
     volumes:
       - ~/mysql-data:/var/lib/mysql
-    networks:
-      - pos_network
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
     networks:
       - pos_network
   caddy:
