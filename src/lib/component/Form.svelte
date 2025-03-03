@@ -33,41 +33,43 @@
 	}: Props = $props();
 </script>
 
-<form
-	data-sveltekit-keepfocus={data_sveltekit_keepfocus}
-	data-sveltekit-noscroll={data_sveltekit_noscroll}
-	{onchange}
-	{action}
-	{method}
-	{enctype}
-	class={className}
-	use:enhance={() => {
-		loading = true;
-		return async ({ update, result }) => {
-			await update({ reset: reset });
-			loading = false;
-			if (showToast) {
-				if (result.type === 'failure') {
-					new bs5.Toast({
-						body: `<i class="fa-solid fa-circle-xmark"></i> ការស្នើរបរាជ័យ`,
-						className: 'border-0 bg-danger text-white me-1',
-						btnCloseWhite: true,
-						margin: '60px'
-					}).show();
-					fnError?.();
+<fieldset disabled={loading}>
+	<form
+		data-sveltekit-keepfocus={data_sveltekit_keepfocus}
+		data-sveltekit-noscroll={data_sveltekit_noscroll}
+		{onchange}
+		{action}
+		{method}
+		{enctype}
+		class={className}
+		use:enhance={() => {
+			loading = true;
+			return async ({ update, result }) => {
+				await update({ reset: reset });
+				loading = false;
+				if (showToast) {
+					if (result.type === 'failure') {
+						new bs5.Toast({
+							body: `<i class="fa-solid fa-circle-xmark"></i> ការស្នើរបរាជ័យ`,
+							className: 'border-0 bg-danger text-white me-1',
+							btnCloseWhite: true,
+							margin: '60px'
+						}).show();
+						fnError?.();
+					}
+					if (result.type === 'success' || result.type === 'redirect') {
+						new bs5.Toast({
+							body: `<i class="fa-solid fa-circle-check"></i> ការស្នើរជោគជ័យ`,
+							className: 'border-0 bg-success text-white me-1',
+							btnCloseWhite: true,
+							margin: '60px'
+						}).show();
+						fnSuccess?.();
+					}
 				}
-				if (result.type === 'success' || result.type === 'redirect') {
-					new bs5.Toast({
-						body: `<i class="fa-solid fa-circle-check"></i> ការស្នើរជោគជ័យ`,
-						className: 'border-0 bg-success text-white me-1',
-						btnCloseWhite: true,
-						margin: '60px'
-					}).show();
-					fnSuccess?.();
-				}
-			}
-		};
-	}}
->
-	{@render children?.()}
-</form>
+			};
+		}}
+	>
+		{@render children?.()}
+	</form>
+</fieldset>
