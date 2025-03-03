@@ -55,7 +55,7 @@
 					value={page}
 					style="width: 70px;"
 					type="number"
-					class="form-control form-control-sm text-center"
+					class="form-control text-center"
 				/>
 			</div>
 			<div class="align-content-center">

@@ -3,7 +3,7 @@
 	import type { LayoutServerData } from './$types';
 	import { page } from '$app/state';
 	import { onNavigate } from '$app/navigation';
-
+	import { store } from '$lib/store/store.svelte';
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
 		return new Promise((resolve) => {
@@ -15,6 +15,9 @@
 	});
 	let { data, children }: { data: LayoutServerData; children: Snippet } = $props();
 	let { user } = $derived(data);
+	$effect(() => {
+		store.inerHight = (window.innerHeight - 180).toString().concat('px');
+	});
 </script>
 
 <nav class="navbar navbar-default sticky-top navbar-expand-lg bg-body-tertiary">
@@ -47,7 +50,7 @@
 					</a>
 				</li>
 
-				<li class="nav-item dropdown">
+				<li  class="nav-item dropdown">
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/product') ||
 							page.url.pathname.includes('/dash/brand') ||
@@ -61,7 +64,7 @@
 					>
 						<i class="fa-solid fa-folder-tree"></i> សារពើភ័ណ្ឌ
 					</a>
-					<ul class="dropdown-menu">
+					<ul  class="dropdown-menu">
 						<li>
 							<a
 								class="dropdown-item"

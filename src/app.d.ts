@@ -22,18 +22,20 @@ declare global {
 	}
 	declare const bs5: {
 		Toast: {
-			new (param: Param): {
+			new(param: Param): {
 				element: HTMLDivElement
 				bootstrapToast: {
 					show(): void
 					hide(): void
 				}
-	
+
 				show(): void
 				hide(): void
 			}
 		}
 	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	declare const bootstrap:  any
 }
 
-export {};
+export { };

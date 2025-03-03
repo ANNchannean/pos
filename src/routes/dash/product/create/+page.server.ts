@@ -58,7 +58,6 @@ export const actions: Actions = {
 		// បញ្ជប់ការពិនិ្យ
 		//ករណី produts មានស្រាប់ ត្រូវ Update
 		if (product_id) {
-
 			await db
 				.update(product)
 				.set({

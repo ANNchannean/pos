@@ -144,7 +144,9 @@ td,
 th {
 	vertical-align: middle;
 }
-
+table,thead {
+	z-index: 1;
+}
 /* Style the scrollbar */
 ::-webkit-scrollbar {
 	width: 6px;

@@ -15,7 +15,7 @@
 	onchange={({ currentTarget }) => {
 		currentTarget.requestSubmit();
 	}}
-	class="row"
+	class="row g-1"
 >
 	{#if page_}
 		<input type="hidden" name="page" value={page_} />

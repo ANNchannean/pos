@@ -1,8 +1,6 @@
 <script lang="ts">
-	import AlertDelete from '$lib/component/AlertDelete.svelte';
-	import CropImage from '$lib/component/CropImage.svelte';
+	import Barcode from '$lib/component/Barcode.svelte';
 	import DatetimeFormat from '$lib/component/DatetimeFormat.svelte';
-	import Form from '$lib/component/Form.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product } = $derived(data);
@@ -15,10 +13,10 @@
 		<div class="col-auto">
 			<img
 				class="img-thumbnail"
-				style="height: 200px;"
+				style="height: 370px;"
 				src="/uploads/{get_product?.image}"
 				alt=""
-			/>
+			/> <br />
 		</div>
 		<div class="col">
 			<table class="table">
@@ -26,7 +24,9 @@
 					<tr>
 						<td>ឈ្មេះផលិតផល​​</td>
 						<td>:</td>
-						<td>{get_product?.name}</td>
+						<td>
+							<a href="/dash/product/create?product_id={get_product?.id}">{get_product?.name}</a>
+						</td>
 					</tr>
 					<tr>
 						<td>ប្រេនទំនិញ</td>
@@ -37,6 +37,32 @@
 						<td>ប្រភេទទំនិញ</td>
 						<td>:</td>
 						<td>{get_product?.category?.name}</td>
+					</tr>
+					<tr>
+						<td>ម៉ូដែល</td>
+						<td>:</td>
+						<td>{get_product?.model}</td>
+					</tr>
+					<tr>
+						<td>ល័ក្ខណ </td>
+						<td>:</td>
+						<td>{get_product?.condition}</td>
+					</tr>
+					<tr>
+						<td>បាកូដ </td>
+						<td>:</td>
+						<td>
+							<Barcode text={get_product?.barcode || ''} />
+						</td>
+					</tr>
+					<tr>
+						<td>ការពិពណ៌នា </td>
+						<td>:</td>
+						<td>
+							<div class="text-break">
+								{get_product?.description}
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<td>ខ្នាតលក់រាយ</td>
