@@ -2,17 +2,17 @@
 	import type { Snippet } from 'svelte';
 	import type { LayoutServerData } from './$types';
 	import { page } from '$app/state';
-	import { onNavigate } from '$app/navigation';
+	// import { onNavigate } from '$app/navigation';
 	import { store } from '$lib/store/store.svelte';
-	onNavigate((navigation) => {
-		if (!document.startViewTransition) return;
-		return new Promise((resolve) => {
-			document.startViewTransition(async () => {
-				resolve();
-				await navigation.complete;
-			});
-		});
-	});
+	// onNavigate((navigation) => {
+	// 	if (!document.startViewTransition) return;
+	// 	return new Promise((resolve) => {
+	// 		document.startViewTransition(async () => {
+	// 			resolve();
+	// 			await navigation.complete;
+	// 		});
+	// 	});
+	// });
 	let { data, children }: { data: LayoutServerData; children: Snippet } = $props();
 	let { user } = $derived(data);
 	$effect(() => {
@@ -157,6 +157,12 @@
 	</div>
 </nav>
 
-<div class="container-fluid pt-3">
-	{@render children()}
-</div>
+<main class="container-fluid pt-3">
+	{#if store.inerHight}
+		{@render children?.()}
+	{:else}
+		<div class="opacity-50" style="text-align:center;margin-top: 40vh;">
+			<i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+		</div>
+	{/if}
+</main>

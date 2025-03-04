@@ -179,7 +179,6 @@
 				{/each}
 				{#if data.length === 0}
 					<button type="button" class="dropdown-item">
-						
 						<i class="fa-regular fa-face-sad-cry"></i> គ្មានទិន្ន័យទេ
 					</button>
 				{/if}

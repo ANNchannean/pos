@@ -70,7 +70,7 @@
 				<tr>
 					<td>{n + index}</td>
 					<td>
-						<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item.image}" alt="" />
+						<img class="img-thumbnail" style="height: 50px;" src={item.image ? `/uploads/${item.image}` : `/no-image.png`} alt="" />
 					</td>
 					<td>
 						<div class="text-truncate" style="width: 20rem;">

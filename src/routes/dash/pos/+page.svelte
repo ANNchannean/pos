@@ -4,6 +4,7 @@
 	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
 	import NoData from '$lib/component/NoData.svelte';
 	import Select from '$lib/component/Select.svelte';
+	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, Snapshot } from './$types';
 	interface TForm {
 		id: number;
@@ -11,7 +12,7 @@
 		price: number;
 		qty: number;
 		total: number;
-		unit: number;
+		unit_id: number;
 		dis_value: string | null;
 		dis_pecent: number | null;
 	}
@@ -26,7 +27,11 @@
 		capture: () => form_pos,
 		restore: (value) => (form_pos = value)
 	};
-
+	function alertDiscount() {
+		let value = prompt('Please enter your name', '');
+		let ps = prompt('Please enter your name', '');
+		let person = prompt('Please enter your name', '');
+	}
 	function addProduct(para: TForm) {
 		// ប្រសិនបើមានទំនិញបានបញ្ជូលរូចត្រូវបូកបន្ថែម ១
 		if (form_pos.some((e) => e.id === para.id)) {
@@ -64,23 +69,51 @@
 					items={get_products.map((e) => ({ id: e.id, name: e.name }))}
 				/>
 			</div>
-			<div class="card-body table-responsive">
-				<table class="table table-light table-active table-sm">
-					<thead>
+			<div class="card-body table-responsive p-0">
+				<table class="table table-sm">
+					<thead class="table-active table-bordered">
 						<tr>
-							<td>ផលិតផល់</td>
-							<td>តម្លៃ</td>
-							<td>ចំនួន</td>
-							<td>សរុប</td>
+							<td style="width: 50%;">ផលិតផល់</td>
+							<td style="width: 20$;">តម្លៃ</td>
+							<td style="width: 10$;">ចំនួន</td>
+							<td style="width: 20$;">សរុប</td>
 						</tr>
 					</thead>
 					<tbody>
 						{#each form_pos as form}
 							<tr>
-								<td>{form.name}</td>
-								<td>{form.price}</td>
-								<td>{form.qty}</td>
-								<td>{form.total}</td>
+								<td>
+									<div>
+										<button
+											onclick={alertDiscount}
+											class="btn btn-link text-start text-decoration-none"
+										>
+											{form.name}
+										</button>
+									</div>
+								</td>
+								<td>$ {form.price} </td>
+								<td>
+									<input
+										onchange={(e) => {
+											addProduct({
+												id: form.id,
+												name: form.name,
+												price: form.price,
+												qty: Number(e.currentTarget.value),
+												total: form.price,
+												dis_value: null,
+												dis_pecent: null,
+												unit_id: form.unit_id
+											});
+										}}
+										class="form-control py-1"
+										style="width: 60px;"
+										type="number"
+										value={form.qty}
+									/>
+								</td>
+								<td>$ {form.total}</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -96,9 +129,7 @@
 				<div class=" border-0 bg-primary-subtle mb-2 w-100">
 					<div class="row">
 						<div class="col text-start mx-2">សរុប</div>
-						<div class="col text-end mx-2">
-							$ 1
-						</div>
+						<div class="col text-end mx-2">$ 1</div>
 					</div>
 				</div>
 
@@ -125,30 +156,24 @@
 				<HeaderQuery>
 					<div class="row">
 						<div class="col-6">
-							<Select
-								name="brand_id"
-								selectType="param"
-								displayName="ប្រេនទំនិញ"
-								items={get_brands}
-							/>
+							<SelectParam name="brand_id" placeholder="ប្រេនទំនិញ" items={get_brands} />
 						</div>
 						<div class="col-6">
-							<Select
-								name="category_id"
-								selectType="param"
-								displayName="ប្រភេទទំនិញ"
-								items={get_categories}
-							/>
+							<SelectParam name="category_id" placeholder="ប្រភេទទំនិញ" items={get_categories} />
 						</div>
 					</div>
 				</HeaderQuery>
 			</div>
-			<div style="height: {innerHeight - 130}px; " class="card-body overflow-scroll">
-				<div class="row g-0">
+			<div style="height: {innerHeight - 148}px; " class="card-body overflow-scroll">
+				<div class="row">
 					{#each get_products as product}
-						<div class="col-md-3">
-							<div class="card" style="width: 10rem;">
-								<img src="/uploads/{product.image}" class="card-img-top" alt="" />
+						<div class="col-md-3 col-lg-2 mb-4 col-sm-4">
+							<div class="card">
+								<img
+									src={product?.image ? `/uploads/${product?.image}` : `/no-image.png`}
+									class="card-img-top"
+									alt=""
+								/>
 								<div class="card-body">
 									<!-- <h5 class="card-title">Card title</h5> -->
 									<p class="card-text text-truncate">
@@ -165,7 +190,7 @@
 												total: product.price,
 												dis_value: null,
 												dis_pecent: null,
-												unit: product.unit_id
+												unit_id: product.unit_id
 											})}
 										class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
 									>

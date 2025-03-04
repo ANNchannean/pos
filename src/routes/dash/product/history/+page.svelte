@@ -14,9 +14,10 @@
 			<img
 				class="img-thumbnail"
 				style="height: 370px;"
-				src="/uploads/{get_product?.image}"
+				src={get_product?.image ? `/uploads/${get_product?.image}` : `/no-image.png`}
 				alt=""
-			/> <br />
+			/>
+			<br />
 		</div>
 		<div class="col">
 			<table class="table">
