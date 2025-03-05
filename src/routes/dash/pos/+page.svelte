@@ -35,16 +35,30 @@
 			let obj = product_order.find((obj) => obj.id === para.id);
 			if (obj) {
 				obj.qty = obj.qty + 1;
-				obj.total = +((obj.qty + 1) * obj.price).toFixed(2);
+				obj.total = +(obj.qty * obj.price).toFixed(2);
 			}
 			// modify ទិន្ន័យ product_order
 			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ product_order
-			return;
+		} else {
+			product_order.push(para);
 		}
-		product_order.push(para);
 	}
 	let total = $derived(product_order?.reduce((s, e) => s + +e.total, 0).toFixed(2));
 	let innerHeight = $derived(window.innerHeight);
+	function modalDiscount(product_order_id: number) {
+		const discount = (document.getElementById(`discount${product_order_id}`) as HTMLInputElement)
+			?.value;
+		const price = (document.getElementById(`price${product_order_id}`) as HTMLInputElement)?.value;
+		const qty = (document.getElementById(`qty${product_order_id}`) as HTMLInputElement)?.value;
+		const found = product_order.find((e) => e.id === product_order_id);
+		if (found) {
+			found.qty = Number(qty);
+			found.total = +(+qty * +price).toFixed(2);
+			found.discount = discount;
+			found.price = +price;
+		}
+		document.getElementById('close_modal')?.click();
+	}
 </script>
 
 <div class="row g-1 w-100">
@@ -76,7 +90,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each product_order as form}
+						{#each product_order as form (form.id)}
 							<tr>
 								<td>
 									<div>
@@ -98,19 +112,17 @@
 								<td>
 									<input
 										onchange={(e) => {
-											addProduct({
-												id: form.id,
-												name: form.name,
-												price: form.price,
-												qty: Number(e.currentTarget.value),
-												total: form.price,
-												discount: null,
-												unit_id: form.unit_id
-											});
+											const value = +e.currentTarget.value as number;
+											const found = product_order.find((e) => e.id === form.id);
+											if (found) {
+												found.qty = Number(value);
+												found.total = +(+value * form.price).toFixed(2);
+											}
 										}}
 										class="form-control py-1"
 										style="width: 60px;"
 										type="number"
+										min="1"
 										value={form.qty}
 									/>
 								</td>
@@ -130,7 +142,9 @@
 				<div class=" border-0 bg-primary-subtle mb-2 w-100">
 					<div class="row">
 						<div class="col text-start mx-2">សរុប</div>
-						<div class="col text-end mx-2">$ 1</div>
+						<div class="col text-end mx-2">
+							$ {product_order.reduce((s, e) => s + Number(e.total || 0), 0)}
+						</div>
 					</div>
 				</div>
 
@@ -218,7 +232,13 @@
 				<h1 class="modal-title fs-5 text-truncate" id="exampleModalLabel">
 					{product_order.find((e) => e.id === product_order_id)?.name}
 				</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button
+					id="close_modal"
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
 			</div>
 			<div class="modal-body">
 				<div class="input-group pb-2">
@@ -236,25 +256,45 @@
 						}}
 						value={product_order.find((e) => e.id === product_order_id)?.discount}
 						type="text"
-						name=""
+						name="discount"
 						step="any"
+			
 						class="form-control"
-						id=""
+						id={`discount${product_order_id}`}
 					/>
 				</div>
 				<div class="input-group pb-2">
 					<label style="width: 120px;" for="" class="input-group-text">ខ្នាត</label>
-					<input value={product_order.find((e) => e.id === product_order_id)?.qty} type="number" name="" step="any" class="form-control" id="" />
+					<input
+						value={product_order.find((e) => e.id === product_order_id)?.qty}
+						type="number"
+						name="qty"
+						step="any"
+						min="1"
+						class="form-control"
+						id={`qty${product_order_id}`}
+					/>
 				</div>
 				<div class="input-group">
 					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
-					<input value={product_order.find((e) => e.id === product_order_id)?.price} type="number" name="" step="any" class="form-control" id="" />
+					<input
+						value={product_order.find((e) => e.id === product_order_id)?.price}
+						type="number"
+						name="price"
+						step="any"
+						min="1"
+						class="form-control"
+						id={`price${product_order_id}`}
+					/>
 				</div>
 			</div>
-			<div class="modal-footer justify-content-between">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">បិទ</button>
-				<button onclick={() => alert('hayyy')} type="button" class="btn btn-primary"
-					>រក្សាទុក</button
+			<div class="modal-footer float-end">
+				<button
+					onclick={() => {
+						modalDiscount(product_order_id);
+					}}
+					type="button"
+					class="btn btn-primary">រក្សាទុក</button
 				>
 			</div>
 		</div>

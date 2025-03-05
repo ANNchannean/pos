@@ -46,7 +46,6 @@
 		newUrl?.searchParams?.set(name, e);
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
-	$inspect(q)
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
