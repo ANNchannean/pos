@@ -4,6 +4,7 @@
 	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
 	import NoData from '$lib/component/NoData.svelte';
 	import Paginations from '$lib/component/Paginations.svelte';
+	import SelectParam from '$lib/component/SelectParam.svelte';
 	import { store } from '$lib/store/store.svelte';
 	import type { PageServerData } from './$types';
 
@@ -27,21 +28,15 @@
 			<div class="col-auto">
 				<HandleQ q_name="q" />
 			</div>
-			<div class="col-auto">
-				<select name="brand_id" id="brand_id" class="form-control">
-					<option value="">ស្វែងរកតាមប្រេនទំនិញ</option>
-					{#each get_brands as item}
-						<option value={item.id}>{item.name}</option>
-					{/each}
-				</select>
+			<div style="width: 300px;" class="col-auto">
+				<SelectParam placeholder="ស្វែងរកតាមប្រេនទំនិញ" name="brand_id" items={get_brands} />
 			</div>
-			<div class="col-auto">
-				<select name="category_id" id="category_id" class="form-control">
-					<option value="">ស្វែងរកតាមប្រភេទទំនិញ</option>
-					{#each get_categories as item}
-						<option value={item.id}>{item.name}</option>
-					{/each}
-				</select>
+			<div style="width: 300px;" class="col-auto">
+				<SelectParam
+					placeholder="ស្វែងរកតាមប្រភេទទំនិញ"
+					name="category_id"
+					items={get_categories}
+				/>
 			</div>
 			<div class="col-auto">
 				<a href="/dash/product/create" class="btn btn-warning">បង្កើតថ្មី</a>
@@ -70,7 +65,12 @@
 				<tr>
 					<td>{n + index}</td>
 					<td>
-						<img class="img-thumbnail" style="height: 50px;" src={item.image ? `/uploads/${item.image}` : `/no-image.png`} alt="" />
+						<img
+							class="img-thumbnail"
+							style="height: 50px;"
+							src={item.image ? `/uploads/${item.image}` : `/no-image.png`}
+							alt=""
+						/>
 					</td>
 					<td>
 						<div class="text-truncate" style="width: 20rem;">

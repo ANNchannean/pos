@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Barcode from '$lib/component/Barcode.svelte';
 	import type { PageData } from './$types';
 	import QRCode from 'qrcode';
 	let { data }: { data: PageData } = $props();
@@ -16,3 +17,4 @@
 <h1>hello world</h1>
 <button onclick={async () => (qr = await generateQR('1334'))} class="btn btn-primary">Test</button>
 <img src={qr} alt="" />
+<Barcode text='114dsfs' />

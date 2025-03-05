@@ -8,11 +8,18 @@
 		placeholder?: string;
 		height?: string;
 		q_name?: string;
+		value?: string | number | null;
 	}
-	let { items, name = '', placeholder = 'Select', q_name = '', height = '300' }: Props = $props();
+	let {
+		items,
+		name = '',
+		placeholder = 'Select',
+		q_name = '',
+		height = '300',
+		value = $bindable('')
+	}: Props = $props();
 	let timeout: number | NodeJS.Timeout;
 	let q = $state('');
-	let value = $state('');
 	const handleQ: EventHandler<Event, HTMLInputElement> = ({ currentTarget }) => {
 		clearTimeout(timeout);
 		if (!value) q = '';
@@ -22,7 +29,7 @@
 				newUrl?.searchParams?.set(q_name, currentTarget?.value);
 				goto(newUrl, { keepFocus: true, noScroll: true });
 			} else {
-				q = value;
+				q = currentTarget.value
 			}
 		}, 400);
 	};
@@ -39,6 +46,7 @@
 		newUrl?.searchParams?.set(name, e);
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
+	$inspect(q)
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->

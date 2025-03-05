@@ -1,13 +1,14 @@
 import { db } from '$lib/server/db';
 import type { Actions, PageServerLoad } from './$types';
 import { exspend, inventory, product } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 import { fail, redirect } from '@sveltejs/kit';
 import { localFormat } from '$lib/client/helper';
 
 
 // រុញទិន្នន័យទៅ Client  តាមរយៈ Load Function 
 export const load = (async ({ url }) => {
+	const q = url.searchParams.get('q') || '';
 	const product_id = url.searchParams.get('product_id') || '';
 	const inventory_id = url.searchParams.get('inventory_id') || '';
 	const exspend_id = url.searchParams.get('exspend_id') || '';
@@ -15,7 +16,8 @@ export const load = (async ({ url }) => {
 		where: eq(inventory.id, +inventory_id)
 	})
 	const get_products = await db.query.product.findMany({
-
+		where: like(product.name, `%${q}%`),
+		limit:200
 	});
 	const get_product = await db.query.product.findFirst({
 		where: eq(product.id, Number(product_id)),

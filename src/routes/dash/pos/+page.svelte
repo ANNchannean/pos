@@ -13,8 +13,7 @@
 		qty: number;
 		total: number;
 		unit_id: number;
-		dis_value: string | null;
-		dis_pecent: number | null;
+		discount: string | null;
 	}
 	let { data }: { data: PageServerData } = $props();
 	let { get_customers, get_products, get_brands, get_categories } = $derived(data);
@@ -22,32 +21,29 @@
 	let q_customers = $derived(
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
 	);
-	let form_pos: TForm[] = $state([]);
+	let product_order_id = $state(0);
+
+	let product_order: TForm[] = $state([]);
 	export const snapshot: Snapshot<TForm[]> = {
-		capture: () => form_pos,
-		restore: (value) => (form_pos = value)
+		capture: () => product_order,
+		restore: (value) => (product_order = value)
 	};
-	function alertDiscount() {
-		let value = prompt('Please enter your name', '');
-		let ps = prompt('Please enter your name', '');
-		let person = prompt('Please enter your name', '');
-	}
 	function addProduct(para: TForm) {
 		// ប្រសិនបើមានទំនិញបានបញ្ជូលរូចត្រូវបូកបន្ថែម ១
-		if (form_pos.some((e) => e.id === para.id)) {
+		if (product_order.some((e) => e.id === para.id)) {
 			// Function ស្វែងរកទំនិញដែលមានហើយបូក ១បន្ថែម
-			let obj = form_pos.find((obj) => obj.id === para.id);
+			let obj = product_order.find((obj) => obj.id === para.id);
 			if (obj) {
 				obj.qty = obj.qty + 1;
 				obj.total = +((obj.qty + 1) * obj.price).toFixed(2);
 			}
-			// modify ទិន្ន័យ form_pos
-			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ form_pos
+			// modify ទិន្ន័យ product_order
+			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ product_order
 			return;
 		}
-		form_pos.push(para);
+		product_order.push(para);
 	}
-	let total = $derived(form_pos?.reduce((s, e) => s + +e.total, 0).toFixed(2));
+	let total = $derived(product_order?.reduce((s, e) => s + +e.total, 0).toFixed(2));
 	let innerHeight = $derived(window.innerHeight);
 </script>
 
@@ -80,13 +76,19 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each form_pos as form}
+						{#each product_order as form}
 							<tr>
 								<td>
 									<div>
+										<!-- Button trigger modal -->
 										<button
-											onclick={alertDiscount}
-											class="btn btn-link text-start text-decoration-none"
+											onclick={() => {
+												product_order_id = form.id;
+											}}
+											type="button"
+											class="btn btn-link my-0 py-0 text-start text-decoration-none"
+											data-bs-toggle="modal"
+											data-bs-target="#exampleModal"
 										>
 											{form.name}
 										</button>
@@ -102,8 +104,7 @@
 												price: form.price,
 												qty: Number(e.currentTarget.value),
 												total: form.price,
-												dis_value: null,
-												dis_pecent: null,
+												discount: null,
 												unit_id: form.unit_id
 											});
 										}}
@@ -188,8 +189,7 @@
 												price: product.price,
 												qty: 1,
 												total: product.price,
-												dis_value: null,
-												dis_pecent: null,
+												discount: null,
 												unit_id: product.unit_id
 											})}
 										class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
@@ -199,6 +199,63 @@
 						</div>
 					{/each}
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="exampleModal"
+	tabindex="-1"
+	aria-labelledby="exampleModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5 text-truncate" id="exampleModalLabel">
+					{product_order.find((e) => e.id === product_order_id)?.name}
+				</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="input-group pb-2">
+					<label style="width: 120px;" for="" class="input-group-text">បញ្ចុះតម្លៃ</label>
+					<input
+						oninput={(e) => {
+							const value = e.currentTarget.value || '';
+							if (!isNaN(+value)) {
+							} else {
+								if (!value.includes('%')) {
+									e.currentTarget.value = value.slice(0, value.length - 1);
+									alert('ទិន្ន័យត្រូវតែជាលេខឫមានសញ្ញា % នៅខាងក្រោយ');
+								}
+							}
+						}}
+						value={product_order.find((e) => e.id === product_order_id)?.discount}
+						type="text"
+						name=""
+						step="any"
+						class="form-control"
+						id=""
+					/>
+				</div>
+				<div class="input-group pb-2">
+					<label style="width: 120px;" for="" class="input-group-text">ខ្នាត</label>
+					<input value={product_order.find((e) => e.id === product_order_id)?.qty} type="number" name="" step="any" class="form-control" id="" />
+				</div>
+				<div class="input-group">
+					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
+					<input value={product_order.find((e) => e.id === product_order_id)?.price} type="number" name="" step="any" class="form-control" id="" />
+				</div>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">បិទ</button>
+				<button onclick={() => alert('hayyy')} type="button" class="btn btn-primary"
+					>រក្សាទុក</button
+				>
 			</div>
 		</div>
 	</div>

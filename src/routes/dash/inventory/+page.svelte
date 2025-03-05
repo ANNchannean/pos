@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import Form from '$lib/component/Form.svelte';
+	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_products, get_exspend, get_inventory } = $derived(data);
@@ -19,7 +20,14 @@
 	<div class="col-md-12">
 		<div class="mb-2">
 			<label for="product_id" class="form-label">ឈ្មោះផលិតផល</label>
-			<select
+			<SelectParam
+				q_name="q"
+				value={product_id}
+				name="product_id"
+				placeholder="ស្វែងរកឈ្មោះផលិតផល"
+				items={get_products.map((e) => ({ id: e.id, name: e.name }))}
+			/>
+			<!-- <select
 				disabled={inventory_id ? true : false}
 				name="product_id"
 				id="product_id"
@@ -30,7 +38,7 @@
 						>{item?.name ?? ''}</option
 					>
 				{/each}
-			</select>
+			</select> -->
 		</div>
 	</div>
 </form>
@@ -144,7 +152,10 @@
 							<a
 								href="/dash/inventory?inventory_id={inventory_id !== inventory.id
 									? inventory.id
-									: ''}&exspend_id={inventory.exspend_id}&product_id={inventory.product_id}"
+									: ''}&exspend_id={inventory.exspend_id}&product_id={inventory.product_id !==
+								product_id
+									? inventory.product_id
+									: ''}"
 								class:active={inventory_id === inventory.id}
 								class="btn btn-outline-warning"><i class="fa-solid fa-edit"></i> កែសម្រួល</a
 							>

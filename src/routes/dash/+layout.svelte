@@ -19,7 +19,6 @@
 		store.inerHight = (window.innerHeight - 180).toString().concat('px');
 	});
 </script>
-
 <nav class="navbar navbar-default sticky-top navbar-expand-lg bg-body-tertiary">
 	<div class="container">
 		<!-- <a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a> -->

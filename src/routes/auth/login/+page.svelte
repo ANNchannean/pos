@@ -43,8 +43,7 @@
 				</div>
 				<span class="text-danger p-2">
 					{form?.message}
-					{form?.password}
-					{form?.username}
+					
 				</span>
 				<div class="">
 					<button class="btn btn-warning float-end btn-block"
