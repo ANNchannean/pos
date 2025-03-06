@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
+	import Form from '$lib/component/Form.svelte';
 	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
 	import NoData from '$lib/component/NoData.svelte';
 	import Select from '$lib/component/Select.svelte';
@@ -11,6 +12,7 @@
 		name: string;
 		price: number;
 		qty: number;
+		amount: number;
 		total: number;
 		unit_id: number;
 		discount: string | null;
@@ -35,7 +37,10 @@
 			let obj = product_order.find((obj) => obj.id === para.id);
 			if (obj) {
 				obj.qty = obj.qty + 1;
-				obj.total = +(obj.qty * obj.price).toFixed(2);
+				obj.amount = +(obj.qty * obj.price).toFixed();
+				obj.total = obj.discount
+					? +Number(calulatorDiscount(obj.qty, obj.price, obj.discount)).toFixed(2)
+					: obj.amount;
 			}
 			// modify ទិន្ន័យ product_order
 			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ product_order
@@ -43,7 +48,6 @@
 			product_order.push(para);
 		}
 	}
-	let total = $derived(product_order?.reduce((s, e) => s + +e.total, 0).toFixed(2));
 	let innerHeight = $derived(window.innerHeight);
 	function modalDiscount(product_order_id: number) {
 		const discount = (document.getElementById(`discount${product_order_id}`) as HTMLInputElement)
@@ -53,16 +57,38 @@
 		const found = product_order.find((e) => e.id === product_order_id);
 		if (found) {
 			found.qty = Number(qty);
-			found.total = +(+qty * +price).toFixed(2);
+			found.amount = +(+qty * +price).toFixed(2);
 			found.discount = discount;
-			found.price = +price;
+			found.price = +Number(price).toFixed(2);
+			found.total = discount
+				? +Number(calulatorDiscount(+qty, +price, discount)).toFixed(2)
+				: +found.amount.toFixed(2);
 		}
 		document.getElementById('close_modal')?.click();
 	}
+	function calulatorDiscount(qty: number, price: number, discount: string) {
+		if (!qty || !price || !discount) return 0;
+		const total = qty * price;
+		if (discount.includes('%')) {
+			return (total - +(total * (Number(discount.replace('%', '')) / 100))).toFixed(2);
+		} else {
+			return +(qty * price - Number(discount) * qty).toFixed(2);
+		}
+	}
+	let total_amount = $derived(
+		product_order.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
+	);
+	let plan_input_amount = $state(0);
+	$effect(() => {
+		if (total_amount) {
+			plan_input_amount = +total_amount;
+		}
+	});
+	let total_billing_amount = $derived((+total_amount - plan_input_amount).toFixed(2));
 </script>
 
 <div class="row g-1 w-100">
-	<div class="col-md-4">
+	<div class="col-md-5">
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
 				<div class="input-group mb-1">
@@ -83,10 +109,11 @@
 				<table class="table table-sm">
 					<thead class="table-active table-bordered">
 						<tr>
-							<td style="width: 50%;">ផលិតផល់</td>
+							<td style="width: 40%;">ផលិតផល់</td>
 							<td style="width: 20$;">តម្លៃ</td>
 							<td style="width: 10$;">ចំនួន</td>
 							<td style="width: 20$;">សរុប</td>
+							<td></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -102,7 +129,7 @@
 											type="button"
 											class="btn btn-link my-0 py-0 text-start text-decoration-none"
 											data-bs-toggle="modal"
-											data-bs-target="#exampleModal"
+											data-bs-target="#discountModal"
 										>
 											{form.name}
 										</button>
@@ -116,7 +143,12 @@
 											const found = product_order.find((e) => e.id === form.id);
 											if (found) {
 												found.qty = Number(value);
-												found.total = +(+value * form.price).toFixed(2);
+												found.amount = +(+value * form.price);
+												found.total = found.discount
+													? +Number(
+															calulatorDiscount(found.qty, found.price, found.discount)
+														).toFixed(2)
+													: found.amount;
 											}
 										}}
 										class="form-control py-1"
@@ -127,6 +159,17 @@
 									/>
 								</td>
 								<td>$ {form.total}</td>
+								<td>
+									<button
+										onclick={() => {
+											product_order = product_order.filter((e) => e.id !== form.id);
+										}}
+										aria-label="delete"
+										class="btn btn-link text-decoration-none text-danger"
+									>
+										<i class="fa-solid fa-trash"></i>
+									</button>
+								</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -135,15 +178,15 @@
 			<div class="card-footer">
 				<div class=" border-0 bg-primary-subtle mb-1 w-100">
 					<div class="row">
-						<div class="col text-start mx-2">បញ្ចុះតម្លៃ</div>
-						<div class="col text-end mx-2">12$</div>
+						<div class="col text-start mx-2">សរុបទំនិញ</div>
+						<div class="col text-end mx-2">{product_order.length} មុខ</div>
 					</div>
 				</div>
 				<div class=" border-0 bg-primary-subtle mb-2 w-100">
 					<div class="row">
-						<div class="col text-start mx-2">សរុប</div>
+						<div class="col text-start mx-2">សរុបតម្លៃ</div>
 						<div class="col text-end mx-2">
-							$ {product_order.reduce((s, e) => s + Number(e.total || 0), 0)}
+							$ {total_amount}
 						</div>
 					</div>
 				</div>
@@ -151,7 +194,11 @@
 				<div class="row g-2">
 					<div class="col-md-4">
 						<button class="border-0 py-2 text-bg-warning h-50 w-100">រក្សាទុក</button>
-						<button class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button>
+						<button
+							onclick={() =>
+								confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (product_order = []) : undefined}
+							class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button
+						>
 					</div>
 					<div class="col-md-4">
 						<button class="border-0 py-2 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
@@ -159,13 +206,17 @@
 					</div>
 
 					<div class="col-md-4">
-						<button class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button>
+						<button
+							data-bs-toggle="modal"
+							data-bs-target="#billingModal"
+							class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button
+						>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-7">
 		<div class="card rounded-0">
 			<div class="card-header">
 				<HeaderQuery>
@@ -203,6 +254,7 @@
 												price: product.price,
 												qty: 1,
 												total: product.price,
+												amount: product.price,
 												discount: null,
 												unit_id: product.unit_id
 											})}
@@ -218,10 +270,10 @@
 	</div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Discount -->
 <div
 	class="modal fade"
-	id="exampleModal"
+	id="discountModal"
 	tabindex="-1"
 	aria-labelledby="exampleModalLabel"
 	aria-hidden="true"
@@ -257,8 +309,6 @@
 						value={product_order.find((e) => e.id === product_order_id)?.discount}
 						type="text"
 						name="discount"
-						step="any"
-			
 						class="form-control"
 						id={`discount${product_order_id}`}
 					/>
@@ -269,7 +319,7 @@
 						value={product_order.find((e) => e.id === product_order_id)?.qty}
 						type="number"
 						name="qty"
-						step="any"
+						step="0.25"
 						min="1"
 						class="form-control"
 						id={`qty${product_order_id}`}
@@ -281,7 +331,7 @@
 						value={product_order.find((e) => e.id === product_order_id)?.price}
 						type="number"
 						name="price"
-						step="any"
+						step="0.25"
 						min="1"
 						class="form-control"
 						id={`price${product_order_id}`}
@@ -297,6 +347,121 @@
 					class="btn btn-primary">រក្សាទុក</button
 				>
 			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal Billing -->
+<div
+	class="modal fade"
+	id="billingModal"
+	tabindex="-1"
+	aria-labelledby="exampleModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title">
+					<h1 class="my-0 py-0 text-truncate text-warning"><i class="fa-solid fa-receipt"></i> ពត៌មានការទូទាត់ប្រាក់</h1>
+				</div>
+				<button
+					id="close_modal_billing"
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<Form fnSuccess={() => {
+				document.getElementById('close_modal_billing')?.click()
+				product_order = []
+			} } action="?/pos" method="post">
+				<input type="hidden" name="return_or_balance" value={total_billing_amount} />
+				{#each product_order as item (item.id)}
+					<input type="hidden" name="product_id" value={item.id} />
+					<input type="hidden" name="discount" value={item.discount} />
+					<input type="hidden" name="qty" value={item.qty} />
+					<input type="hidden" name="price" value={item.price} />
+					<input type="hidden" name="total" value={item.total} />
+					<input type="hidden" name="unit_id" value={item.unit_id} />
+					<input type="hidden" name="amount" value={item.amount} />
+				{/each}
+				<div class="modal-body">
+					<div>
+						<table class="table table-primary">
+							<tbody>
+								<tr>
+									<td>ឈ្មោះអតិថិជន</td>
+									<td>:</td>
+									<td> General </td>
+								</tr>
+								<tr>
+									<td>សរុបទំនិញ</td>
+									<td>:</td>
+									<td>
+										{product_order.length} មុខ
+									</td>
+								</tr>
+								<tr>
+									<td>សរុបតម្លៃ</td>
+									<td>:</td>
+									<td>
+										$ {total_amount}
+									</td>
+								</tr>
+								<tr>
+									<td>ប្រាក់អាប់ឫជំពាក់</td>
+									<td>:</td>
+									<td>
+										{#if +total_billing_amount < 0}
+											<span class="text-success">
+												"ប្រាក់អាប់" $ {total_billing_amount.toString().replace('-', '')}
+											</span>
+										{/if}
+										{#if +total_billing_amount > 0}
+											<span class="text-danger">
+												"ប្រាក់ជំពាក់" $ {total_billing_amount}
+											</span>
+										{/if}
+										{#if +total_billing_amount === 0}
+											<span class="text-primary"> "គ្មានប្រាក់អាប់ឫជំពាក់" </span>
+										{/if}
+										<!-- {plan_input_amount} -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="input-group pb-2">
+						<label for="total_amount" class="input-group-text">សរុបតម្លៃ</label>
+						<input
+							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
+							class="form-control"
+							value={total_amount}
+							type="number"
+							step="any"
+							name="total_amount"
+							id="total_amount"
+						/>
+						<label for="total_amount" class="input-group-text">$</label>
+					</div>
+					<div>
+						<textarea
+							placeholder="ចំណាំលើការទូទាត់ប្រាក់"
+							class="form-control"
+							name="billing_note"
+							id="billing_note"
+						></textarea>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button disabled={!product_order.length} type="submit" class="btn btn-warning"
+						><i class="fa-solid fa-comments-dollar"></i> គិតប្រាក់</button
+					>
+				</div>
+			</Form>
 		</div>
 	</div>
 </div>

@@ -89,9 +89,9 @@ export const productOrder = t.mysqlTable('product_order', {
 	quantity: t.int().notNull().default(1),
 	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	disc_value: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
-	invoice_id: t.int().references(() => invoice.id).notNull(),
-	disc_pecent: t.int(),
+	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	discount: t.varchar({ length: 20 }),
+	invoice_id: t.int().references(() => invoice.id, { onDelete: 'cascade', onUpdate: 'cascade' }).notNull(),
 });
 export const productOrderRelations = relations(productOrder, ({ one }) => ({
 	product: one(product, {
@@ -113,12 +113,12 @@ export const invoice = t.mysqlTable('invoice', {
 	customer_id: t.int().references(() => customer.id),
 	status: t.varchar({ length: 20 }).notNull().default('pending').$type<'paid' | "pending" | "partial">(),
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
-	disc_value: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
-	disc_pecent: t.int(),
+	discount: t.varchar({ length: 20 }),
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	amount_paid: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	return: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	created_at: t.datetime({ mode: 'string' }).notNull(),
+	note: t.text()
 });
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
