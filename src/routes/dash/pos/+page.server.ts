@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import {  invoice, product, productOrder } from '$lib/server/db/schema';
+import { invoice, product, productOrder } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { localFormat } from '$lib/client/helper';

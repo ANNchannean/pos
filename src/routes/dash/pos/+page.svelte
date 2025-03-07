@@ -434,7 +434,20 @@
 					</div>
 
 					<div class="input-group pb-2">
-						<label for="total_amount" class="input-group-text">សរុបតម្លៃ</label>
+						<label for="total_amount" class="input-group-text">បញ្ជុះតម្លៃ</label>
+						<input
+							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
+							class="form-control"
+							value={total_amount}
+							type="number"
+							step="any"
+							name="total_amount"
+							id="total_amount"
+						/>
+						<label for="total_amount" class="input-group-text">$</label>
+					</div>
+					<div class="input-group pb-2">
+						<label for="total_amount" class="input-group-text">ប្រាក់ទទួល</label>
 						<input
 							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
 							class="form-control"
