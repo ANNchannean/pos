@@ -19,6 +19,7 @@
 		store.inerHight = (window.innerHeight - 180).toString().concat('px');
 	});
 </script>
+
 <nav class="navbar navbar-default sticky-top navbar-expand-lg bg-body-tertiary">
 	<div class="container">
 		<!-- <a class="navbar-brand" href="/dash"><i class="fa-solid fa-house"></i> ទំព័រដើម </a> -->
@@ -49,7 +50,35 @@
 					</a>
 				</li>
 
-				<li  class="nav-item dropdown">
+				<li class="nav-item dropdown">
+					<a
+						class:text-warning={page.url.pathname.includes('/dash/report/')}
+						class="nav-link dropdown-toggle"
+						href={'#'}
+						role="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+						<i class="fa-solid fa-stapler"></i> របាយការណ៌
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/report/sale')}
+								href="/dash/report/sale"><i class="fa-solid fa-file-invoice-dollar"></i> លក់</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/report/dept')}
+								href="/dash/report/dept"><i class="fa-solid fa-money-bill-transfer"></i> ជំពាក់</a
+							>
+						</li>
+					</ul>
+				</li>
+				<li class="nav-item dropdown">
 					<a
 						class:text-warning={page.url.pathname.includes('/dash/product') ||
 							page.url.pathname.includes('/dash/brand') ||
@@ -63,7 +92,7 @@
 					>
 						<i class="fa-solid fa-folder-tree"></i> សារពើភ័ណ្ឌ
 					</a>
-					<ul  class="dropdown-menu">
+					<ul class="dropdown-menu">
 						<li>
 							<a
 								class="dropdown-item"

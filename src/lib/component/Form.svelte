@@ -47,6 +47,12 @@
 			return async ({ update, result }) => {
 				await update({ reset: reset });
 				loading = false;
+				if (result.type === 'failure') {
+					fnError?.();
+				}
+				if (result.type === 'success' || result.type === 'redirect') {
+					fnSuccess?.();
+				}
 				if (showToast) {
 					if (result.type === 'failure') {
 						new bs5.Toast({
@@ -55,7 +61,6 @@
 							btnCloseWhite: true,
 							margin: '60px'
 						}).show();
-						fnError?.();
 					}
 					if (result.type === 'success' || result.type === 'redirect') {
 						new bs5.Toast({
@@ -64,7 +69,6 @@
 							btnCloseWhite: true,
 							margin: '60px'
 						}).show();
-						fnSuccess?.();
 					}
 				}
 			};

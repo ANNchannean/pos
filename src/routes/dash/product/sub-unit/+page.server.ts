@@ -40,7 +40,7 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	add_sub_unit: async ({ request }) => {
 		const body = await request.formData();
-		const { product_id, unit_id, qty_per_unit, sub_unit_id } = Object.fromEntries(body) as Record<string, string>;
+		const { product_id, unit_id, qty_per_unit, sub_unit_id ,price} = Object.fromEntries(body) as Record<string, string>;
 
 		const get_product = await db.query.product.findFirst({
 			where: eq(product.id, +product_id),
@@ -59,6 +59,7 @@ export const actions: Actions = {
 			await db.insert(subUnit).values({
 				unit_id: +unit_id,
 				product_id: +product_id,
+				price:+price,
 				qty_per_unit: +qty_per_unit
 			})
 		}
@@ -66,6 +67,7 @@ export const actions: Actions = {
 			await db.update(subUnit).set({
 				unit_id: +unit_id,
 				product_id: +product_id,
+				price:+price,
 				qty_per_unit: +qty_per_unit
 			}).where(eq(subUnit.id, +sub_unit_id))
 		}

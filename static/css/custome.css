@@ -1,32 +1,6 @@
-/* Custom Button Colors */
-
-/* input:user-invalid {
-  box-shadow: 0px 0px 0px 1px #ff0000;
-  -webkit-transition: none;
-  -moz-transition: none;
-  transition: none;
-} */
-/* input[type="date"],
-input[type="datetime-local"],
-input[type="datetime"],
-input[type="time"]  {
-  position: relative;
+.btn,.form-control,.input-group ,.input-group-text ,.card,.table,.modal-content,.alert{
+	border-radius: 3px;
 }
-
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="datetime"]::-webkit-calendar-picker-indicator,
-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: auto;
-  height: auto;
-  color: transparent;
-  background: transparent; 
-} */
 
 
 .form-control:focus,
@@ -71,7 +45,7 @@ input[type='checkbox'] {
 	src: url(/font/KantumruyPro-VariableFont_wght.ttf);
 }
 
-/* @font-face {
+@font-face {
     font-family: 'KhmerOSBattambang';
     src: url(/font/Kh-Battambang.ttf);
 }
@@ -89,7 +63,7 @@ input[type='checkbox'] {
 @font-face {
     font-family: 'KhmerOSMuol';
     src: url(/font/KhmerOSmuol.ttf);
-} */
+}
 
 * {
 	font-family: 'Kantumruy', serif;

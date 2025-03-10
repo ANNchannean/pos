@@ -9,6 +9,18 @@ export const user = t.mysqlTable('user', {
 	role: t.varchar({ length: 20 }).notNull().default('admin').$type<'user' | 'admin' | 'cashier'>(),
 	created_at: t.datetime(),
 });
+export const companyInfo = t.mysqlTable('company_info', {
+	id: t.int().primaryKey().autoincrement(),
+	name_khmer: t.varchar({ length: 255 }).notNull(),
+	name_english: t.varchar({ length: 255 }).notNull(),
+	address: t.varchar({ length: 255 }),
+	contact: t.varchar({ length: 255 }),
+	description:t.text(),
+	logo: t.varchar({ length: 255 }),
+	qr: t.varchar({ length: 255 }),
+	note: t.text(),
+	created_at: t.datetime({ mode: 'string' }).notNull(),
+});
 
 export const session = t.mysqlTable('session', {
 	id: t.varchar({ length: 255 }).primaryKey(),
@@ -93,6 +105,8 @@ export const productOrder = t.mysqlTable('product_order', {
 	discount: t.varchar({ length: 20 }),
 	invoice_id: t.int().references(() => invoice.id, { onDelete: 'cascade', onUpdate: 'cascade' }).notNull(),
 });
+
+export type ProductOrder = typeof productOrder.$inferSelect;
 export const productOrderRelations = relations(productOrder, ({ one }) => ({
 	product: one(product, {
 		references: [product.id],
@@ -111,19 +125,23 @@ export const productOrderRelations = relations(productOrder, ({ one }) => ({
 export const invoice = t.mysqlTable('invoice', {
 	id: t.int().primaryKey().autoincrement(),
 	customer_id: t.int().references(() => customer.id),
-	status: t.varchar({ length: 20 }).notNull().default('pending').$type<'paid' | "pending" | "partial">(),
+	status: t.varchar({ length: 20 }).notNull().default('pending').$type<'paid' | "debt">(),
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	discount: t.varchar({ length: 20 }),
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	amount_paid: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
-	return: t.decimal({ precision: 10, scale: 2 }).$type<number>(),
 	created_at: t.datetime({ mode: 'string' }).notNull(),
+	seller_id: t.varchar({ length: 255 }).references(() => user.id).notNull(),
 	note: t.text()
 });
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
 		references: [customer.id],
 		fields: [invoice.customer_id]
+	}),
+	seller: one(user, {
+		references: [user.id],
+		fields: [invoice.seller_id]
 	}),
 	productOrders: many(productOrder)
 }));

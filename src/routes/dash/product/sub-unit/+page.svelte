@@ -30,7 +30,7 @@
 					<tr>
 						<td>ខ្នាតលក់រាយ</td>
 						<td>:</td>
-						<td>{get_product?.unit?.name}</td>
+						<td>{get_product?.unit?.name} / $ {get_product?.price}</td>
 					</tr>
 					<tr>
 						<td>ខ្នាតលក់ដុំ</td>
@@ -45,7 +45,7 @@
 												class="btn btn-link"
 											>
 												@ 1 {sub_unit.unit.name} មាន {sub_unit.qty_per_unit}
-												{get_product?.unit.name}
+												{get_product?.unit.name} តម្លៃ $ {sub_unit.price}
 											</a>
 										</div>
 										<div class="col">
@@ -87,6 +87,17 @@
 			value={get_sub_unit?.qty_per_unit}
 			placeholder="ខ្លាតពីតូចទៅធំ​"
 			name="qty_per_unit"
+			type="number"
+			class="form-control"
+		/>
+	</div>
+	<div class="mb-2">
+		<label for="">តម្លៃលក់ដុំ</label>
+		<input
+			value={get_sub_unit?.price}
+			placeholder=""
+			name="price"
+			step="any"
 			type="number"
 			class="form-control"
 		/>

@@ -1,36 +1,41 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import AlertDelete from '$lib/component/AlertDelete.svelte';
+	import { page } from '$app/state';
 	import Form from '$lib/component/Form.svelte';
 	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
-	import NoData from '$lib/component/NoData.svelte';
 	import Select from '$lib/component/Select.svelte';
 	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, Snapshot } from './$types';
-	interface TForm {
-		id: number;
-		name: string;
-		price: number;
-		qty: number;
-		amount: number;
-		total: number;
-		unit_id: number;
-		discount: string | null;
-	}
+	import { store, type ProductOrder } from '$lib/store/store.svelte';
 	let { data }: { data: PageServerData } = $props();
-	let { get_customers, get_products, get_brands, get_categories } = $derived(data);
+	let { get_customers, get_products, get_brands, get_categories, get_invoice } = $derived(data);
 	let q = $state('');
 	let q_customers = $derived(
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
 	);
 	let product_order_id = $state(0);
-
-	let product_order: TForm[] = $state([]);
-	export const snapshot: Snapshot<TForm[]> = {
+	let get_product = $derived(get_products.find((e) => e.id === product_order_id));
+	let product_order: ProductOrder[] = $state(store.productOrders);
+	$effect(() => {
+		if (get_invoice) {
+			product_order = get_invoice.productOrders.map((e) => ({
+				id: e.product.id,
+				name: e.product.name,
+				price: e.price,
+				qty: e.quantity,
+				amount: e.amount,
+				total: e.total,
+				unit_id: e.unit_id,
+				discount: e.discount
+			}));
+		} else {
+			product_order = [];
+		}
+	});
+	export const snapshot: Snapshot<ProductOrder[]> = {
 		capture: () => product_order,
 		restore: (value) => (product_order = value)
 	};
-	function addProduct(para: TForm) {
+	function addProduct(para: ProductOrder) {
 		// ប្រសិនបើមានទំនិញបានបញ្ជូលរូចត្រូវបូកបន្ថែម ១
 		if (product_order.some((e) => e.id === para.id)) {
 			// Function ស្វែងរកទំនិញដែលមានហើយបូក ១បន្ថែម
@@ -54,12 +59,15 @@
 			?.value;
 		const price = (document.getElementById(`price${product_order_id}`) as HTMLInputElement)?.value;
 		const qty = (document.getElementById(`qty${product_order_id}`) as HTMLInputElement)?.value;
+		const unit_id = (document.getElementById(`unit_id${product_order_id}`) as HTMLInputElement)
+			?.value;
 		const found = product_order.find((e) => e.id === product_order_id);
 		if (found) {
 			found.qty = Number(qty);
 			found.amount = +(+qty * +price).toFixed(2);
 			found.discount = discount;
 			found.price = +Number(price).toFixed(2);
+			found.unit_id = +unit_id;
 			found.total = discount
 				? +Number(calulatorDiscount(+qty, +price, discount)).toFixed(2)
 				: +found.amount.toFixed(2);
@@ -84,7 +92,11 @@
 			plan_input_amount = +total_amount;
 		}
 	});
-	let total_billing_amount = $derived((+total_amount - plan_input_amount).toFixed(2));
+	let final_discount: string = $state(data.get_invoice?.discount || '');
+	let final_total = $derived(
+		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
+	);
+	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
 </script>
 
 <div class="row g-1 w-100">
@@ -117,7 +129,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each product_order as form (form.id)}
+						{#each product_order as form}
 							<tr>
 								<td>
 									<div>
@@ -176,43 +188,45 @@
 				</table>
 			</div>
 			<div class="card-footer">
-				<div class=" border-0 bg-primary-subtle mb-1 w-100">
-					<div class="row">
-						<div class="col text-start mx-2">សរុបទំនិញ</div>
-						<div class="col text-end mx-2">{product_order.length} មុខ</div>
-					</div>
-				</div>
-				<div class=" border-0 bg-primary-subtle mb-2 w-100">
-					<div class="row">
-						<div class="col text-start mx-2">សរុបតម្លៃ</div>
-						<div class="col text-end mx-2">
-							$ {total_amount}
+				<fieldset disabled={!product_order.length}>
+					<div class=" border-0 bg-primary-subtle mb-1 w-100">
+						<div class="row">
+							<div class="col text-start mx-2">សរុបទំនិញ</div>
+							<div class="col text-end mx-2">{product_order.length} មុខ</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="row g-2">
-					<div class="col-md-4">
-						<button class="border-0 py-2 text-bg-warning h-50 w-100">រក្សាទុក</button>
-						<button
-							onclick={() =>
-								confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (product_order = []) : undefined}
-							class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button
-						>
-					</div>
-					<div class="col-md-4">
-						<button class="border-0 py-2 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
-						<button class="border-0 py-2 text-bg-info h-50 w-100">បោះពុម្ភវិក្កយបត្រ</button>
+					<div class=" border-0 bg-primary-subtle mb-2 w-100">
+						<div class="row">
+							<div class="col text-start mx-2">សរុបតម្លៃ</div>
+							<div class="col text-end mx-2">
+								$ {total_amount}
+							</div>
+						</div>
 					</div>
 
-					<div class="col-md-4">
-						<button
-							data-bs-toggle="modal"
-							data-bs-target="#billingModal"
-							class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button
-						>
+					<div class="row g-2">
+						<div class="col-md-4">
+							<button class="border-0 py-2 text-bg-warning h-50 w-100">រក្សាទុក</button>
+							<button
+								onclick={() =>
+									confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (product_order = []) : undefined}
+								class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button
+							>
+						</div>
+						<div class="col-md-4">
+							<button class="border-0 py-2 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
+							<button class="border-0 py-2 text-bg-info h-50 w-100">បោះពុម្ភវិក្កយបត្រ</button>
+						</div>
+
+						<div class="col-md-4">
+							<button
+								data-bs-toggle="modal"
+								data-bs-target="#billingModal"
+								class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button
+							>
+						</div>
 					</div>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 	</div>
@@ -324,6 +338,42 @@
 						class="form-control"
 						id={`qty${product_order_id}`}
 					/>
+					<select
+						onchange={(e) => {
+							const value = e.currentTarget.value || '';
+							if (get_product?.subUnit.find((e) => e.unit_id === +value)) {
+								const priceElement = document.getElementById(
+									`price${product_order_id}`
+								) as HTMLInputElement | null;
+								if (priceElement) {
+									priceElement.value =
+										get_product?.subUnit.find((e) => e.unit_id === +value)?.price?.toString() ?? '';
+								}
+							} else {
+								const priceElement = document.getElementById(
+									`price${product_order_id}`
+								) as HTMLInputElement | null;
+								if (priceElement) {
+									priceElement.value =
+										get_product?.price.toString() || '';
+								}
+							}
+						}}
+						class="form-control"
+						name="unit_id"
+						id={`unit_id${product_order_id}`}
+					>
+						<option value={get_product?.unit_id}>{get_product?.unit?.name}</option>
+						{#each get_product?.subUnit || [] as item}
+							<option
+								selected={item.unit_id ===
+								product_order?.find((e) => e.id === product_order_id)?.unit_id
+									? true
+									: false}
+								value={item.unit_id}>{item.unit.name}</option
+							>
+						{/each}
+					</select>
 				</div>
 				<div class="input-group">
 					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
@@ -362,7 +412,9 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<div class="modal-title">
-					<h1 class="my-0 py-0 text-truncate text-warning"><i class="fa-solid fa-receipt"></i> ពត៌មានការទូទាត់ប្រាក់</h1>
+					<h1 class="my-0 py-0 text-truncate text-warning">
+						<i class="fa-solid fa-receipt"></i> ពត៌មានការទូទាត់ប្រាក់
+					</h1>
 				</div>
 				<button
 					id="close_modal_billing"
@@ -372,11 +424,19 @@
 					aria-label="Close"
 				></button>
 			</div>
-			<Form fnSuccess={() => {
-				document.getElementById('close_modal_billing')?.click()
-				product_order = []
-			} } action="?/pos" method="post">
+			<Form
+				showToast={false}
+				fnSuccess={() => {
+					document.getElementById('close_modal_billing')?.click();
+					product_order = [];
+				}}
+				action="?/pos"
+				method="post"
+			>
 				<input type="hidden" name="return_or_balance" value={total_billing_amount} />
+				<input type="hidden" name="total_amount" value={total_amount} />
+				<input type="hidden" name="invoice_id" value={page.url.searchParams.get('invoice_id')} />
+				<input type="hidden" name="final_total" value={final_total} />
 				{#each product_order as item (item.id)}
 					<input type="hidden" name="product_id" value={item.id} />
 					<input type="hidden" name="discount" value={item.discount} />
@@ -410,6 +470,13 @@
 									</td>
 								</tr>
 								<tr>
+									<td>បញ្ជុះតម្លៃ</td>
+									<td>:</td>
+									<td>
+										{final_discount} សរុបចុងក្រោយ​ $ {final_total}
+									</td>
+								</tr>
+								<tr>
 									<td>ប្រាក់អាប់ឫជំពាក់</td>
 									<td>:</td>
 									<td>
@@ -434,30 +501,42 @@
 					</div>
 
 					<div class="input-group pb-2">
-						<label for="total_amount" class="input-group-text">បញ្ជុះតម្លៃ</label>
+						<label style="width: 100px;" for="total_amount" class="input-group-text"
+							>បញ្ជុះតម្លៃ</label
+						>
 						<input
-							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
+							oninput={(e) => {
+								const value = e.currentTarget.value || '';
+								if (!isNaN(+value)) {
+								} else {
+									if (!value.includes('%')) {
+										e.currentTarget.value = value.slice(0, value.length - 1);
+										alert('ទិន្ន័យត្រូវតែជាលេខឫមានសញ្ញា % នៅខាងក្រោយ');
+									}
+								}
+							}}
+							bind:value={final_discount}
 							class="form-control"
-							value={total_amount}
-							type="number"
-							step="any"
-							name="total_amount"
-							id="total_amount"
+							type="text"
+							name="final_discount"
+							id="final_discount"
 						/>
-						<label for="total_amount" class="input-group-text">$</label>
+						<label for="final_discount" class="input-group-text">$</label>
 					</div>
 					<div class="input-group pb-2">
-						<label for="total_amount" class="input-group-text">ប្រាក់ទទួល</label>
+						<label style="width: 100px;" for="total_amount" class="input-group-text"
+							>ប្រាក់ទទួល</label
+						>
 						<input
 							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
 							class="form-control"
-							value={total_amount}
+							value={final_total}
 							type="number"
 							step="any"
-							name="total_amount"
-							id="total_amount"
+							name="get_amount"
+							id="get_amount"
 						/>
-						<label for="total_amount" class="input-group-text">$</label>
+						<label for="get_amount" class="input-group-text">$</label>
 					</div>
 					<div>
 						<textarea

@@ -23,7 +23,7 @@
 						cropper.destroy();
 					}
 					cropper = new Cropper(imageElement, {
-						aspectRatio: 4 / 3.2
+						aspectRatio: 4 / 4
 					});
 				}
 			};
