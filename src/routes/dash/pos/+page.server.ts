@@ -132,16 +132,20 @@ export const actions: Actions = {
 				const amount_ = amount[i]?.toString();
 				const product_id_ = product_id[i]?.toString();
 				if (product_id_) continue;
-				if (get_invoice?.productOrders.some((e) => e.product_id === +product_id_)) {
-					await db.update(productOrder).set({
-						product_id: +product_id_,
-						unit_id: +unit_id_,
-						quantity: +qty_,
-						price: +price_,
-						total: +total_,
-						amount: +amount_,
-						discount: discount_
-					});
+				const productOrder_ = get_invoice?.productOrders.find((e) => e.product_id === +product_id_);
+				if (productOrder_?.id) {
+					await db
+						.update(productOrder)
+						.set({
+							product_id: +product_id_,
+							unit_id: +unit_id_,
+							quantity: +qty_,
+							price: +price_,
+							total: +total_,
+							amount: +amount_,
+							discount: discount_
+						})
+						.where(eq(productOrder.id, +productOrder_?.id));
 				} else {
 					await db.insert(productOrder).values({
 						product_id: +product_id_,

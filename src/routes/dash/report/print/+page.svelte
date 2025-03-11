@@ -101,7 +101,7 @@
 						</div>
 					</td>
 					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
-						<div>ប្រាក់សរុប​</div>
+						ប្រាក់សរុប
 					</td>
 					<td class="border border-dark border-1 border border-dark border-1" colspan="1">
 						<div>$ {get_invoice?.amount}</div>
@@ -109,7 +109,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
-						<div>បញ្ចុះតម្លៃ</div>
+						បញ្ចុះតម្លៃ
 					</td>
 					<td class="border border-dark border-1" colspan="1">
 						<div>
@@ -123,10 +123,10 @@
 				</tr>
 				<tr class="border-bottom-0">
 					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
-						<div>សរុបចុងក្រោយ</div>
+						សរុបចុងក្រោយ
 					</td>
 					<td class="border border-dark border-1" colspan="1">
-						<div>$ {get_invoice?.total}</div>
+						$ {get_invoice?.total}
 					</td>
 				</tr>
 				{#if get_invoice?.note}

@@ -129,9 +129,12 @@ export const actions: Actions = {
 				inventory: true
 			}
 		});
-		await db.update(exspend).set({
-			amount: get_exspend?.inventory.reduce((s, e) => s + Number(e.total_expense) || 0, 0)
-		});
+		await db
+			.update(exspend)
+			.set({
+				amount: get_exspend?.inventory.reduce((s, e) => s + Number(e.total_expense) || 0, 0)
+			})
+			.where(eq(exspend.id, +exspend_id));
 	}
 };
 interface TCreateINV {
@@ -181,9 +184,12 @@ async function createInventory(param: TCreateINV) {
 				inventory: true
 			}
 		});
-		await db.update(exspend).set({
-			amount: get_exspend?.inventory.reduce((s, e) => s + Number(e.total_expense) || 0, 0)
-		});
+		await db
+			.update(exspend)
+			.set({
+				amount: get_exspend?.inventory.reduce((s, e) => s + Number(e.total_expense) || 0, 0)
+			})
+			.where(eq(exspend.id, +param.exspend_id));
 	} catch (error) {
 		console.log(error);
 		return fail(400, { serverErr: true });

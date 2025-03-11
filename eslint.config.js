@@ -6,7 +6,7 @@ import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
-
+import drizzle from 'eslint-plugin-drizzle';
 export default ts.config(
 	includeIgnoreFile(gitignorePath),
 	js.configs.recommended,
@@ -23,12 +23,42 @@ export default ts.config(
 		}
 	},
 	{
-		files: ['**/*.svelte'],
+		files: ['**/*.ts'],
+		plugins: {
+			drizzle
+		},
 
+		rules: {
+			'drizzle/enforce-delete-with-where': 'error',
+			'drizzle/enforce-update-with-where': 'error'
+		}
+	},
+	{
+		files: ['**/*.svelte'],
 		languageOptions: {
 			parserOptions: {
 				parser: ts.parser
 			}
+		},
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off',
+			'svelte/no-unused-svelte-ignore': 'off',
+			'@typescript-eslint/no-unused-vars': 'off',
+			'no-undef': 'off',
+			'@typescript-eslint/ban-ts-comment': 'off'
 		}
+	},
+	{
+		ignores: [
+			'build/',
+			'.svelte-kit/',
+			'dist/',
+			'static/',
+			'src/plugins/',
+			'migrations/',
+			'drizzle/',
+			'mysql-data/',
+			'sql-backup/'
+		]
 	}
 );
