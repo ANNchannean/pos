@@ -98,6 +98,10 @@
 					>
 						<div class="text-break text-start fs-6">
 							{get_company?.note}
+							{#if get_invoice?.note}
+								<br />
+								#{get_invoice?.note}
+							{/if}
 						</div>
 					</td>
 					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
@@ -129,11 +133,6 @@
 						$ {get_invoice?.total}
 					</td>
 				</tr>
-				{#if get_invoice?.note}
-					<tr>
-						<td colspan="5">{get_invoice?.note}</td>
-					</tr>
-				{/if}
 			</tbody>
 		</table>
 

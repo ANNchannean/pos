@@ -1,10 +1,11 @@
 import { db } from '$lib/server/db';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, ne } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { invoice } from '$lib/server/db/schema';
 import { pagination, betweenHelper } from '$lib/server/utils';
 import { fail } from '@sveltejs/kit';
 export const load = (async ({ url }) => {
+	const status = url.searchParams.get('status') as 'paid' | 'debt';
 	const seller_id = url.searchParams.get('seller_id') ?? '';
 	const customer_id = url.searchParams.get('customer_id') ?? '';
 	const get_invoices = await db.query.invoice.findMany({
@@ -12,7 +13,8 @@ export const load = (async ({ url }) => {
 			betweenHelper(url, invoice.created_at),
 			customer_id ? eq(invoice.customer_id, +customer_id) : undefined,
 			seller_id ? eq(invoice.seller_id, seller_id) : undefined,
-			eq(invoice.status, 'pending')
+			status ? eq(invoice.status, status) : undefined,
+			ne(invoice.status, 'debt')
 		),
 		with: {
 			customer: true,
@@ -27,7 +29,8 @@ export const load = (async ({ url }) => {
 			betweenHelper(url, invoice.created_at),
 			customer_id ? eq(invoice.customer_id, +customer_id) : undefined,
 			seller_id ? eq(invoice.seller_id, seller_id) : undefined,
-			eq(invoice.status, 'pending')
+			status ? eq(invoice.status, status) : undefined,
+			ne(invoice.status, 'debt')
 		)
 	);
 	return { get_invoices, items: count };

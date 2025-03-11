@@ -9,12 +9,16 @@
 		height?: string;
 		q_name?: string;
 		value?: string | number | null;
+		onclick?: () => void;
+		outside?: boolean;
 	}
 	let {
+		onclick,
+		outside = false,
 		items,
 		name = '',
 		placeholder = 'Select',
-		q_name = '',
+		q_name=$bindable(''),
 		height = '300',
 		value = $bindable('')
 	}: Props = $props();
@@ -56,6 +60,7 @@
 >
 	<input {value} type="hidden" {name} />
 	<button
+		data-bs-auto-close={outside ? 'outside' : 'true'}
 		type="button"
 		onclick={() => (q = '')}
 		class="form-control"
@@ -95,7 +100,11 @@
 						type="button"
 						class:active={item.id === items.find((e) => e.id === value)?.id}
 						onclick={(e) => {
+							if(outside) {
+							q_name = ''
+							}
 							e.preventDefault();
+							onclick?.();
 							value = item.id;
 							pushParam(item.id);
 						}}

@@ -28,7 +28,9 @@ export const load = (async ({ url }) => {
 		and(
 			betweenHelper(url, invoice.created_at),
 			customer_id ? eq(invoice.customer_id, +customer_id) : undefined,
-			seller_id ? eq(invoice.seller_id, seller_id) : undefined
+			seller_id ? eq(invoice.seller_id, seller_id) : undefined,
+			status ? eq(invoice.status, status) : undefined,
+			ne(invoice.status, 'pending')
 		)
 	);
 	return { get_invoices, items: count };

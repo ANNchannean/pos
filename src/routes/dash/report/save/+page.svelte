@@ -14,7 +14,7 @@
 	let n = $state(1);
 </script>
 
-<h4>របាយការណ៌លក់</h4>
+<h4>វិក្កយបត្របានរក្សាទុក</h4>
 <hr />
 <div class="row pb-1">
 	<div class="col-auto">

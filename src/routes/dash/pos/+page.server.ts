@@ -1,15 +1,19 @@
 import { db } from '$lib/server/db';
-import { invoice, product, productOrder } from '$lib/server/db/schema';
-import { and, eq } from 'drizzle-orm';
+import { customer, invoice, product, productOrder } from '$lib/server/db/schema';
+import { and, eq, like } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { localFormat } from '$lib/client/helper';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = (async ({ url }) => {
+	const customer_q = url.searchParams.get('customer_q') || '';
+	const product_q = url.searchParams.get('product_q') || '';
 	const invoice_id = url.searchParams.get('invoice_id') || '';
 	const brand_id = url.searchParams.get('brand_id') || '';
 	const category_id = url.searchParams.get('category_id') || '';
-	const get_customers = await db.query.customer.findMany();
+	const get_customers = await db.query.customer.findMany(({
+		where: like(customer.name, `%${customer_q}%`)
+	}));
 	const get_brands = await db.query.brand.findMany();
 	const get_categories = await db.query.category.findMany();
 	const get_products = await db.query.product.findMany({
@@ -23,7 +27,8 @@ export const load = (async ({ url }) => {
 		},
 		where: and(
 			brand_id ? eq(product.brand_id, +brand_id) : undefined,
-			category_id ? eq(product.category_id, +category_id) : undefined
+			category_id ? eq(product.category_id, +category_id) : undefined,
+			like(product.name, `%${product_q}%`)
 		),
 		limit: 50
 	});
@@ -63,7 +68,6 @@ export const actions: Actions = {
 		const amount = body.getAll('amount');
 		if (!final_total || !seller_id) return fail(400, { validErr: true });
 		// បញ្ជូលទំនិញទៅ ការកុម្មង់
-		console.log(body);
 
 		if (!invoice_id) {
 			const create_invocie = await db

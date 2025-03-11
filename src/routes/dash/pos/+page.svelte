@@ -13,8 +13,8 @@
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
 	);
 	let modal_type: 'pay' | 'save' = $state('pay');
-	let product_order_id = $state(0);
-	let get_product = $derived(get_products.find((e) => e.id === product_order_id));
+	let product_id = $state(0);
+	let get_product = $derived(get_products.find((e) => e.id === product_id));
 	let product_order: ProductOrder[] = $state(store.productOrders);
 	$effect(() => {
 		if (get_invoice) {
@@ -43,7 +43,7 @@
 			let obj = product_order.find((obj) => obj.id === para.id);
 			if (obj) {
 				obj.qty = obj.qty + 1;
-				obj.amount = +(obj.qty * obj.price).toFixed();
+				obj.amount = +(obj.qty * obj.price).toFixed(2);
 				obj.total = obj.discount
 					? +Number(calulatorDiscount(obj.qty, obj.price, obj.discount)).toFixed(2)
 					: obj.amount;
@@ -55,23 +55,21 @@
 		}
 	}
 	let innerHeight = $derived(window.innerHeight);
-	function modalDiscount(product_order_id: number) {
-		const discount = (document.getElementById(`discount${product_order_id}`) as HTMLInputElement)
-			?.value;
-		const price = (document.getElementById(`price${product_order_id}`) as HTMLInputElement)?.value;
-		const qty = (document.getElementById(`qty${product_order_id}`) as HTMLInputElement)?.value;
-		const unit_id = (document.getElementById(`unit_id${product_order_id}`) as HTMLInputElement)
-			?.value;
-		const found = product_order.find((e) => e.id === product_order_id);
+	function modalDiscount(product_id: number) {
+		const discount = (document.getElementById(`discount${product_id}`) as HTMLInputElement)?.value;
+		const price = (document.getElementById(`price${product_id}`) as HTMLInputElement)?.value;
+		const qty = (document.getElementById(`qty${product_id}`) as HTMLInputElement)?.value;
+		const unit_id = (document.getElementById(`unit_id${product_id}`) as HTMLInputElement)?.value;
+		const found = product_order.find((e) => e.id === product_id);
 		if (found) {
 			found.qty = Number(qty);
 			found.amount = +(+qty * +price).toFixed(2);
 			found.discount = discount;
 			found.price = +Number(price).toFixed(2);
 			found.unit_id = +unit_id;
-			found.total = discount
-				? +Number(calulatorDiscount(+qty, +price, discount)).toFixed(2)
-				: +found.amount.toFixed(2);
+			found.total = +(
+				discount ? +Number(calulatorDiscount(+qty, +price, discount)) : +found.amount
+			).toFixed(2);
 		}
 		document.getElementById('close_modal')?.click();
 	}
@@ -108,16 +106,19 @@
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
 				<div class="input-group mb-1">
-					<Select
+					<SelectParam
 						name="customer_id"
-						displayName="ស្វែងរកអតិថិជន"
+						q_name="customer_q"
+						placeholder="ស្វែងរកអតិថិជន"
 						items={get_customers.map((e) => ({ id: e.id, name: e.name }))}
 					/>
 				</div>
 
-				<Select
+				<SelectParam
+					outside={true}
 					name="product_id"
-					displayName="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
+					q_name="product_q"
+					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
 					items={get_products.map((e) => ({ id: e.id, name: e.name }))}
 				/>
 			</div>
@@ -140,7 +141,7 @@
 										<!-- Button trigger modal -->
 										<button
 											onclick={() => {
-												product_order_id = form.id;
+												product_id = form.id;
 											}}
 											type="button"
 											class="btn btn-link my-0 py-0 text-start text-decoration-none"
@@ -159,7 +160,7 @@
 											const found = product_order.find((e) => e.id === form.id);
 											if (found) {
 												found.qty = Number(value);
-												found.amount = +(+value * form.price);
+												found.amount = +(+value * form.price).toFixed(2);
 												found.total = found.discount
 													? +Number(
 															calulatorDiscount(found.qty, found.price, found.discount)
@@ -310,7 +311,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5 text-truncate" id="exampleModalLabel">
-					{product_order.find((e) => e.id === product_order_id)?.name}
+					{product_order.find((e) => e.id === product_id)?.name}
 				</h1>
 				<button
 					id="close_modal"
@@ -334,30 +335,30 @@
 								}
 							}
 						}}
-						value={product_order.find((e) => e.id === product_order_id)?.discount}
+						value={product_order.find((e) => e.id === product_id)?.discount}
 						type="text"
 						name="discount"
 						class="form-control"
-						id={`discount${product_order_id}`}
+						id={`discount${product_id}`}
 					/>
 				</div>
 				<div class="input-group pb-2">
 					<label style="width: 120px;" for="" class="input-group-text">ខ្នាត</label>
 					<input
-						value={product_order.find((e) => e.id === product_order_id)?.qty}
+						value={product_order.find((e) => e.id === product_id)?.qty}
 						type="number"
 						name="qty"
 						step="0.25"
 						min="1"
 						class="form-control"
-						id={`qty${product_order_id}`}
+						id={`qty${product_id}`}
 					/>
 					<select
 						onchange={(e) => {
 							const value = e.currentTarget.value || '';
 							if (get_product?.subUnit.find((e) => e.unit_id === +value)) {
 								const priceElement = document.getElementById(
-									`price${product_order_id}`
+									`price${product_id}`
 								) as HTMLInputElement | null;
 								if (priceElement) {
 									priceElement.value =
@@ -365,7 +366,7 @@
 								}
 							} else {
 								const priceElement = document.getElementById(
-									`price${product_order_id}`
+									`price${product_id}`
 								) as HTMLInputElement | null;
 								if (priceElement) {
 									priceElement.value = get_product?.price.toString() || '';
@@ -374,13 +375,12 @@
 						}}
 						class="form-control"
 						name="unit_id"
-						id={`unit_id${product_order_id}`}
+						id={`unit_id${product_id}`}
 					>
 						<option value={get_product?.unit_id}>{get_product?.unit?.name}</option>
 						{#each get_product?.subUnit || [] as item}
 							<option
-								selected={item.unit_id ===
-								product_order?.find((e) => e.id === product_order_id)?.unit_id
+								selected={item.unit_id === product_order?.find((e) => e.id === product_id)?.unit_id
 									? true
 									: false}
 								value={item.unit_id}>{item.unit.name}</option
@@ -391,20 +391,20 @@
 				<div class="input-group">
 					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
 					<input
-						value={product_order.find((e) => e.id === product_order_id)?.price}
+						value={product_order.find((e) => e.id === product_id)?.price}
 						type="number"
 						name="price"
-						step="0.25"
+						step="any"
 						min="1"
 						class="form-control"
-						id={`price${product_order_id}`}
+						id={`price${product_id}`}
 					/>
 				</div>
 			</div>
 			<div class="modal-footer float-end">
 				<button
 					onclick={() => {
-						modalDiscount(product_order_id);
+						modalDiscount(product_id);
 					}}
 					type="button"
 					class="btn btn-primary"
@@ -570,7 +570,7 @@
 				<div class="modal-footer">
 					<button disabled={!product_order.length} type="submit" class="btn btn-warning">
 						{#if modal_type === 'pay'}
-							<i class="fa-solid fa-comments-dollar"></i> គិតប្រាក់
+							<i class="fa-solid fa-comments-dollar"></i> ទូទាត់ប្រាក់
 						{:else}
 							<i class="fa-solid fa-file-export"></i> រក្សាទុក្ខ
 						{/if}
