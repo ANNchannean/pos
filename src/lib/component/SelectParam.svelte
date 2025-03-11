@@ -18,7 +18,7 @@
 		items,
 		name = '',
 		placeholder = 'Select',
-		q_name=$bindable(''),
+		q_name = $bindable(''),
 		height = '300',
 		value = $bindable('')
 	}: Props = $props();
@@ -29,9 +29,10 @@
 		if (!value) q = '';
 		timeout = setTimeout(() => {
 			if (q_name) {
-				const newUrl = new URL(page.url);
-				newUrl?.searchParams?.set(q_name, currentTarget?.value);
-				goto(newUrl, { keepFocus: true, noScroll: true });
+				// const newUrl = new URL(page.url);
+				// newUrl?.searchParams?.set(q_name, currentTarget?.value);
+				// goto(newUrl, { keepFocus: true, noScroll: true });
+				pushParam(q_name, currentTarget?.value);
 			} else {
 				q = currentTarget.value;
 			}
@@ -45,11 +46,12 @@
 			return items.filter((el) => el.name?.toLowerCase().includes(q.toLowerCase())).slice(0, 200);
 		}
 	});
-	function pushParam(e: string) {
+	function pushParam(name: string, value: string) {
 		const newUrl = new URL(page.url);
-		newUrl?.searchParams?.set(name, e);
+		newUrl?.searchParams?.set(name, value);
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
+	let plan_rest_q = $state('');
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -79,7 +81,7 @@
 				e.stopPropagation();
 				document.getElementById(name)?.focus();
 				value = '';
-				pushParam('');
+				pushParam(q_name, '');
 			}}
 			class="float-end"
 		>
@@ -89,7 +91,14 @@
 
 	<div style="width: 100%;" class="dropdown-menu">
 		<div class="px-2 pb-2">
-			<input id={name} oninput={handleQ} class="form-control" type="search" />
+			<input
+				bind:value={plan_rest_q}
+				id={name}
+				autocomplete="off"
+				oninput={handleQ}
+				class="form-control"
+				type="search"
+			/>
 		</div>
 
 		<div style=" max-height: {height.concat('px')}; overflow-y: auto;">
@@ -100,13 +109,14 @@
 						type="button"
 						class:active={item.id === items.find((e) => e.id === value)?.id}
 						onclick={(e) => {
-							if(outside) {
-							q_name = ''
-							}
 							e.preventDefault();
-							onclick?.();
 							value = item.id;
-							pushParam(item.id);
+							pushParam(name, item.id);
+							if (onclick) {
+								onclick?.();
+								pushParam(q_name, '');
+								plan_rest_q = '';
+							}
 						}}
 						class="dropdown-item"
 					>

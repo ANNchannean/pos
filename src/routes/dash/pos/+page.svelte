@@ -99,6 +99,11 @@
 	function inputValueElement(e: string) {
 		return (document.getElementById(e) as HTMLInputElement)?.value;
 	}
+	$effect(() => {
+		if (page.url.searchParams.get('product_id')) {
+			product_id = Number(page.url.searchParams.get('product_id'));
+		}
+	});
 </script>
 
 <div class="row g-1 w-100">
@@ -113,9 +118,22 @@
 						items={get_customers.map((e) => ({ id: e.id, name: e.name }))}
 					/>
 				</div>
-
 				<SelectParam
 					outside={true}
+					onclick={() => {
+						if (get_product) {
+							addProduct({
+								id: +get_product?.id,
+								name: get_product?.name ?? '',
+								price: +get_product?.price,
+								qty: 1,
+								total: +get_product?.price,
+								amount: +get_product?.price,
+								discount: null,
+								unit_id: +get_product?.unit_id
+							});
+						}
+					}}
 					name="product_id"
 					q_name="product_q"
 					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
