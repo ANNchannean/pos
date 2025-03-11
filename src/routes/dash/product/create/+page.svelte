@@ -64,13 +64,8 @@
 			<div class="mb-2">
 				<label for="condition" class="form-label">ល័ក្ខខ័ណ</label>
 				<select value={get_product?.condition} class="form-control" name="condition" id="condition">
-					<option class="form-control" value="NEW">
-						NEW</option
-					>
-					<option class="form-control" value="SECONDHAND">
-						SECONDHAND</option
-					>
-					
+					<option class="form-control" value="NEW"> NEW</option>
+					<option class="form-control" value="SECONDHAND"> SECONDHAND</option>
 				</select>
 			</div>
 		</div>

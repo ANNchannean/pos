@@ -17,4 +17,4 @@
 <h1>hello world</h1>
 <button onclick={async () => (qr = await generateQR('1334'))} class="btn btn-primary">Test</button>
 <img src={qr} alt="" />
-<Barcode text='114dsfs' />
+<Barcode text="114dsfs" />

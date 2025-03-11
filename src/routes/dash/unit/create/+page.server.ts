@@ -23,9 +23,9 @@ export const actions: Actions = {
 		const { unit_name, unit_id } = Object.fromEntries(body) as Record<string, string>;
 		const valid_unit = await db.query.unit.findFirst({
 			where: eq(unit.name, unit_name)
-		})
+		});
 		if (valid_unit?.name === unit_name) return fail(400, { message: 'ខ្នាតនេះមានរួចហើយ' });
-		if (unit_name === "") return fail(400, { message: 'សូមបំពេញឈ្មោះខ្នាត' });
+		if (unit_name === '') return fail(400, { message: 'សូមបំពេញឈ្មោះខ្នាត' });
 		if (unit_id) {
 			await db
 				.update(unit)
@@ -34,16 +34,18 @@ export const actions: Actions = {
 				})
 				.where(eq(unit.id, Number(unit_id)))
 				.catch((err) => {
-					console.log(err)
-				})
+					console.log(err);
+				});
 		}
 		if (!unit_id) {
-			await db.insert(unit).values({
-				name: unit_name
-			})
-				.catch((err) => {
-					console.log(err)
+			await db
+				.insert(unit)
+				.values({
+					name: unit_name
 				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		redirect(300, '/dash/unit');

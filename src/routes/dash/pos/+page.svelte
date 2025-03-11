@@ -12,6 +12,7 @@
 	let q_customers = $derived(
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
 	);
+	let modal_type: 'pay' | 'save' = $state('pay');
 	let product_order_id = $state(0);
 	let get_product = $derived(get_products.find((e) => e.id === product_order_id));
 	let product_order: ProductOrder[] = $state(store.productOrders);
@@ -97,6 +98,9 @@
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
 	);
 	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
+	function inputValueElement(e: string) {
+		return (document.getElementById(e) as HTMLInputElement)?.value;
+	}
 </script>
 
 <div class="row g-1 w-100">
@@ -206,23 +210,33 @@
 
 					<div class="row g-2">
 						<div class="col-md-4">
-							<button class="border-0 py-2 text-bg-warning h-50 w-100">រក្សាទុក</button>
-							<button
+							<a
+								href="?"
 								onclick={() =>
 									confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (product_order = []) : undefined}
-								class="border-0 py-2 text-bg-danger h-50 w-100">បោះបង់</button
+								class="border-0 py-2 btn-lg rounded-0 btn btn-danger w-100"
+								><i class="fa-solid fa-ban"></i> បោះបង់</a
 							>
 						</div>
 						<div class="col-md-4">
-							<button class="border-0 py-2 text-bg-success h-50 w-100">បោះពុម្ភការកុម្មង់</button>
-							<button class="border-0 py-2 text-bg-info h-50 w-100">បោះពុម្ភវិក្កយបត្រ</button>
+							<button
+								onclick={() => (modal_type = 'save')}
+								type="button"
+								data-bs-toggle="modal"
+								data-bs-target="#billingModal"
+								class="border-0 btn-lg py-2 rounded-0 btn btn-success w-100"
+								><i class="fa-solid fa-file-export"></i> រក្សាទុក</button
+							>
 						</div>
 
 						<div class="col-md-4">
 							<button
+								onclick={() => (modal_type = 'pay')}
+								type="button"
 								data-bs-toggle="modal"
 								data-bs-target="#billingModal"
-								class="border-0 py-2 text-bg-primary w-100 h-100">ទូទាត់ប្រាក់</button
+								class="border-0 btn-lg py-2 rounded-0 btn btn-primary w-100"
+								><i class="fa-solid fa-comments-dollar"></i> ទូទាត់ប្រាក់</button
 							>
 						</div>
 					</div>
@@ -354,8 +368,7 @@
 									`price${product_order_id}`
 								) as HTMLInputElement | null;
 								if (priceElement) {
-									priceElement.value =
-										get_product?.price.toString() || '';
+									priceElement.value = get_product?.price.toString() || '';
 								}
 							}
 						}}
@@ -394,7 +407,9 @@
 						modalDiscount(product_order_id);
 					}}
 					type="button"
-					class="btn btn-primary">រក្សាទុក</button
+					class="btn btn-primary"
+				>
+					រក្សាទុក</button
 				>
 			</div>
 		</div>
@@ -436,6 +451,9 @@
 				<input type="hidden" name="return_or_balance" value={total_billing_amount} />
 				<input type="hidden" name="total_amount" value={total_amount} />
 				<input type="hidden" name="invoice_id" value={page.url.searchParams.get('invoice_id')} />
+				{#if modal_type === 'save'}
+					<input type="hidden" name="save" value="pending" />
+				{/if}
 				<input type="hidden" name="final_total" value={final_total} />
 				{#each product_order as item (item.id)}
 					<input type="hidden" name="product_id" value={item.id} />
@@ -540,6 +558,7 @@
 					</div>
 					<div>
 						<textarea
+							value={get_invoice?.note}
 							placeholder="ចំណាំលើការទូទាត់ប្រាក់"
 							class="form-control"
 							name="billing_note"
@@ -549,9 +568,13 @@
 				</div>
 
 				<div class="modal-footer">
-					<button disabled={!product_order.length} type="submit" class="btn btn-warning"
-						><i class="fa-solid fa-comments-dollar"></i> គិតប្រាក់</button
-					>
+					<button disabled={!product_order.length} type="submit" class="btn btn-warning">
+						{#if modal_type === 'pay'}
+							<i class="fa-solid fa-comments-dollar"></i> គិតប្រាក់
+						{:else}
+							<i class="fa-solid fa-file-export"></i> រក្សាទុក្ខ
+						{/if}
+					</button>
 				</div>
 			</Form>
 		</div>

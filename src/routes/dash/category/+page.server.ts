@@ -11,8 +11,6 @@ export const load = (async () => {
 	};
 }) satisfies PageServerLoad;
 
-
-
 export const actions: Actions = {
 	// សម្រាប់កង្កើតប្រេនថ្មី
 	delete: async ({ request }) => {

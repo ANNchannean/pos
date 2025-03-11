@@ -6,7 +6,9 @@
 	let { data }: { data: PageServerData } = $props();
 	let { get_brands } = $derived(data);
 	let q = $state('');
-	let q_brands = $derived(get_brands.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
+	let q_brands = $derived(
+		get_brands.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
+	);
 </script>
 
 <h4>បញ្ជីប្រេនទំនិញ</h4>
@@ -44,11 +46,8 @@
 					<div class="row">
 						<div class="col-auto">
 							<AlertDelete action="?/delete">
-				
 								<input type="hidden" name="brand_id" value={brand.id} />
 							</AlertDelete>
-							
-						
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/brand/create?brand_id={brand.id}"
@@ -60,6 +59,5 @@
 			</tr>
 		{/each}
 		<NoData colspan={3} items={q_brands.length} />
-
 	</tbody>
 </table>

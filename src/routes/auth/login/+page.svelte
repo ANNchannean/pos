@@ -13,7 +13,7 @@
 			<h4 class="card-title text-center"><i class="fa-solid fa-gears"></i> ចូលប្រើប្រព័ន្ធ</h4>
 		</div>
 		<div class="card-body">
-			<Form showToast={false}  action="?/login" method="POST">
+			<Form showToast={false} action="?/login" method="POST">
 				<label for="username">ឈ្មោះអ្នកប្រើប្រព័ន្ធ</label>
 
 				<div class="input-group">
@@ -43,7 +43,6 @@
 				</div>
 				<span class="text-danger p-2">
 					{form?.message}
-					
 				</span>
 				<div class="">
 					<button class="btn btn-warning float-end btn-block"

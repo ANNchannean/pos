@@ -52,9 +52,7 @@
 </script>
 
 <div class="input-group">
-	<label for="" class="input-group-text">
-		ជ្រើសរើសរូបភាព
-	</label>
+	<label for="" class="input-group-text"> ជ្រើសរើសរូបភាព </label>
 	<button
 		onclick={() => document.getElementById(sid.concat('img'))?.click()}
 		aria-label="selectimage"

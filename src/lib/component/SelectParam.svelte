@@ -29,7 +29,7 @@
 				newUrl?.searchParams?.set(q_name, currentTarget?.value);
 				goto(newUrl, { keepFocus: true, noScroll: true });
 			} else {
-				q = currentTarget.value
+				q = currentTarget.value;
 			}
 		}, 400);
 	};

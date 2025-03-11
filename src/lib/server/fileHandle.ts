@@ -37,8 +37,7 @@ export async function uploadFile(file: File) {
 export async function updateFile(file: File, oldFileName: string) {
 	if (!file.size) return;
 	await deleteFile(oldFileName);
-	return await uploadFile(file)
-
+	return await uploadFile(file);
 }
 
 export async function deleteFile(fileName: string): Promise<void> {
@@ -52,7 +51,6 @@ export async function deleteFile(fileName: string): Promise<void> {
 		if (files.length === 0) {
 			await fs.rmdir(folderPath);
 		}
-
 	} catch (error) {
 		console.error('Error deleting file:', error);
 	}

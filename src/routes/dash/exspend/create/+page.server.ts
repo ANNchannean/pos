@@ -18,18 +18,20 @@ export const load = (async ({ url }) => {
 export const actions: Actions = {
 	// សម្រាប់កង្កើតប្រភេទទំនិញថ្មី
 	create_exspend: async ({ request, locals }) => {
-		const user_id = String(locals.user?.id)
+		const user_id = String(locals.user?.id);
 		const body = await request.formData();
-		const { amount, reason, datetime, exspend_id } = Object.fromEntries(body) as Record<string, string>
+		const { amount, reason, datetime, exspend_id } = Object.fromEntries(body) as Record<
+			string,
+			string
+		>;
 
 		// ពិនិត្យមើលទិន្ន័យដែលគ្មាន
 		const validexspend = {
 			amount: false,
-			datetime: false,
-
-		}
-		if (!amount) validexspend.amount = true
-		if (!datetime) validexspend.datetime = true
+			datetime: false
+		};
+		if (!amount) validexspend.amount = true;
+		if (!datetime) validexspend.datetime = true;
 
 		if (Object.values(validexspend).includes(true)) return fail(400, validexspend);
 		// បញ្ជប់ការពិនិ្យ
@@ -39,13 +41,12 @@ export const actions: Actions = {
 				.set({
 					amount: Number(amount),
 					reason: reason,
-					created_at: datetime,
-
+					created_at: datetime
 				})
 				.where(eq(exspend.id, Number(exspend_id)))
 				.catch((err) => {
-					console.log(err)
-				})
+					console.log(err);
+				});
 		}
 		if (!exspend_id) {
 			await db
@@ -54,12 +55,11 @@ export const actions: Actions = {
 					amount: Number(amount),
 					reason: reason,
 					created_at: datetime,
-					user_id: user_id,
-
+					user_id: user_id
 				})
 				.catch((err) => {
-					console.log(err)
-				})
+					console.log(err);
+				});
 		}
 
 		redirect(300, '/dash/exspend');

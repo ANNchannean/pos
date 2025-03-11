@@ -9,26 +9,22 @@ export const load = (async ({ url }) => {
 		where: eq(product.id, Number(product_id)),
 		with: {
 			unit: true,
-			brand:true,
-			category:true,
+			brand: true,
+			category: true,
 			subUnit: {
 				with: {
 					unit: true
 				}
 			},
-			inventory:{
-				with:{
-					constUnit:true
+			inventory: {
+				with: {
+					constUnit: true
 				},
-				orderBy:desc(inventory.datetime_buy)
+				orderBy: desc(inventory.datetime_buy)
 			}
 		}
 	});
 	return {
-		get_product,
-
-
+		get_product
 	};
 }) satisfies PageServerLoad;
-
-

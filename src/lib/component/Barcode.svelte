@@ -2,7 +2,7 @@
 	import JsBarcode from 'jsbarcode';
 
 	let { text }: { text: string | null } = $props();
-	
+
 	let barcode = $state('');
 	$effect(() => {
 		if (text && text?.length < 15) {

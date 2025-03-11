@@ -23,10 +23,9 @@ export const actions: Actions = {
 		const validLogin = {
 			username: false,
 			password: false
-
-		}
-		if (!username) validLogin.username = true
-		if (!password) validLogin.password = true
+		};
+		if (!username) validLogin.username = true;
+		if (!password) validLogin.password = true;
 		if (Object.values(validLogin).includes(true)) return fail(400, validLogin);
 		if (!validateUsername(username)) {
 			return fail(400, {
@@ -88,7 +87,7 @@ export const actions: Actions = {
 			const session = await auth.createSession(sessionToken, userId);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 			return fail(500, { message: 'An error has occurred' });
 		}
 		return redirect(302, '/dash');

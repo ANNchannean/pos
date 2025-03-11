@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Form from '$lib/component/Form.svelte';
-	import type { PageServerData, Snapshot,ActionData } from './$types';
+	import type { PageServerData, Snapshot, ActionData } from './$types';
 	//  មានតួនាទីចាប់ទិន្ន័យពី Server
-	let { data,form }: { data: PageServerData,form:ActionData } = $props();
+	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_category } = $derived(data);
 	let category_name = $state(data?.get_category?.name ?? '');
 	export const snapshot: Snapshot<string> = {

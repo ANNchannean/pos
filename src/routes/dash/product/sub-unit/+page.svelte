@@ -37,7 +37,7 @@
 						<td>:</td>
 						<td>
 							<div>
-								{#each get_product?.subUnit || [] as sub_unit,index}
+								{#each get_product?.subUnit || [] as sub_unit, index}
 									<div class="row">
 										<div class="col-auto">
 											<a

@@ -7,7 +7,7 @@
 	let { data }: { data: PageServerData } = $props();
 	let { get_units } = $derived(data);
 	let q = $state('');
-	let q_units = $derived(get_units.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()) ))
+	let q_units = $derived(get_units.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase())));
 </script>
 
 <h4>បញ្ជីខ្នាត</h4>
@@ -45,10 +45,8 @@
 					<div class="row">
 						<div class="col-auto">
 							<AlertDelete action="?/delete">
-								
 								<input type="hidden" name="unit_id" value={unit.id} />
 							</AlertDelete>
-							
 						</div>
 						<div class="col">
 							<a class="btn btn-outline-warning" href="/dash/unit/create?unit_id={unit.id}"

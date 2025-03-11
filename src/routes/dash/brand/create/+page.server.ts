@@ -23,9 +23,9 @@ export const actions: Actions = {
 		const { brand_name, brand_id } = Object.fromEntries(body) as Record<string, string>;
 		const valid_brand = await db.query.brand.findFirst({
 			where: eq(brand.name, brand_name)
-		})
+		});
 		if (valid_brand?.name === brand_name) return fail(400, { message: 'ប្រេននេះមានរួចហើយ' });
-		if (brand_name === "") return fail(400, { message: 'សូមបំពេញឈ្មោះប្រេន' });
+		if (brand_name === '') return fail(400, { message: 'សូមបំពេញឈ្មោះប្រេន' });
 		if (brand_id) {
 			await db
 				.update(brand)
@@ -34,16 +34,18 @@ export const actions: Actions = {
 				})
 				.where(eq(brand.id, Number(brand_id)))
 				.catch((err) => {
-					console.log(err)
-				})
+					console.log(err);
+				});
 		}
 		if (!brand_id) {
-			await db.insert(brand).values({
-				name: brand_name
-			})
-				.catch((err) => {
-					console.log(err)
+			await db
+				.insert(brand)
+				.values({
+					name: brand_name
 				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 
 		redirect(300, '/dash/brand');

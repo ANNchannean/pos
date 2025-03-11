@@ -69,8 +69,6 @@
 				placeholder="ហេតុផល់ចំណាយ"
 				bind:value={form_exspend.reason}
 			></textarea>
-
-		
 		</div>
 	</div>
 	<div>

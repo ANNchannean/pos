@@ -38,14 +38,13 @@
 		{/if}
 	</div>
 	<fieldset disabled={!edit}>
-
-		<div  class="card-body">
+		<div class="card-body">
 			<section class="invoice border-0">
 				<div class="page-header row">
 					<div class="col-auto text-center">
 						<!-- svelte-ignore a11y_click_events_have_key_events -->
 						<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	
+
 						<img
 							onclick={() => document.getElementById('img')?.click()}
 							class:border={edit}
@@ -54,7 +53,7 @@
 							src="/uploads/{get_company?.logo}"
 							alt="no logo"
 						/>
-	
+
 						<br />
 						{#if edit}
 							<!-- <input accept="image/*" type="file" name="file" id="file" /> -->
@@ -62,7 +61,6 @@
 						{/if}
 					</div>
 					<div class="col text-center">
-						
 						<div class="form-floating mb-3">
 							<input
 								name="name_khmer"
@@ -73,7 +71,7 @@
 								required
 								autocomplete="off"
 							/>
-	
+
 							<label for="name_khmer">ឈ្មោះក្រុមហ៊ុន (ខ្មែរ)</label>
 						</div>
 						<div class="form-floating mb-3">
@@ -86,7 +84,7 @@
 								required
 								autocomplete="off"
 							/>
-	
+
 							<label for="name_english">ឈ្មោះក្រុមហ៊ុន (អង់គ្លេស)</label>
 						</div>
 						<div class="form-floating mb-3">
@@ -99,7 +97,7 @@
 								autocomplete="off"
 								name="description"
 							/>
-	
+
 							<label for="description">ការបរិយាយ</label>
 						</div>
 						<div class="form-floating mb-3">
@@ -111,7 +109,7 @@
 								required
 								autocomplete="off"
 							/>
-	
+
 							<label for="contact">ទំនាក់ទំនង</label>
 						</div>
 						<div class="form-floating mb-3">
@@ -123,7 +121,7 @@
 								autocomplete="off"
 								name="address"
 							/>
-	
+
 							<label for="address">អាស័យដ្នាន</label>
 						</div>
 						<div class="form-floating">

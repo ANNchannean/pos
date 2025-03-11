@@ -66,14 +66,23 @@
 							<a
 								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/report/sale')}
-								href="/dash/report/sale"><i class="fa-solid fa-file-invoice-dollar"></i> លក់</a
+								href="/dash/report/sale"
+								><i class="fa-solid fa-file-invoice-dollar"></i> របាយការណ៌លក់</a
 							>
 						</li>
 						<li>
 							<a
 								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/report/dept')}
-								href="/dash/report/dept"><i class="fa-solid fa-money-bill-transfer"></i> ជំពាក់</a
+								href="/dash/report/dept"
+								><i class="fa-solid fa-money-bill-transfer"></i> របាយការណ៌ជំពាក់</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/report/dept')}
+								href="/dash/report/save"><i class="fa-solid fa-money-bill-transfer"></i> រក្សាទុក</a
 							>
 						</li>
 					</ul>
