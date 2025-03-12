@@ -105,12 +105,11 @@ export const productOrder = t.mysqlTable('product_order', {
 	id: t.int().primaryKey().autoincrement(),
 	product_id: t
 		.int()
-		.references(() => product.id)
+		.references(() => product.id, { onDelete: 'restrict', onUpdate: 'cascade' })
 		.notNull(),
 	unit_id: t
 		.int()
-		.references(() => unit.id)
-		.notNull(),
+		.references(() => unit.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
 	quantity: t.int().notNull().default(1),
 	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),

@@ -7,19 +7,17 @@
 	import { store, type ProductOrder } from '$lib/store/store.svelte';
 	import SearchProductSubmit from '$lib/component/SearchProductSubmit.svelte';
 	import { addProduct, modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
+	import HandleQ from '$lib/component/HandleQ.svelte';
 	let { data }: { data: PageServerData } = $props();
 	let { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan } =
 		$derived(data);
 	let q = $state('');
-	let q_customers = $derived(
-		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
-	);
 	let modal_type: 'pay' | 'save' = $state('pay');
 	let product_id = $state(0);
 	let get_product = $derived(get_products.find((e) => e.id === product_id));
 	$effect(() => {
-		if (get_invoice) {
-			store.productOrders = get_invoice.productOrders.map((e) => ({
+		if (get_invoice?.productOrders) {
+			store.productOrders = get_invoice?.productOrders?.map((e) => ({
 				id: e.product.id,
 				name: e.product.name,
 				price: e.price,
@@ -27,7 +25,15 @@
 				amount: e.amount,
 				total: e.total,
 				unit_id: e.unit_id,
-				discount: e.discount
+				discount: e.discount,
+				subUnit: [
+					{ unit_id: e.product.unit_id, name: e.product?.unit.name, price: e.product.price },
+					...e.product.subUnit.map((e) => ({
+						unit_id: e.unit_id,
+						name: e.unit.name,
+						price: e.price
+					}))
+				]
 			}));
 		} else {
 			store.productOrders = [];
@@ -52,6 +58,7 @@
 	let final_total = $derived(
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
 	);
+
 	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
 	$effect(() => {
 		if (page.url.searchParams.get('product_id')) {
@@ -59,23 +66,10 @@
 			if (get_product?.id !== product_id) {
 				$inspect('a');
 			}
-			// if (get_product?.id) {
-			// 	addProduct({
-			// 		id: +get_product?.id,
-			// 		name: get_product?.name ?? '',
-			// 		price: +get_product?.price,
-			// 		qty: 1,
-			// 		total: +get_product?.price,
-			// 		amount: +get_product?.price,
-			// 		discount: null,
-			// 		unit_id: +get_product?.unit_id
-			// 	});
-			// }
 		}
 	});
 </script>
 
-<!-- {JSON.stringify(store.productOrders)} -->
 <div class="row g-1 w-100">
 	<div class="col-md-5">
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
@@ -99,27 +93,6 @@
 					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
 					items={get_product_scan.map((e) => ({ id: e.id, name: e.name, price: e.price }))}
 				/>
-				<!-- <SelectParam
-					outside={true}
-					onclick={() => {
-						if (get_product) {
-							addProduct({
-								id: +get_product?.id,
-								name: get_product?.name ?? '',
-								price: +get_product?.price,
-								qty: 1,
-								total: +get_product?.price,
-								amount: +get_product?.price,
-								discount: null,
-								unit_id: +get_product?.unit_id
-							});
-						}
-					}}
-					name="product_id"
-					q_name="product_q"
-					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
-					items={get_products.map((e) => ({ id: e.id, name: e.name }))}
-				/> -->
 			</div>
 			<div class="card-body table-responsive p-0">
 				<table class="table table-sm">
@@ -249,11 +222,14 @@
 			<div class="card-header">
 				<HeaderQuery>
 					<div class="row">
-						<div class="col-6">
+						<div class="col-4">
 							<SelectParam name="brand_id" placeholder="ប្រេនទំនិញ" items={get_brands} />
 						</div>
-						<div class="col-6">
+						<div class="col-4">
 							<SelectParam name="category_id" placeholder="ប្រភេទទំនិញ" items={get_categories} />
+						</div>
+						<div class="col-4">
+							<HandleQ q_name="search" />
 						</div>
 					</div>
 				</HeaderQuery>
@@ -261,6 +237,15 @@
 			<div style="height: {innerHeight - 148}px; " class="card-body overflow-scroll">
 				<div class="row">
 					{#each get_products as product}
+						{@const subUnit = [
+							{ unit_id: product.unit_id, name: product.unit.name, price: product.price },
+							...product.subUnit.map((e) => ({
+								unit_id: e.unit_id,
+								name: e.unit.name,
+								price: e.price
+							}))
+						]}
+
 						<div class="col-md-3 col-lg-2 mb-4 col-sm-4">
 							<div class="card">
 								<img
@@ -284,7 +269,8 @@
 												total: product.price,
 												amount: product.price,
 												discount: null,
-												unit_id: product.unit_id
+												unit_id: product.unit_id,
+												subUnit: subUnit
 											})}
 										class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
 									>
@@ -356,13 +342,20 @@
 					<select
 						onchange={(e) => {
 							const value = e.currentTarget.value || '';
-							if (get_product?.subUnit.find((e) => e.unit_id === +value)) {
+							if (
+								store.productOrders
+									.find((e) => e.id === product_id)
+									?.subUnit.find((e) => e.unit_id === +value)
+							) {
 								const priceElement = document.getElementById(
 									`price${product_id}`
 								) as HTMLInputElement | null;
 								if (priceElement) {
 									priceElement.value =
-										get_product?.subUnit.find((e) => e.unit_id === +value)?.price?.toString() ?? '';
+										store.productOrders
+											.find((e) => e.id === product_id)
+											?.subUnit.find((e) => e.unit_id === +value)
+											?.price?.toString() ?? '';
 								}
 							} else {
 								const priceElement = document.getElementById(
@@ -377,14 +370,13 @@
 						name="unit_id"
 						id={`unit_id${product_id}`}
 					>
-						<option value={get_product?.unit_id}>{get_product?.unit?.name}</option>
-						{#each get_product?.subUnit || [] as item}
+						{#each store.productOrders.find((e) => e.id === product_id)?.subUnit || [] as item}
 							<option
 								selected={item.unit_id ===
 								store.productOrders?.find((e) => e.id === product_id)?.unit_id
 									? true
 									: false}
-								value={item.unit_id}>{item.unit.name}</option
+								value={item.unit_id}>{item.name}</option
 							>
 						{/each}
 					</select>
@@ -443,8 +435,8 @@
 			<Form
 				showToast={false}
 				fnSuccess={() => {
-					document.getElementById('close_modal_billing')?.click();
 					store.productOrders = [];
+					document.getElementById('close_modal_billing')?.click();
 				}}
 				action="?/pos"
 				method="post"

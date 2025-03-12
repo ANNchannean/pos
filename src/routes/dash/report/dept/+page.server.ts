@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { and, desc, eq, ne } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { invoice } from '$lib/server/db/schema';
 import { pagination, betweenHelper } from '$lib/server/utils';
@@ -14,7 +14,7 @@ export const load = (async ({ url }) => {
 			customer_id ? eq(invoice.customer_id, +customer_id) : undefined,
 			seller_id ? eq(invoice.seller_id, seller_id) : undefined,
 			status ? eq(invoice.status, status) : undefined,
-			ne(invoice.status, 'debt')
+			eq(invoice.status, 'debt')
 		),
 		with: {
 			customer: true,
@@ -30,7 +30,7 @@ export const load = (async ({ url }) => {
 			customer_id ? eq(invoice.customer_id, +customer_id) : undefined,
 			seller_id ? eq(invoice.seller_id, seller_id) : undefined,
 			status ? eq(invoice.status, status) : undefined,
-			ne(invoice.status, 'debt')
+			eq(invoice.status, 'debt')
 		)
 	);
 	return { get_invoices, items: count };

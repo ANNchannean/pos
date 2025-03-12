@@ -1,11 +1,12 @@
 import { db } from '$lib/server/db';
 import { customer, invoice, product, productOrder } from '$lib/server/db/schema';
-import { and, eq, like } from 'drizzle-orm';
+import { and, eq, like, or } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { localFormat } from '$lib/client/helper';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = (async ({ url }) => {
+	const search = url.searchParams.get('search') || '';
 	const customer_q = url.searchParams.get('customer_q') || '';
 	const product_q = url.searchParams.get('product_q') || '';
 	const invoice_id = url.searchParams.get('invoice_id') || '';
@@ -41,6 +42,12 @@ export const load = (async ({ url }) => {
 		where: and(
 			brand_id ? eq(product.brand_id, +brand_id) : undefined,
 			category_id ? eq(product.category_id, +category_id) : undefined,
+			or(
+
+				like(product.name, `%${search}%`),
+				like(product.model, `%${search}%`),
+				like(product.condition, `%${search}%`)
+			)
 
 		),
 		limit: 50
@@ -50,7 +57,16 @@ export const load = (async ({ url }) => {
 		with: {
 			productOrders: {
 				with: {
-					product: true
+					product: {
+						with:{
+							subUnit:{
+								with:{
+									unit:true
+								}
+							},
+							unit:true
+						}
+					}
 				}
 			},
 			customer: true
@@ -96,7 +112,7 @@ export const actions: Actions = {
 					note: billing_note,
 					seller_id: seller_id,
 					customer_id: customer_id ? +customer_id : null,
-					status: save === 'pedding' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
+					status: save === 'pending' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
 				})
 				.$returningId();
 
@@ -140,7 +156,7 @@ export const actions: Actions = {
 					note: billing_note,
 					seller_id: seller_id,
 					customer_id: customer_id ? +customer_id : null,
-					status: save === 'pedding' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
+					status: save === 'pending' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
 				})
 				.where(eq(invoice.id, +invoice_id));
 			// បញ្ជូលទំនិញទៅProductOrder

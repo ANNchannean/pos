@@ -112,7 +112,7 @@
 					<td> $ {invoice.total}</td>
 					<td>
 						{#if invoice.status === 'debt'}
-							<a href="/dash/pos?invoice_id={invoice.id}" class="btn btn-link">ជំពាក់</a>
+							<a href="/dash/pos?invoice_id={invoice.id}" class="btn btn-link">ជំពាក់</a>$ { invoice.total - Number(invoice.amount_paid) }
 						{:else}
 							មិនជំពាក់
 						{/if}
