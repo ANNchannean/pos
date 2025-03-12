@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import NoData from '$lib/component/NoData.svelte';
+	import { store } from '$lib/store/store.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_customers } = $derived(data);
@@ -13,7 +14,7 @@
 
 <h4>បញ្ជីឈ្មោះអតិថិជន</h4>
 <hr />
-<div class="row">
+<div class="row pb-1">
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
 			<input
@@ -29,41 +30,47 @@
 		<a href="/dash/customer/create" class="btn btn-warning">បង្កើតថ្មី</a>
 	</div>
 </div>
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">ID#</th>
-			<th scope="col">ឈ្មោះអតិថិជន</th>
-			<th scope="col">រូបភាព</th>
-			<th scope="col">អាស័យដ្នាន</th>
-			<th scope="col">ទំនាក់ទំនង</th>
-			<th>ការកែប្រែ</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each q_customers as item, index}
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
+		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 			<tr>
-				<td> {index + 1} </td>
-				<td> {item.name} </td>
-				<td> {item.picture} </td>
-				<td> {item.address} </td>
-				<td> {item.contact} </td>
-				<td>
-					<div class="row">
-						<div class="col-auto">
-							<AlertDelete action="?/delete">
-								<input type="hidden" name="customer_id" value={item.id} />
-							</AlertDelete>
-						</div>
-						<div class="col">
-							<a class="btn btn-outline-warning" href="/dash/customer/create?customer_id={item.id}"
-								><i class="fa-solid fa-edit"></i> កែសម្រួល</a
-							>
-						</div>
-					</div>
-				</td>
+				<th scope="col">ID#</th>
+				<th scope="col">ឈ្មោះអតិថិជន</th>
+				<th scope="col">ភេទ</th>
+				<th scope="col">រូបភាព</th>
+				<th scope="col">អាស័យដ្នាន</th>
+				<th scope="col">ទំនាក់ទំនង</th>
+				<th>ការកែប្រែ</th>
 			</tr>
-		{/each}
-		<NoData colspan={6} items={q_customers.length} />
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each q_customers as item, index}
+				<tr>
+					<td> {index + 1} </td>
+					<td> {item.name} </td>
+					<td> {item.gender} </td>
+					<td> {item.picture} </td>
+					<td> {item.address} </td>
+					<td> {item.contact} </td>
+					<td>
+						<div class="row">
+							<div class="col-auto">
+								<AlertDelete action="?/delete">
+									<input type="hidden" name="customer_id" value={item.id} />
+								</AlertDelete>
+							</div>
+							<div class="col">
+								<a
+									class="btn btn-outline-warning"
+									href="/dash/customer/create?customer_id={item.id}"
+									><i class="fa-solid fa-edit"></i> កែសម្រួល</a
+								>
+							</div>
+						</div>
+					</td>
+				</tr>
+			{/each}
+			<NoData colspan={6} items={q_customers.length} />
+		</tbody>
+	</table>
+</div>

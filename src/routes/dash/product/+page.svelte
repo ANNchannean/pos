@@ -44,8 +44,8 @@
 		</HeaderQuery>
 	</div>
 </div>
-<div style="height: {store.inerHight};" class="table-responsive">
-	<table class="table">
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
 		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 			<tr>
 				<th scope="col">#</th>

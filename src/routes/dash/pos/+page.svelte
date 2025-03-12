@@ -2,12 +2,14 @@
 	import { page } from '$app/state';
 	import Form from '$lib/component/Form.svelte';
 	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
-	import Select from '$lib/component/Select.svelte';
 	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, Snapshot } from './$types';
 	import { store, type ProductOrder } from '$lib/store/store.svelte';
+	import SearchProductSubmit from '$lib/component/SearchProductSubmit.svelte';
+	import { addProduct, modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
 	let { data }: { data: PageServerData } = $props();
-	let { get_customers, get_products, get_brands, get_categories, get_invoice } = $derived(data);
+	let { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan } =
+		$derived(data);
 	let q = $state('');
 	let q_customers = $derived(
 		get_customers.filter((e) => e.name?.toLowerCase().includes(q.toLowerCase()))
@@ -15,10 +17,9 @@
 	let modal_type: 'pay' | 'save' = $state('pay');
 	let product_id = $state(0);
 	let get_product = $derived(get_products.find((e) => e.id === product_id));
-	let product_order: ProductOrder[] = $state(store.productOrders);
 	$effect(() => {
 		if (get_invoice) {
-			product_order = get_invoice.productOrders.map((e) => ({
+			store.productOrders = get_invoice.productOrders.map((e) => ({
 				id: e.product.id,
 				name: e.product.name,
 				price: e.price,
@@ -29,61 +30,17 @@
 				discount: e.discount
 			}));
 		} else {
-			product_order = [];
+			store.productOrders = [];
 		}
 	});
 	export const snapshot: Snapshot<ProductOrder[]> = {
-		capture: () => product_order,
-		restore: (value) => (product_order = value)
+		capture: () => store.productOrders,
+		restore: (value) => (store.productOrders = value)
 	};
-	function addProduct(para: ProductOrder) {
-		// ប្រសិនបើមានទំនិញបានបញ្ជូលរូចត្រូវបូកបន្ថែម ១
-		if (product_order.some((e) => e.id === para.id)) {
-			// Function ស្វែងរកទំនិញដែលមានហើយបូក ១បន្ថែម
-			let obj = product_order.find((obj) => obj.id === para.id);
-			if (obj) {
-				obj.qty = obj.qty + 1;
-				obj.amount = +(obj.qty * obj.price).toFixed(2);
-				obj.total = obj.discount
-					? +Number(calulatorDiscount(obj.qty, obj.price, obj.discount)).toFixed(2)
-					: obj.amount;
-			}
-			// modify ទិន្ន័យ product_order
-			//​ បើសិនរកមិនឃើញបញ្ជូលទំនិញ ទៅ product_order
-		} else {
-			product_order.push(para);
-		}
-	}
 	let innerHeight = $derived(window.innerHeight);
-	function modalDiscount(product_id: number) {
-		const discount = (document.getElementById(`discount${product_id}`) as HTMLInputElement)?.value;
-		const price = (document.getElementById(`price${product_id}`) as HTMLInputElement)?.value;
-		const qty = (document.getElementById(`qty${product_id}`) as HTMLInputElement)?.value;
-		const unit_id = (document.getElementById(`unit_id${product_id}`) as HTMLInputElement)?.value;
-		const found = product_order.find((e) => e.id === product_id);
-		if (found) {
-			found.qty = Number(qty);
-			found.amount = +(+qty * +price).toFixed(2);
-			found.discount = discount;
-			found.price = +Number(price).toFixed(2);
-			found.unit_id = +unit_id;
-			found.total = +(
-				discount ? +Number(calulatorDiscount(+qty, +price, discount)) : +found.amount
-			).toFixed(2);
-		}
-		document.getElementById('close_modal')?.click();
-	}
-	function calulatorDiscount(qty: number, price: number, discount: string) {
-		if (!qty || !price || !discount) return 0;
-		const total = qty * price;
-		if (discount.includes('%')) {
-			return (total - +(total * (Number(discount.replace('%', '')) / 100))).toFixed(2);
-		} else {
-			return +(qty * price - Number(discount) * qty).toFixed(2);
-		}
-	}
+
 	let total_amount = $derived(
-		product_order.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
+		store.productOrders.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
 	);
 	let plan_input_amount = $state(0);
 	$effect(() => {
@@ -96,16 +53,29 @@
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
 	);
 	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
-	function inputValueElement(e: string) {
-		return (document.getElementById(e) as HTMLInputElement)?.value;
-	}
 	$effect(() => {
 		if (page.url.searchParams.get('product_id')) {
 			product_id = Number(page.url.searchParams.get('product_id'));
+			if (get_product?.id !== product_id) {
+				$inspect('a');
+			}
+			// if (get_product?.id) {
+			// 	addProduct({
+			// 		id: +get_product?.id,
+			// 		name: get_product?.name ?? '',
+			// 		price: +get_product?.price,
+			// 		qty: 1,
+			// 		total: +get_product?.price,
+			// 		amount: +get_product?.price,
+			// 		discount: null,
+			// 		unit_id: +get_product?.unit_id
+			// 	});
+			// }
 		}
 	});
 </script>
 
+<!-- {JSON.stringify(store.productOrders)} -->
 <div class="row g-1 w-100">
 	<div class="col-md-5">
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
@@ -117,8 +87,19 @@
 						placeholder="ស្វែងរកអតិថិជន"
 						items={get_customers.map((e) => ({ id: e.id, name: e.name }))}
 					/>
+					{#if get_invoice?.customer?.name}
+						<label for="customer_id" class="input-group-text bg-warning"
+							>{get_invoice?.customer?.name}</label
+						>
+					{/if}
 				</div>
-				<SelectParam
+				<SearchProductSubmit
+					name="product_id"
+					q_name="product_q"
+					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
+					items={get_product_scan.map((e) => ({ id: e.id, name: e.name, price: e.price }))}
+				/>
+				<!-- <SelectParam
 					outside={true}
 					onclick={() => {
 						if (get_product) {
@@ -138,7 +119,7 @@
 					q_name="product_q"
 					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
 					items={get_products.map((e) => ({ id: e.id, name: e.name }))}
-				/>
+				/> -->
 			</div>
 			<div class="card-body table-responsive p-0">
 				<table class="table table-sm">
@@ -152,7 +133,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each product_order as form}
+						{#each store.productOrders as form}
 							<tr>
 								<td>
 									<div>
@@ -175,7 +156,7 @@
 									<input
 										onchange={(e) => {
 											const value = +e.currentTarget.value as number;
-											const found = product_order.find((e) => e.id === form.id);
+											const found = store.productOrders.find((e) => e.id === form.id);
 											if (found) {
 												found.qty = Number(value);
 												found.amount = +(+value * form.price).toFixed(2);
@@ -197,7 +178,7 @@
 								<td>
 									<button
 										onclick={() => {
-											product_order = product_order.filter((e) => e.id !== form.id);
+											store.productOrders = store.productOrders.filter((e) => e.id !== form.id);
 										}}
 										aria-label="delete"
 										class="btn btn-link text-decoration-none text-danger"
@@ -211,11 +192,11 @@
 				</table>
 			</div>
 			<div class="card-footer">
-				<fieldset disabled={!product_order.length}>
+				<fieldset disabled={!store.productOrders.length}>
 					<div class=" border-0 bg-primary-subtle mb-1 w-100">
 						<div class="row">
 							<div class="col text-start mx-2">សរុបទំនិញ</div>
-							<div class="col text-end mx-2">{product_order.length} មុខ</div>
+							<div class="col text-end mx-2">{store.productOrders.length} មុខ</div>
 						</div>
 					</div>
 					<div class=" border-0 bg-primary-subtle mb-2 w-100">
@@ -232,7 +213,7 @@
 							<a
 								href="?"
 								onclick={() =>
-									confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (product_order = []) : undefined}
+									confirm('ទំនិញនឹងត្រូវសំអាតទាំងអស់') ? (store.productOrders = []) : undefined}
 								class="border-0 py-2 btn-lg rounded-0 btn btn-danger w-100"
 								><i class="fa-solid fa-ban"></i> បោះបង់</a
 							>
@@ -319,6 +300,7 @@
 
 <!-- Modal Discount -->
 <div
+	data-bs-backdrop="static"
 	class="modal fade"
 	id="discountModal"
 	tabindex="-1"
@@ -329,7 +311,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5 text-truncate" id="exampleModalLabel">
-					{product_order.find((e) => e.id === product_id)?.name}
+					{store.productOrders.find((e) => e.id === product_id)?.name}
 				</h1>
 				<button
 					id="close_modal"
@@ -353,7 +335,7 @@
 								}
 							}
 						}}
-						value={product_order.find((e) => e.id === product_id)?.discount}
+						value={store.productOrders.find((e) => e.id === product_id)?.discount}
 						type="text"
 						name="discount"
 						class="form-control"
@@ -363,7 +345,7 @@
 				<div class="input-group pb-2">
 					<label style="width: 120px;" for="" class="input-group-text">ខ្នាត</label>
 					<input
-						value={product_order.find((e) => e.id === product_id)?.qty}
+						value={store.productOrders.find((e) => e.id === product_id)?.qty}
 						type="number"
 						name="qty"
 						step="0.25"
@@ -398,7 +380,8 @@
 						<option value={get_product?.unit_id}>{get_product?.unit?.name}</option>
 						{#each get_product?.subUnit || [] as item}
 							<option
-								selected={item.unit_id === product_order?.find((e) => e.id === product_id)?.unit_id
+								selected={item.unit_id ===
+								store.productOrders?.find((e) => e.id === product_id)?.unit_id
 									? true
 									: false}
 								value={item.unit_id}>{item.unit.name}</option
@@ -409,7 +392,7 @@
 				<div class="input-group">
 					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
 					<input
-						value={product_order.find((e) => e.id === product_id)?.price}
+						value={store.productOrders.find((e) => e.id === product_id)?.price}
 						type="number"
 						name="price"
 						step="any"
@@ -461,7 +444,7 @@
 				showToast={false}
 				fnSuccess={() => {
 					document.getElementById('close_modal_billing')?.click();
-					product_order = [];
+					store.productOrders = [];
 				}}
 				action="?/pos"
 				method="post"
@@ -469,11 +452,12 @@
 				<input type="hidden" name="return_or_balance" value={total_billing_amount} />
 				<input type="hidden" name="total_amount" value={total_amount} />
 				<input type="hidden" name="invoice_id" value={page.url.searchParams.get('invoice_id')} />
+				<input type="hidden" name="customer_id" value={page.url.searchParams.get('customer_id')} />
 				{#if modal_type === 'save'}
 					<input type="hidden" name="save" value="pending" />
 				{/if}
 				<input type="hidden" name="final_total" value={final_total} />
-				{#each product_order as item (item.id)}
+				{#each store.productOrders as item (item.id)}
 					<input type="hidden" name="product_id" value={item.id} />
 					<input type="hidden" name="discount" value={item.discount} />
 					<input type="hidden" name="qty" value={item.qty} />
@@ -495,7 +479,7 @@
 									<td>សរុបទំនិញ</td>
 									<td>:</td>
 									<td>
-										{product_order.length} មុខ
+										{store.productOrders.length} មុខ
 									</td>
 								</tr>
 								<tr>
@@ -586,7 +570,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<button disabled={!product_order.length} type="submit" class="btn btn-warning">
+					<button disabled={!store.productOrders.length} type="submit" class="btn btn-warning">
 						{#if modal_type === 'pay'}
 							<i class="fa-solid fa-comments-dollar"></i> ទូទាត់ប្រាក់
 						{:else}

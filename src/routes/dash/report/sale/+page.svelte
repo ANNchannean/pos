@@ -76,21 +76,11 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div style="width: 300px;" class="col-auto">
-				<SelectParam placeholder="ស្វែងរកតាមប្រេនទំនិញ" name="brand_id" items={get_brands} />
-			</div> -->
-			<!-- <div style="width: 300px;" class="col-auto">
-				<SelectParam
-					placeholder="ស្វែងរកតាមប្រភេទទំនិញ"
-					name="category_id"
-					items={get_categories}
-				/>
-			</div> -->
 		</HeaderQuery>
 	</div>
 </div>
-<div style="height: {store.inerHight};" class="table-responsive">
-	<table class="table">
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
 		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 			<tr>
 				<th scope="col">#</th>
@@ -139,7 +129,7 @@
 							<div class="col-2">
 								<a
 									aria-label={invoice.id.toString().concat('print')}
-									href="/dash/report/print?invoice_id={invoice.id}"
+									href="/dash/report/print?invoice_id={invoice.id}&customer_id={invoice.customer_id}"
 									class="btn btn-link text-warning"><i class="fa-solid fa-print"></i></a
 								>
 							</div>

@@ -3,6 +3,7 @@
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import Form from '$lib/component/Form.svelte';
 	import NoData from '$lib/component/NoData.svelte';
+	import { store } from '$lib/store/store.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_suppliers } = $derived(data);
@@ -14,7 +15,7 @@
 
 <h4>បញ្ជីឈ្មោះអ្នកផ្គត់ផ្គង់</h4>
 <hr />
-<div class="row">
+<div class="row pb-1">
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
 			<input
@@ -30,8 +31,9 @@
 		<a href="/dash/supplier/create" class="btn btn-warning">បង្កើតថ្មី</a>
 	</div>
 </div>
-<table class="table">
-	<thead>
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
+		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 		<tr>
 			<th scope="col">ID#</th>
 			<th scope="col">ឈ្មោះអ្នកផ្គត់ផ្គង់</th>
@@ -68,3 +70,4 @@
 		<NoData colspan={6} items={q_suppliers.length} />
 	</tbody>
 </table>
+</div>

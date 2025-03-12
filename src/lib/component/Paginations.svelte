@@ -7,7 +7,7 @@
 	}
 
 	let page: number = $state(1);
-	let limit: number = $state(10);
+	let limit: number = $state(20);
 	let { items, n = $bindable() }: Props = $props();
 	let total_page = $derived(Math.ceil(items / limit));
 	function pushPage() {
@@ -24,7 +24,7 @@
 	});
 </script>
 
-<fieldset disabled={items < limit}>
+<fieldset>
 	<div class="row">
 		<div class="col-12 d-flex justify-content-end">
 			<div>
@@ -49,17 +49,17 @@
 			<div class="mx-2">
 				<input
 					oninput={(e) => {
-						page = Number(e.currentTarget.value);
+						limit = Number(e.currentTarget.value);
 						pushPage();
 					}}
-					value={page}
+					value={limit}
 					style="width: 70px;"
 					type="number"
-					class="form-control text-center"
+					class="text-center form-control-plaintext"
 				/>
 			</div>
 			<div class="align-content-center">
-				<!-- <span>{locale.T('of')} / {total_page} {locale.T('page')} </span> -->
+				<span>ទំព័រ {page} / {total_page} </span>
 			</div>
 			<div>
 				<button

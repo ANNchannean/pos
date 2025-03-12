@@ -60,7 +60,6 @@
 	onclick={() => document.getElementById(name)?.focus()}
 	class="dropdown form-control m-0 p-0 shadow-none border-0"
 >
-	<input {value} type="hidden" {name} />
 	<button
 		data-bs-auto-close={outside ? 'outside' : 'true'}
 		type="button"
@@ -80,8 +79,8 @@
 			onclick={(e) => {
 				e.stopPropagation();
 				document.getElementById(name)?.focus();
+				pushParam(name, '');
 				value = '';
-				pushParam(q_name, '');
 			}}
 			class="float-end"
 		>

@@ -16,6 +16,19 @@ export const load = (async ({ url }) => {
 	}));
 	const get_brands = await db.query.brand.findMany();
 	const get_categories = await db.query.category.findMany();
+	const get_product_scan = await db.query.product.findMany({
+		with: {
+			subUnit: {
+				with: {
+					unit: true
+				}
+			},
+			unit: true
+		},
+		where: like(product.name, `%${product_q}%`),
+
+		limit: 50
+	});
 	const get_products = await db.query.product.findMany({
 		with: {
 			subUnit: {
@@ -28,7 +41,7 @@ export const load = (async ({ url }) => {
 		where: and(
 			brand_id ? eq(product.brand_id, +brand_id) : undefined,
 			category_id ? eq(product.category_id, +category_id) : undefined,
-			like(product.name, `%${product_q}%`)
+
 		),
 		limit: 50
 	});
@@ -39,10 +52,11 @@ export const load = (async ({ url }) => {
 				with: {
 					product: true
 				}
-			}
+			},
+			customer: true
 		}
 	});
-	return { get_customers, get_products, get_brands, get_categories, get_invoice };
+	return { get_customers, get_products, get_brands, get_categories, get_invoice,get_product_scan };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -57,6 +71,7 @@ export const actions: Actions = {
 			get_amount,
 			final_total,
 			invoice_id,
+			customer_id,
 			save
 		} = Object.fromEntries(body) as Record<string, string>;
 		const product_id = body.getAll('product_id');
@@ -80,6 +95,7 @@ export const actions: Actions = {
 					discount: final_discount,
 					note: billing_note,
 					seller_id: seller_id,
+					customer_id: customer_id ? +customer_id : null,
 					status: save === 'pedding' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
 				})
 				.$returningId();
@@ -123,6 +139,7 @@ export const actions: Actions = {
 					discount: final_discount,
 					note: billing_note,
 					seller_id: seller_id,
+					customer_id: customer_id ? +customer_id : null,
 					status: save === 'pedding' ? 'pending' : +final_total > +get_amount ? 'debt' : 'paid'
 				})
 				.where(eq(invoice.id, +invoice_id));

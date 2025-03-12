@@ -3,7 +3,7 @@ import type { MySqlColumn } from 'drizzle-orm/mysql-core';
 
 export function pagination(url: URL) {
 	const page = Number(url.searchParams.get('page')) || 1;
-	const limit = Number(url.searchParams.get('limit')) || 10;
+	const limit = Number(url.searchParams.get('limit')) || 20;
 	const currenctPage = page || 1;
 	const offset = limit * (currenctPage - 1);
 	return {

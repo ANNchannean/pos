@@ -8,6 +8,7 @@
 		name: data.get_customer?.name,
 		address: data.get_customer?.address,
 		contact: data.get_customer?.contact,
+		gender: data.get_customer?.gender,
 		picture: ''
 	});
 	export const snapshot: Snapshot = {
@@ -23,7 +24,7 @@
 <Form enctype="multipart/form-data" action="?/create_customer" method="POST">
 	<div class="mb-3">
 		<div class="mb-2">
-			<label for="exampleFormControlInput1" class="form-label">ឈ្មោះអតិថិជន</label>
+			<label for="customer_name" class="form-label">ឈ្មោះអតិថិជន</label>
 			{#if get_customer?.id}
 				<input type="hidden" name="customer_id" value={get_customer.id} />
 			{/if}
@@ -43,7 +44,25 @@
 			{/if}
 		</div>
 		<div class="mb-2">
-			<label for="exampleFormControlInput1" class="form-label">អាស័យដ្នាន</label>
+			<label for="gender" class="form-label">ភេទ</label>
+			
+			<!-- svelte-ignore a11y_autofocus -->
+			<input
+				autocomplete="off"
+				autofocus
+				bind:value={form_customer.gender}
+				type="text"
+				class="form-control"
+				name="gender"
+				id="gender"
+				placeholder="បញ្ជូលឈ្មោះអតិថិជន"
+			/>
+			{#if form?.name}
+				<p class="text-danger">សូមបញ្ជូលឈ្មោះអតិថិជន</p>
+			{/if}
+		</div>
+		<div class="mb-2">
+			<label for="customer_address" class="form-label">អាស័យដ្នាន</label>
 
 			<input
 				autocomplete="off"
@@ -60,7 +79,7 @@
 			{/if}
 		</div>
 		<div class="mb-2">
-			<label for="exampleFormControlInput1" class="form-label">ទំនាក់ទំនង</label>
+			<label for="customer_contact" class="form-label">ទំនាក់ទំនង</label>
 			<input
 				autocomplete="off"
 				bind:value={form_customer.contact}

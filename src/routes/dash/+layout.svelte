@@ -16,7 +16,7 @@
 	let { data, children }: { data: LayoutServerData; children: Snippet } = $props();
 	let { user } = $derived(data);
 	$effect(() => {
-		store.inerHight = (window.innerHeight - 180).toString().concat('px');
+		store.inerHight = (window.innerHeight - 160).toString().concat('px');
 	});
 </script>
 
@@ -66,8 +66,7 @@
 							<a
 								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/report/sale')}
-								href="/dash/report/sale"
-								><i class="fa-solid fa-comments-dollar"></i> របាយការណ៌លក់</a
+								href="/dash/report/sale"><i class="fa-solid fa-comments-dollar"></i> របាយការណ៌លក់</a
 							>
 						</li>
 						<li>
@@ -194,7 +193,7 @@
 	</div>
 </nav>
 
-<main class="container-fluid pt-3">
+<main class="container-fluid bg-body-tertiary">
 	{#if store.inerHight}
 		{@render children?.()}
 	{:else}

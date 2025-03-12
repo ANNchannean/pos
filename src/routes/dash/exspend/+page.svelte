@@ -3,6 +3,7 @@
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import DatetimeFormat from '$lib/component/DatetimeFormat.svelte';
 	import NoData from '$lib/component/NoData.svelte';
+	import { store } from '$lib/store/store.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_exspends } = $derived(data);
@@ -10,7 +11,7 @@
 
 <h4>បញ្ជីការចំណាយ</h4>
 <hr />
-<div class="row">
+<div class="row pb-1">
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
 			<input name="q" placeholder="ស្វែងរកតាមរយឈ្មោះ..." type="search" class="form-control" />
@@ -20,8 +21,9 @@
 		<a href="/dash/exspend/create" class="btn btn-warning">បញ្ចូលការចំណាយ</a>
 	</div>
 </div>
-<table class="table">
-	<thead>
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
+		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 		<tr>
 			<th scope="col">ID#</th>
 			<th scope="col">សរុបចំណាយ</th>
@@ -70,3 +72,4 @@
 		<NoData colspan={6} items={get_exspends.length} />
 	</tbody>
 </table>
+</div>

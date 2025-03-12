@@ -111,7 +111,7 @@
 	</div>
 </Form>
 
-<table class="table">
+<table class="table table-light">
 	<thead>
 		<tr>
 			<th scope="col">#</th>

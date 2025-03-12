@@ -19,7 +19,7 @@ export const actions: Actions = {
 	// សម្រាប់កង្កើតប្រភេទទំនិញថ្មី
 	create_customer: async ({ request }) => {
 		const body = await request.formData();
-		const { customer_name, customer_address, customer_contact, customer_id } = Object.fromEntries(
+		const { customer_name, customer_address, customer_contact, customer_id,gender } = Object.fromEntries(
 			body
 		) as Record<string, string>;
 
@@ -39,6 +39,7 @@ export const actions: Actions = {
 				.update(customer)
 				.set({
 					name: customer_name,
+					gender: gender,
 					address: customer_address,
 					contact: customer_contact
 				})
@@ -53,6 +54,7 @@ export const actions: Actions = {
 				.values({
 					name: customer_name,
 					address: customer_address,
+					gender: gender,
 					contact: customer_contact
 				})
 				.catch((err) => {

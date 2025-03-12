@@ -2,6 +2,7 @@
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import Form from '$lib/component/Form.svelte';
 	import NoData from '$lib/component/NoData.svelte';
+	import { store } from '$lib/store/store.svelte';
 	import type { PageServerData } from './$types';
 	let { data }: { data: PageServerData } = $props();
 	let { get_categoryies } = $derived(data);
@@ -13,7 +14,7 @@
 
 <h4>បញ្ជីប្រភេទទំនិញ</h4>
 <hr />
-<div class="row">
+<div class="row pb-1">
 	<div class="col-4">
 		<form data-sveltekit-keepfocus action="?/search" method="get">
 			<input
@@ -29,8 +30,9 @@
 		<a href="/dash/category/create" class="btn btn-warning">បង្កើតថ្មី</a>
 	</div>
 </div>
-<table class="table">
-	<thead>
+<div style="height: {store.inerHight};" class="table-responsive overflow-x-hidden">
+	<table class="table table-light">
+		<thead style="z-index: 1;" class="sticky-top position-sticky table-active">
 		<tr>
 			<th scope="col">ID#</th>
 			<th scope="col">ឈ្មោះប្រភេទទំនិញ</th>
@@ -65,3 +67,4 @@
 		<NoData colspan={3} items={q_categories.length} />
 	</tbody>
 </table>
+</div>

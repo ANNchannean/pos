@@ -20,7 +20,7 @@
 			/>
 		</div>
 		<div class="col">
-			<table class="table">
+			<table class="table table-light">
 				<tbody>
 					<tr>
 						<td>ឈ្មេះផលិតផល​​</td>

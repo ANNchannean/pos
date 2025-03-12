@@ -137,20 +137,20 @@
 		</table>
 
 		<div class="footer">
-			<div style="font-size: 110%;" class="en_font_times_new_roman row fs-3">
+			<div  class="en_font_times_new_roman row fs-4">
 				<div class="col-6 text-center">
-					<span>------------------------</span>
-					<br />
 					<span>ហត្ថលេខានឹងឈ្មោះអ្នកបង់ប្រាក់</span>
 					<br />
 					<span>Sign's Payment and Name</span>
+					<br />
+					<span>------------------------</span>
 				</div>
 				<div class="col-6 text-center">
-					<span>------------------------</span>
-					<br />
 					<span>ហត្ថលេខានឹងឈ្មោះអ្នកទទួលប្រាក់</span>
 					<br />
 					<span>Sign's Cashier and Name</span>
+					<br />
+					<span>------------------------</span>
 				</div>
 			</div>
 		</div>

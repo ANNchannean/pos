@@ -87,10 +87,11 @@ export const productRelations = relations(product, ({ one, many }) => ({
 
 export const customer = t.mysqlTable('customer', {
 	id: t.int().primaryKey().autoincrement(),
-	name: t.varchar({ length: 50 }),
+	name: t.varchar({ length: 100 }),
 	picture: t.varchar({ length: 255 }),
-	address: t.varchar({ length: 100 }),
-	contact: t.varchar({ length: 20 })
+	address: t.varchar({ length: 255 }),
+	contact: t.varchar({ length: 50 }),
+	gender: t.varchar({ length: 20 })
 });
 export const supplier = t.mysqlTable('supplier', {
 	id: t.int().primaryKey().autoincrement(),
