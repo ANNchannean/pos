@@ -334,7 +334,6 @@
 						value={store.productOrders.find((e) => e.id === product_id)?.qty}
 						type="number"
 						name="qty"
-						step="0.25"
 						min="1"
 						class="form-control"
 						id={`qty${product_id}`}

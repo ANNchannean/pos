@@ -58,13 +58,13 @@ export const load = (async ({ url }) => {
 			productOrders: {
 				with: {
 					product: {
-						with:{
-							subUnit:{
-								with:{
-									unit:true
+						with: {
+							subUnit: {
+								with: {
+									unit: true
 								}
 							},
-							unit:true
+							unit: true
 						}
 					}
 				}
@@ -72,7 +72,7 @@ export const load = (async ({ url }) => {
 			customer: true
 		}
 	});
-	return { get_customers, get_products, get_brands, get_categories, get_invoice,get_product_scan };
+	return { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -168,7 +168,6 @@ export const actions: Actions = {
 				const unit_id_ = unit_id[i]?.toString();
 				const amount_ = amount[i]?.toString();
 				const product_id_ = product_id[i]?.toString();
-				if (product_id_) continue;
 				const productOrder_ = get_invoice?.productOrders.find((e) => e.product_id === +product_id_);
 				if (productOrder_?.id) {
 					await db
@@ -194,6 +193,12 @@ export const actions: Actions = {
 						discount: discount_,
 						invoice_id: +invoice_id
 					});
+				}
+			}
+			for (const e of get_invoice?.productOrders || []) {
+				const is_created = product_id.some((ee) => +ee === e.product_id)
+				if (!is_created) {
+					await db.delete(productOrder).where(eq(productOrder.id, e.id));
 				}
 			}
 			redirect(300, `/dash/report/print?invoice_id=${invoice_id}`);
