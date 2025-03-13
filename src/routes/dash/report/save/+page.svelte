@@ -116,7 +116,7 @@
 				</tr>
 			{/each}
 
-			<NoData colspan={8} items={get_invoices.length} />
+			<NoData colspan={9} items={get_invoices.length} />
 		</tbody>
 	</table>
 </div>

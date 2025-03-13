@@ -118,6 +118,13 @@
 						<li>
 							<a
 								class="dropdown-item"
+								class:text-warning={page.url.pathname.includes('/dash/group-price')}
+								href="/dash/group-price"><i class="fa-solid fa-coins"></i> កញ្ចប់តម្លៃ</a
+							>
+						</li>
+						<li>
+							<a
+								class="dropdown-item"
 								class:text-warning={page.url.pathname.includes('/dash/brand')}
 								href="/dash/brand"><i class="fa-solid fa-sheet-plastic"></i> ប្រេនទំនិញ</a
 							>

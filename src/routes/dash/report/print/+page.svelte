@@ -71,10 +71,11 @@
 			<thead>
 				<tr class="table-active table table-light border border-dark border-1">
 					<td class=" border border-dark border-1" style="width: 3%;">ល.រ</td>
-					<td class=" border border-dark border-1" style="width: 60%;">ឈ្មោះទំនិញ</td>
+					<td class=" border border-dark border-1" style="width: 50%;">ឈ្មោះទំនិញ</td>
 					<td class="text-center border border-dark border-1" style="width: 10%;">ចំនួន</td>
 					<td class="text-center border border-dark border-1" style="width: 10%;">តម្លៃ</td>
-					<td class="text-center border border-dark border-1" style="width: 17%;">សរុប</td>
+					<td class="text-center border border-dark border-1" style="width: 12%;">បញ្ចុះតម្លៃ</td>
+					<td class="text-center border border-dark border-1" style="width: 15%;">សរុប</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -83,9 +84,16 @@
 						<td class="text-center border border-dark border-1">{index + 1}</td>
 						<td class="text-wrap border border-dark border-1">{item.product.name}</td>
 						<td class="text-center text-wrap border border-dark border-1"
-							>{item.quantity} {item.unit.name}</td
+							>{item.quantity} {item?.unit?.name}</td
 						>
 						<td class="text-center border border-dark border-1">$ {item.price}</td>
+						<td class=" border border-dark border-1"
+							>{#if item.discount?.includes('%')}
+								{item.discount}
+							{:else if item.discount}
+								$ {item.discount}
+							{/if}
+						</td>
 						<td class=" border border-dark border-1">$ {item.total}</td>
 					</tr>
 				{/each}
@@ -104,7 +112,7 @@
 							{/if}
 						</div>
 					</td>
-					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
+					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
 						ប្រាក់សរុប
 					</td>
 					<td class="border border-dark border-1 border border-dark border-1" colspan="1">
@@ -112,8 +120,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
-						បញ្ចុះតម្លៃ
+					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
+						បញ្ចុះតម្លៃចុងក្រោយ
 					</td>
 					<td class="border border-dark border-1" colspan="1">
 						<div>
@@ -126,7 +134,7 @@
 					</td>
 				</tr>
 				<tr class="border-bottom-0">
-					<td colspan="2" class="text-end border-bottom-0 border border-dark border-1">
+					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
 						សរុបចុងក្រោយ
 					</td>
 					<td class="border border-dark border-1" colspan="1">
@@ -137,7 +145,7 @@
 		</table>
 
 		<div class="footer">
-			<div  class="en_font_times_new_roman row fs-4">
+			<div class="en_font_times_new_roman row fs-4">
 				<div class="col-6 text-center">
 					<span>ហត្ថលេខានឹងឈ្មោះអ្នកបង់ប្រាក់</span>
 					<br />

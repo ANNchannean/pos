@@ -48,9 +48,9 @@
 					<button class="btn btn-warning float-end btn-block"
 						><i class="fa-solid fa-right-to-bracket"></i> ចូលប្រើប្រព័ន្ធ</button
 					>
-					<button class="btn btn-outline-warning" formaction="?/register"
+					<!-- <button class="btn btn-outline-warning" formaction="?/register"
 						><i class="fa-solid fa-fingerprint"></i> បង្កើតគណនីថ្មី</button
-					>
+					> -->
 				</div>
 			</Form>
 		</div>

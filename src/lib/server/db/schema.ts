@@ -115,10 +115,8 @@ export const productOrder = t.mysqlTable('product_order', {
 	total: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	discount: t.varchar({ length: 20 }),
-	invoice_id: t
-		.int()
-		.references(() => invoice.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-		.notNull()
+	invoice_id: t.int().references(() => invoice.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	sample_invoice_id: t.int().references(() => sampleInvoice.id, { onDelete: 'cascade', onUpdate: 'cascade' })
 });
 
 export type ProductOrder = typeof productOrder.$inferSelect;
@@ -134,6 +132,10 @@ export const productOrderRelations = relations(productOrder, ({ one }) => ({
 	invoice: one(invoice, {
 		references: [invoice.id],
 		fields: [productOrder.invoice_id]
+	}),
+	sampleInvoice: one(sampleInvoice, {
+		references: [sampleInvoice.id],
+		fields: [productOrder.sample_invoice_id]
 	})
 }));
 
@@ -154,8 +156,22 @@ export const invoice = t.mysqlTable('invoice', {
 		.varchar({ length: 255 })
 		.references(() => user.id)
 		.notNull(),
+	note: t.text(),
+	type: t.varchar({ length: 20 }).$type<'set' | null>().default(null)
+});
+
+export const sampleInvoice = t.mysqlTable('sample_invoice', {
+	id: t.int().primaryKey().autoincrement(),
+	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	name: t.varchar({ length: 255 }).notNull(),
 	note: t.text()
 });
+export const sampleInvoiceRelations = relations(sampleInvoice, ({ many }) => ({
+
+	productOrders: many(productOrder)
+}));
+
+
 export const invoiceRelations = relations(invoice, ({ one, many }) => ({
 	customer: one(customer, {
 		references: [customer.id],

@@ -9,12 +9,51 @@
 	import { addProduct, modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
 	import HandleQ from '$lib/component/HandleQ.svelte';
 	let { data }: { data: PageServerData } = $props();
-	let { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan } =
-		$derived(data);
+	let {
+		get_customers,
+		get_products,
+		get_brands,
+		get_categories,
+		get_invoice,
+		get_product_scan,
+		get_sample_invoice
+	} = $derived(data);
 	let q = $state('');
 	let modal_type: 'pay' | 'save' = $state('pay');
 	let product_id = $state(0);
 	let get_product = $derived(get_products.find((e) => e.id === product_id));
+
+	export const snapshot: Snapshot<ProductOrder[]> = {
+		capture: () => store.productOrders,
+		restore: (value) => (store.productOrders = value)
+	};
+	let innerHeight = $derived(window.innerHeight);
+
+	let total_amount = $derived(
+		get_sample_invoice
+			? get_sample_invoice.amount
+			: store.productOrders.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
+	);
+	let plan_input_amount = $state(0);
+	$effect(() => {
+		if (total_amount) {
+			plan_input_amount = +total_amount;
+		}
+	});
+	let final_discount: string = $state(data.get_invoice?.discount || '');
+	let final_total = $derived(
+		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
+	);
+
+	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
+	$effect(() => {
+		if (page.url.searchParams.get('product_id')) {
+			product_id = Number(page.url.searchParams.get('product_id'));
+			if (get_product?.id !== product_id) {
+				$inspect('a');
+			}
+		}
+	});
 	$effect(() => {
 		if (get_invoice?.productOrders) {
 			store.productOrders = get_invoice?.productOrders?.map((e) => ({
@@ -35,37 +74,27 @@
 					}))
 				]
 			}));
+		} else if (get_sample_invoice?.productOrders) {
+			store.productOrders = get_sample_invoice?.productOrders?.map((e) => ({
+				id: e.product.id,
+				name: e.product.name,
+				price: e.price,
+				qty: e.quantity,
+				amount: e.amount,
+				total: e.total,
+				unit_id: e.unit_id,
+				discount: e.discount,
+				subUnit: [
+					{ unit_id: e.product.unit_id, name: e.product?.unit.name, price: e.product.price },
+					...e.product.subUnit.map((e) => ({
+						unit_id: e.unit_id,
+						name: e.unit.name,
+						price: e.price
+					}))
+				]
+			}));
 		} else {
 			store.productOrders = [];
-		}
-	});
-	export const snapshot: Snapshot<ProductOrder[]> = {
-		capture: () => store.productOrders,
-		restore: (value) => (store.productOrders = value)
-	};
-	let innerHeight = $derived(window.innerHeight);
-
-	let total_amount = $derived(
-		store.productOrders.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
-	);
-	let plan_input_amount = $state(0);
-	$effect(() => {
-		if (total_amount) {
-			plan_input_amount = +total_amount;
-		}
-	});
-	let final_discount: string = $state(data.get_invoice?.discount || '');
-	let final_total = $derived(
-		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
-	);
-
-	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
-	$effect(() => {
-		if (page.url.searchParams.get('product_id')) {
-			product_id = Number(page.url.searchParams.get('product_id'));
-			if (get_product?.id !== product_id) {
-				$inspect('a');
-			}
 		}
 	});
 </script>

@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { customer, invoice, product, productOrder } from '$lib/server/db/schema';
+import { customer, invoice, product, productOrder, sampleInvoice } from '$lib/server/db/schema';
 import { and, eq, like, or } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { localFormat } from '$lib/client/helper';
@@ -10,6 +10,7 @@ export const load = (async ({ url }) => {
 	const customer_q = url.searchParams.get('customer_q') || '';
 	const product_q = url.searchParams.get('product_q') || '';
 	const invoice_id = url.searchParams.get('invoice_id') || '';
+	const sample_invoice_id = url.searchParams.get('sample_invoice_id') || '';
 	const brand_id = url.searchParams.get('brand_id') || '';
 	const category_id = url.searchParams.get('category_id') || '';
 	const get_customers = await db.query.customer.findMany(({
@@ -52,6 +53,26 @@ export const load = (async ({ url }) => {
 		),
 		limit: 50
 	});
+	const get_sample_invoice = await db.query.sampleInvoice.findFirst({
+		where: eq(sampleInvoice.id, +sample_invoice_id),
+		with: {
+			productOrders: {
+				with: {
+					product: {
+						with: {
+							subUnit: {
+								with: {
+									unit: true
+								}
+							},
+							unit: true
+						}
+					}
+				}
+			},
+
+		}
+	});
 	const get_invoice = await db.query.invoice.findFirst({
 		where: eq(invoice.id, +invoice_id),
 		with: {
@@ -72,7 +93,7 @@ export const load = (async ({ url }) => {
 			customer: true
 		}
 	});
-	return { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan };
+	return { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan,get_sample_invoice };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
