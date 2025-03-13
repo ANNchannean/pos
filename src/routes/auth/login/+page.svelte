@@ -60,7 +60,7 @@
 <style>
 	.center {
 		margin: auto;
-		width: 550px;
+		width: 450px;
 		padding: 10px;
 		margin-top: 10%;
 	}
