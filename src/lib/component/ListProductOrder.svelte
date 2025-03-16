@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { store, type ProductOrder } from '$lib/store/store.svelte';
-	import {  modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
+	import { modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
 	interface Props<T> {
 		product_id: number;
 		get_product: T;
@@ -39,7 +39,7 @@
 								{product?.name}
 							</h1>
 							<button
-								id={"close_modal".concat(id)}
+								id={'close_modal'.concat(id)}
 								type="button"
 								class="btn-close"
 								data-bs-dismiss="modal"
@@ -137,7 +137,7 @@
 								<div class="form-control">
 									<div class="form-check py-0 my-0">
 										<input
-											onchange={(e) => {
+											onchange={() => {
 												const a = store.productOrders.find((e) => e.product_id === product_id);
 												if (a) a.type = a.type === null ? 'set' : null;
 											}}
@@ -148,10 +148,7 @@
 											id={`type${product_id}`}
 										/>
 										<label class="form-check-label" for={`type${product_id}`}>
-											គ្រីសដើម្បីបញ្ជូលក្នុងតម្លៃរូម {store.productOrders.find(
-												(e) => e.product_id === product_id
-											)?.type}
-											{product_id}
+											គ្រីសដើម្បីបញ្ជូលក្នុងតម្លៃរូម
 										</label>
 									</div>
 								</div>

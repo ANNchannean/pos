@@ -50,7 +50,7 @@
 						<div class="row g-1">
 							<div class="col-auto">
 								<AlertDelete action="?/delete">
-									<input type="hidden" name="exspend_id" value={item.id} />
+									<input type="hidden" name="id" value={item.id} />
 								</AlertDelete>
 							</div>
 							<div class="col-auto">
