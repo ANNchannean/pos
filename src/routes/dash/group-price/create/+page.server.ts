@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import type { Actions, PageServerLoad } from './$types';
-import {  product, productOrder, sampleInvoice } from '$lib/server/db/schema';
+import { product, productOrder, sampleInvoice } from '$lib/server/db/schema';
 import { eq, like } from 'drizzle-orm';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -66,6 +66,7 @@ export const actions: Actions = {
 				product_id: +product_id,
 				unit_id: +unit_id,
 				quantity: +qty,
+				type: 'set',
 				amount: 0,
 				price: 0,
 				total: 0,
@@ -73,12 +74,12 @@ export const actions: Actions = {
 			redirect(300, `/dash/group-price/create?sample_invoice_id=${create_sample_invoice[0].id}`);
 		}
 		if (sample_invoice_id) {
-			console.log(body)
 			await db.insert(productOrder).values({
 				sample_invoice_id: +sample_invoice_id,
 				product_id: +product_id,
 				unit_id: +unit_id,
 				quantity: +qty,
+				type: 'set',
 				amount: 0,
 				price: 0,
 				total: 0,

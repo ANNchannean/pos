@@ -8,6 +8,8 @@
 	import SearchProductSubmit from '$lib/component/SearchProductSubmit.svelte';
 	import { addProduct, modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
 	import HandleQ from '$lib/component/HandleQ.svelte';
+	import DiscountModal from '$lib/component/ListProductOrder.svelte';
+	import ListProductOrder from '$lib/component/ListProductOrder.svelte';
 	let { data }: { data: PageServerData } = $props();
 	let {
 		get_customers,
@@ -28,13 +30,18 @@
 		restore: (value) => (store.productOrders = value)
 	};
 	let innerHeight = $derived(window.innerHeight);
-
-	let total_amount = $derived(
-		get_sample_invoice
-			? get_sample_invoice.amount
-			: store.productOrders.reduce((s, e) => s + Number(e.total || 0), 0).toFixed(2)
+	let null_price = $derived(
+		store.productOrders
+			.filter((e) => e.type !== 'set')
+			?.reduce((s, e) => s + Number(e.total || 0), 0)
+			.toFixed(2)
 	);
+	let total_amount = $state(0);
+	let set_price = $state(0);
 	let plan_input_amount = $state(0);
+	$effect(() => {
+		total_amount = +null_price;
+	});
 	$effect(() => {
 		if (total_amount) {
 			plan_input_amount = +total_amount;
@@ -44,7 +51,6 @@
 	let final_total = $derived(
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
 	);
-
 	let total_billing_amount = $derived((+final_total - plan_input_amount).toFixed(2));
 	$effect(() => {
 		if (page.url.searchParams.get('product_id')) {
@@ -57,10 +63,11 @@
 	$effect(() => {
 		if (get_invoice?.productOrders) {
 			store.productOrders = get_invoice?.productOrders?.map((e) => ({
-				id: e.product.id,
+				product_id: e.product.id,
 				name: e.product.name,
 				price: e.price,
 				qty: e.quantity,
+				type: e.type,
 				amount: e.amount,
 				total: e.total,
 				unit_id: e.unit_id,
@@ -76,10 +83,11 @@
 			}));
 		} else if (get_sample_invoice?.productOrders) {
 			store.productOrders = get_sample_invoice?.productOrders?.map((e) => ({
-				id: e.product.id,
+				product_id: e.product.id,
 				name: e.product.name,
 				price: e.price,
 				qty: e.quantity,
+				type: e.type,
 				amount: e.amount,
 				total: e.total,
 				unit_id: e.unit_id,
@@ -99,6 +107,7 @@
 	});
 </script>
 
+{get_product?.id}
 <div class="row g-1 w-100">
 	<div class="col-md-5">
 		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
@@ -135,60 +144,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each store.productOrders as form}
-							<tr>
-								<td>
-									<div>
-										<!-- Button trigger modal -->
-										<button
-											onclick={() => {
-												product_id = form.id;
-											}}
-											type="button"
-											class="btn btn-link my-0 py-0 text-start text-decoration-none"
-											data-bs-toggle="modal"
-											data-bs-target="#discountModal"
-										>
-											{form.name}
-										</button>
-									</div>
-								</td>
-								<td>$ {form.price} </td>
-								<td>
-									<input
-										onchange={(e) => {
-											const value = +e.currentTarget.value as number;
-											const found = store.productOrders.find((e) => e.id === form.id);
-											if (found) {
-												found.qty = Number(value);
-												found.amount = +(+value * form.price).toFixed(2);
-												found.total = found.discount
-													? +Number(
-															calulatorDiscount(found.qty, found.price, found.discount)
-														).toFixed(2)
-													: found.amount;
-											}
-										}}
-										class="form-control py-1"
-										style="width: 60px;"
-										type="number"
-										min="1"
-										value={form.qty}
-									/>
-								</td>
-								<td>$ {form.total}</td>
-								<td>
-									<button
-										onclick={() => {
-											store.productOrders = store.productOrders.filter((e) => e.id !== form.id);
-										}}
-										aria-label="delete"
-										class="btn btn-link text-decoration-none text-danger"
-									>
-										<i class="fa-solid fa-trash"></i>
-									</button>
-								</td>
-							</tr>
+						{#each store.productOrders as product_order}
+							<ListProductOrder get_product={product_order} product_id={product_order.product_id} />
 						{/each}
 					</tbody>
 				</table>
@@ -291,10 +248,11 @@
 										type="button"
 										onclick={() =>
 											addProduct({
-												id: product.id,
+												product_id: product.id,
 												name: product.name,
 												price: product.price,
 												qty: 1,
+												type: null,
 												total: product.price,
 												amount: product.price,
 												discount: null,
@@ -326,7 +284,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5 text-truncate" id="exampleModalLabel">
-					{store.productOrders.find((e) => e.id === product_id)?.name}
+					{store.productOrders.find((e) => e.product_id === product_id)?.name}
 				</h1>
 				<button
 					id="close_modal"
@@ -350,7 +308,7 @@
 								}
 							}
 						}}
-						value={store.productOrders.find((e) => e.id === product_id)?.discount}
+						value={store.productOrders.find((e) => e.product_id === product_id)?.discount}
 						type="text"
 						name="discount"
 						class="form-control"
@@ -360,7 +318,7 @@
 				<div class="input-group pb-2">
 					<label style="width: 120px;" for="" class="input-group-text">ខ្នាត</label>
 					<input
-						value={store.productOrders.find((e) => e.id === product_id)?.qty}
+						value={store.productOrders.find((e) => e.product_id === product_id)?.qty}
 						type="number"
 						name="qty"
 						min="1"
@@ -372,7 +330,7 @@
 							const value = e.currentTarget.value || '';
 							if (
 								store.productOrders
-									.find((e) => e.id === product_id)
+									.find((e) => e.product_id === product_id)
 									?.subUnit.find((e) => e.unit_id === +value)
 							) {
 								const priceElement = document.getElementById(
@@ -381,7 +339,7 @@
 								if (priceElement) {
 									priceElement.value =
 										store.productOrders
-											.find((e) => e.id === product_id)
+											.find((e) => e.product_id === product_id)
 											?.subUnit.find((e) => e.unit_id === +value)
 											?.price?.toString() ?? '';
 								}
@@ -398,10 +356,10 @@
 						name="unit_id"
 						id={`unit_id${product_id}`}
 					>
-						{#each store.productOrders.find((e) => e.id === product_id)?.subUnit || [] as item}
+						{#each store.productOrders.find((e) => e.product_id === product_id)?.subUnit || [] as item}
 							<option
 								selected={item.unit_id ===
-								store.productOrders?.find((e) => e.id === product_id)?.unit_id
+								store.productOrders?.find((e) => e.product_id === product_id)?.unit_id
 									? true
 									: false}
 								value={item.unit_id}>{item.name}</option
@@ -409,10 +367,10 @@
 						{/each}
 					</select>
 				</div>
-				<div class="input-group">
+				<div class="input-group pb-2">
 					<label style="width: 120px;" for="" class="input-group-text">តម្លៃលក់</label>
 					<input
-						value={store.productOrders.find((e) => e.id === product_id)?.price}
+						value={store.productOrders.find((e) => e.product_id === product_id)?.price}
 						type="number"
 						name="price"
 						step="any"
@@ -420,6 +378,33 @@
 						class="form-control"
 						id={`price${product_id}`}
 					/>
+				</div>
+				<div class="input-group">
+					<label style="width: 120px;" for="" class="input-group-text">តម្លៃរូម</label>
+
+					<div class="form-control">
+						<div class="form-check py-0 my-0">
+							<input
+								onchange={(e) => {
+									const a = store.productOrders.find((e) => e.product_id === product_id);
+									if (a) a.type = a.type === null ? 'set' : null;
+								}}
+								class="form-check-input"
+								type="checkbox"
+								name="type"
+								value={store.productOrders.find((e) => e.product_id === product_id)?.type === 'set'
+									? 'set'
+									: null}
+								id={`type${product_id}`}
+							/>
+							<label class="form-check-label" for={`type${product_id}`}>
+								គ្រីសដើម្បីបញ្ជូលក្នុងតម្លៃរូម {store.productOrders.find(
+									(e) => e.product_id === product_id
+								)?.type}
+								{product_id}
+							</label>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer float-end">
@@ -470,15 +455,15 @@
 				method="post"
 			>
 				<input type="hidden" name="return_or_balance" value={total_billing_amount} />
-				<input type="hidden" name="total_amount" value={total_amount} />
 				<input type="hidden" name="invoice_id" value={page.url.searchParams.get('invoice_id')} />
 				<input type="hidden" name="customer_id" value={page.url.searchParams.get('customer_id')} />
 				{#if modal_type === 'save'}
 					<input type="hidden" name="save" value="pending" />
 				{/if}
 				<input type="hidden" name="final_total" value={final_total} />
-				{#each store.productOrders as item (item.id)}
-					<input type="hidden" name="product_id" value={item.id} />
+				{#each store.productOrders as item (item.product_id)}
+					<input type="hidden" name="product_id" value={item.product_id} />
+					<input type="hidden" name="type" value={item.type} />
 					<input type="hidden" name="discount" value={item.discount} />
 					<input type="hidden" name="qty" value={item.qty} />
 					<input type="hidden" name="price" value={item.price} />
@@ -539,7 +524,36 @@
 							</tbody>
 						</table>
 					</div>
-
+					{#if store.productOrders.some((e) => e.type === 'set')}
+						<div class="input-group pb-2">
+							<label style="width: 100px;" for="set_price" class="input-group-text"
+								>កញ្ចប់តម្លៃ</label
+							>
+							<input
+								class="form-control"
+								bind:value={set_price}
+								type="number"
+								step="any"
+								name="set_price"
+								id="set_price"
+							/>
+							<label for="set_price" class="input-group-text">$</label>
+						</div>
+					{/if}
+					<div class="input-group pb-2">
+						<label style="width: 100px;" for="total_amount" class="input-group-text"
+							>ប្រាក់សរុប</label
+						>
+						<input
+							class="form-control"
+							bind:value={total_amount}
+							type="number"
+							step="any"
+							name="total_amount"
+							id="total_amount"
+						/>
+						<label for="total_amount" class="input-group-text">$</label>
+					</div>
 					<div class="input-group pb-2">
 						<label style="width: 100px;" for="total_amount" class="input-group-text"
 							>បញ្ជុះតម្លៃ</label

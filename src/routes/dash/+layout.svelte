@@ -200,7 +200,7 @@
 	</div>
 </nav>
 
-<main class="container-fluid bg-body-tertiary">
+<main class="container-fluid">
 	{#if store.inerHight}
 		{@render children?.()}
 	{:else}

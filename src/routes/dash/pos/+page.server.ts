@@ -93,7 +93,7 @@ export const load = (async ({ url }) => {
 			customer: true
 		}
 	});
-	return { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan,get_sample_invoice };
+	return { get_customers, get_products, get_brands, get_categories, get_invoice, get_product_scan, get_sample_invoice };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -116,6 +116,7 @@ export const actions: Actions = {
 		const qty = body.getAll('qty');
 		const price = body.getAll('price');
 		const total = body.getAll('total');
+		const type = body.getAll('type');
 		const unit_id = body.getAll('unit_id');
 		const amount = body.getAll('amount');
 		if (!final_total || !seller_id) return fail(400, { validErr: true });
@@ -144,6 +145,7 @@ export const actions: Actions = {
 				const price_ = price[i]?.toString();
 				const total_ = total[i]?.toString();
 				const unit_id_ = unit_id[i]?.toString();
+				const type_ = type[i]?.toString();
 				const amount_ = amount[i]?.toString();
 				const product_id_ = product_id[i]?.toString();
 				await db.insert(productOrder).values({
@@ -152,6 +154,7 @@ export const actions: Actions = {
 					quantity: +qty_,
 					price: +price_,
 					total: +total_,
+					type: type_ === 'set' ? 'set' : null,
 					amount: +amount_,
 					discount: discount_,
 					invoice_id: create_invocie[0].id
@@ -187,6 +190,7 @@ export const actions: Actions = {
 				const price_ = price[i]?.toString();
 				const total_ = total[i]?.toString();
 				const unit_id_ = unit_id[i]?.toString();
+				const type_ = type[i]?.toString();
 				const amount_ = amount[i]?.toString();
 				const product_id_ = product_id[i]?.toString();
 				const productOrder_ = get_invoice?.productOrders.find((e) => e.product_id === +product_id_);
@@ -198,6 +202,7 @@ export const actions: Actions = {
 							unit_id: +unit_id_,
 							quantity: +qty_,
 							price: +price_,
+							type: type_ === 'set' ? 'set' : null,
 							total: +total_,
 							amount: +amount_,
 							discount: discount_
@@ -210,6 +215,7 @@ export const actions: Actions = {
 						quantity: +qty_,
 						price: +price_,
 						total: +total_,
+						type: type_ === 'set' ? 'set' : null,
 						amount: +amount_,
 						discount: discount_,
 						invoice_id: +invoice_id

@@ -116,7 +116,8 @@ export const productOrder = t.mysqlTable('product_order', {
 	amount: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
 	discount: t.varchar({ length: 20 }),
 	invoice_id: t.int().references(() => invoice.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-	sample_invoice_id: t.int().references(() => sampleInvoice.id, { onDelete: 'cascade', onUpdate: 'cascade' })
+	sample_invoice_id: t.int().references(() => sampleInvoice.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+	type: t.varchar({ length: 20 }).$type<'set' | null>().default(null)
 });
 
 export type ProductOrder = typeof productOrder.$inferSelect;
@@ -157,7 +158,6 @@ export const invoice = t.mysqlTable('invoice', {
 		.references(() => user.id)
 		.notNull(),
 	note: t.text(),
-	type: t.varchar({ length: 20 }).$type<'set' | null>().default(null)
 });
 
 export const sampleInvoice = t.mysqlTable('sample_invoice', {
