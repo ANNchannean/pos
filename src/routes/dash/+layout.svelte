@@ -37,8 +37,8 @@
 		<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class:text-warning={page.url.pathname === '/dash'} class="nav-link" href="/dash"
-						><i class="fa-solid fa-house"></i> ទំព័រដើម
+					<a class:text-warning={page.url.pathname === '/dash'} class="nav-link" href="/dash">
+						<i class="fa-solid fa-house"></i> ទំព័រដើម
 					</a>
 				</li>
 				<li class="nav-item">
@@ -154,9 +154,9 @@
 				</li>
 				<li class="nav-item">
 					<a
-						class:text-warning={page.url.pathname.includes('/dash/supplier')}
+						class:text-warning={page.url.pathname.includes('/dash/account')}
 						class="nav-link"
-						href="/dash/supplier"><i class="fa-solid fa-address-book"></i> អ្នកផ្គត់ផ្គង់</a
+						href="/dash/account"><i class="fa-regular fa-circle-user"></i> បុគ្គលិក</a
 					>
 				</li>
 				<li class="nav-item">
@@ -180,12 +180,12 @@
 			</button>
 			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 				<li>
-					<a class="dropdown-item" href="/user/create/?user_id={user.id}"
+					<a class="dropdown-item" href="/dash/account/create/?user_id={user.id}"
 						><i class="fa-regular fa-user"></i> អ្នកប្រើប្រាស់ : {user?.username}</a
 					>
 				</li>
 				<li>
-					<a class="dropdown-item" href="/user/create/?user_id={user.id}"
+					<a class="dropdown-item" href="/dash/account/create/?user_id={user.id}"
 						><i class="fa-solid fa-shield-halved"></i> សិទ្ធជា : {user.role}
 					</a>
 				</li>
@@ -200,7 +200,7 @@
 	</div>
 </nav>
 
-<main  class="container-fluid  ">
+<main class="container-fluid">
 	{#if store.inerHight}
 		{@render children?.()}
 	{:else}

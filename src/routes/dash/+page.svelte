@@ -5,7 +5,7 @@
 	import type { PageServerData } from './$types';
 	import QRCode from 'qrcode';
 	let { data }: { data: PageServerData } = $props();
-	let { count_product, count_user, count_customer, exspend, income } = $derived(data);
+	let { count_product, count_user, count_customer, exspend, income, get_invoices } = $derived(data);
 </script>
 
 <div class="container">
@@ -50,36 +50,9 @@
 			</div>
 		</div>
 	</div>
-	<div>
-		<table class="table table-light">
-			<thead class="table-active">
-				<tr>
-					<th>កាលបរិច្ឋេទ</th>
-					<th>ចំណាយ</th>
-					<th>ចំណូល</th>
-					<th>ចំនេញ / ខាត</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td>$ {exspend}</td>
-					<td>$ {income}</td>
-					<td>
-						{#if income - exspend < 0}
-							ខាត $ {(income - exspend).toString().replace('-', '')}
-						{/if}
-						{#if income - exspend > 0}
-							ចំនេញ $ {(income - exspend).toString().replace('-', '')}
-						{/if}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
 
 	<div>
-		<h1>ទំនិញលក់ថ្ងៃនេះ</h1>
+		<h1>របាយការណ៌</h1>
 		<div class="pb-1">
 			<HeaderQuery>
 				<div class="col-sm-2">
@@ -106,31 +79,43 @@
 				</div>
 			</HeaderQuery>
 		</div>
-		<table class="table table-light">
-			<thead class="table-active">
-				<tr>
-					<th>កាលបរិច្ឋេទ</th>
-					<th>ចំណាយ</th>
-					<th>ចំណូល</th>
-					<th>ចំនេញ / ខាត</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td>$ {exspend}</td>
-					<td>$ {income}</td>
-					<td>
-						{#if income - exspend < 0}
-							ខាត $ {(income - exspend).toString().replace('-', '')}
-						{/if}
-						{#if income - exspend > 0}
-							ចំនេញ $ {(income - exspend).toString().replace('-', '')}
-						{/if}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		{#each get_invoices as item}
+			{@const prduct_orders = item?.productOrders || []}
+			<table class="table table-light table-bordered">
+				<thead class="table-active">
+					<tr>
+						<th
+							>លេខវិក័យប័ត្រ <a href="/dash/pos?invoice_id={item.id}&customer_id={item.customer_id}"
+								>@{item.id}</a
+							>
+						</th>
+						<th>អតិថិជន​ {item.customer?.name || 'ទូទៅ'}</th>
+						<th>ចំនួ​ន</th>
+						<th>តម្លៃ</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each prduct_orders || [] as product, index}
+						<tr>
+							
+							<td colspan="2">{product.product.name}</td>
+							<td>
+								{product.quantity}
+								{product.unit?.name}
+							</td>
+							<td>
+								$ {product.total}
+							</td>
+						</tr>
+					{/each}
+					<tr>
+						<td colspan="2"></td>
+						<td class="">សរុប</td>
+						<td>$ {item.total}</td>
+					</tr>
+				</tbody>
+			</table>
+		{/each}
 	</div>
 </div>
 <div class="row g-1">

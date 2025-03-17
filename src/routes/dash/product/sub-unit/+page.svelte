@@ -12,12 +12,13 @@
 <div class="pb-3">
 	<div class="row">
 		<div class="col-auto">
+
 			<img
-				class="img-thumbnail"
-				style="height: 200px;"
-				src="/uploads/{get_product?.image}"
-				alt=""
-			/>
+			class="img-thumbnail"
+			style="height: 200px;"
+			src={get_product?.image ? `/uploads/${get_product.image}` : `/no-image.png`}
+			alt=""
+		/>
 		</div>
 		<div class="col">
 			<table class="table table-light">
