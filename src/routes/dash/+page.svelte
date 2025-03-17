@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Barcode from '$lib/component/Barcode.svelte';
 	import Graphs from '$lib/component/Graphs.svelte';
+	import HeaderQuery from '$lib/component/HeaderQuery.svelte';
 	import type { PageServerData } from './$types';
 	import QRCode from 'qrcode';
 	let { data }: { data: PageServerData } = $props();
@@ -76,8 +77,35 @@
 			</tbody>
 		</table>
 	</div>
+
 	<div>
 		<h1>ទំនិញលក់ថ្ងៃនេះ</h1>
+		<div class="pb-1">
+			<HeaderQuery>
+				<div class="col-sm-2">
+					<div class="input-group">
+						<span class="input-group-text">ចាប់ពី</span>
+						<input type="date" name="start" class="form-control" />
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="input-group">
+						<span class="input-group-text">រហូតដល់</span>
+						<input type="date" name="end" class="form-control" />
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="input-group">
+						<button aria-label="telegram" class="btn btn-outline-warning"
+							><i class="fa-brands fa-telegram"></i></button
+						>
+						<button aria-label="csv" class="btn btn-outline-warning"
+							><i class="fa-solid fa-file-csv"></i></button
+						>
+					</div>
+				</div>
+			</HeaderQuery>
+		</div>
 		<table class="table table-light">
 			<thead class="table-active">
 				<tr>
