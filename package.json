@@ -49,6 +49,7 @@
 		"@types/qrcode": "^1.5.5",
 		"@typescript-eslint/eslint-plugin": "^8.26.1",
 		"@typescript-eslint/parser": "^8.26.1",
+		"chart.js": "^4.4.8",
 		"cropperjs": "^1.6.2",
 		"dotenv": "^16.4.7",
 		"drizzle-orm": "^0.38.4",

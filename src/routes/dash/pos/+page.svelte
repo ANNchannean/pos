@@ -103,8 +103,16 @@
 			store.productOrders = [];
 		}
 	});
+	$effect(() => {
+		if (store.productOrders.some((e) => e.type === 'set')) {
+			set_price = store.productOrders
+				.filter((e) => e.type === 'set')
+				.reduce((s, e) => s + Number(e.total || 0), 0);
+		} else {
+			set_price = 0;
+		}
+	});
 </script>
-
 
 <div class="row g-1 w-100">
 	<div class="col-md-5">
@@ -142,21 +150,21 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if store.productOrders?.some((e) => e.type === "set" )}
-						<tr>
-							<td colspan="2">
-								<button class="text-end float-end btn btn-success"> កញ្ចប់តម្លៃ </button>
-							</td>
-							<td colspan="3">
-								<input
-									bind:value={set_price}
-									class="form-control"
-									type="number"
-									name="set_price"
-									id="set_price"
-								/>
-							</td>
-						</tr>
+						{#if store.productOrders?.some((e) => e.type === 'set')}
+							<tr>
+								<td colspan="2">
+									<button class="text-end float-end btn btn-success"> កញ្ចប់តម្លៃ </button>
+								</td>
+								<td colspan="3">
+									<input
+										bind:value={set_price}
+										class="form-control"
+										type="number"
+										name="set_price"
+										id="set_price"
+									/>
+								</td>
+							</tr>
 						{/if}
 						{#each store.productOrders as product_order}
 							<ListProductOrder get_product={product_order} product_id={product_order.product_id} />
@@ -246,7 +254,7 @@
 							}))
 						]}
 
-						<div class="col-md-3 col-lg-2 mb-4 col-sm-4">
+						<div class="col-md-3 col-lg-3 mb-4 col-sm-4">
 							<div class="card">
 								<img
 									src={product?.image ? `/uploads/${product?.image}` : `/no-image.png`}
@@ -273,7 +281,7 @@
 												unit_id: product.unit_id,
 												subUnit: subUnit
 											})}
-										class="btn btn-primary w-100">តម្លៃ $ {product.price}</button
+										class="btn btn-warning w-100">តម្លៃ $ {product.price}</button
 									>
 								</div>
 							</div>

@@ -52,13 +52,9 @@ export const actions: Actions = {
 			description: false
 		};
 		if (!product_name) validProduct.product_name = true;
-		if (!barcode) validProduct.barcode = true;
 		if (!price) validProduct.price = true;
-
 		if (!category_id) validProduct.category_id = true;
-		if (!brand_id) validProduct.brand_id = true;
 		if (!unit_id) validProduct.unit_id = true;
-		if (!description) validProduct.description = true;
 		if (Object.values(validProduct).includes(true)) return fail(400, validProduct); // ហាមប៉ះពាល
 		// បញ្ជប់ការពិនិ្យ
 		//ករណី produts មានស្រាប់ ត្រូវ Update

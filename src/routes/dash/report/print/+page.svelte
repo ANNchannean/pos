@@ -11,9 +11,21 @@
 		window.print();
 		document.body.innerHTML = originalContents;
 	}
+	let set_price = $derived.by(() => {
+		if (get_invoice?.productOrders.some((e) => e.type !== 'set')) {
+			return (
+				get_invoice?.amount -
+				get_invoice?.productOrders
+					.filter((e) => e.type !== 'set')
+					.reduce((s, e) => s + Number(e.total || 0), 0)
+			);
+		} else {
+			return get_invoice?.amount;
+		}
+	});
+	let product_null = $derived(get_invoice?.productOrders.filter((e) => e.type !== 'set'));
+	let product_set = $derived(get_invoice?.productOrders.filter((e) => e.type === 'set'));
 </script>
-
-<!-- Invoice 1 - Bootstrap Brain Component -->
 
 <div id="scall" class="row justify-content-center">
 	<div style="width: 1200px;">
@@ -36,7 +48,7 @@
 						{get_company?.name_english ?? ''}
 					</p>
 				</div>
-				<hr />
+				<hr class="border-dark border-2" />
 			</div>
 			<div class="row g-0 justify-content-between fs-3">
 				<div class="col-5">
@@ -79,7 +91,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each get_invoice?.productOrders || [] as item, index (item.id)}
+				{#each product_null || [] as item, index (item.id)}
 					<tr class="border border-dark border-1">
 						<td class="text-center border border-dark border-1">{index + 1}</td>
 						<td class="text-wrap border border-dark border-1">{item.product.name}</td>
@@ -97,6 +109,21 @@
 						<td class=" border border-dark border-1">$ {item.total}</td>
 					</tr>
 				{/each}
+				{#if product_set?.length}
+					<tr class="border border-dark border-1">
+						<td colspan="5" class="text-wrap border border-dark border-1">
+							{#each product_set || [] as item, index (item.id)}
+								<div class="text-success m-2">
+									{index + 1 + Number(product_null?.length)} - {item.product.name}
+									x {item.quantity}
+									{item?.unit?.name}
+								</div>
+							{/each}
+						</td>
+
+						<td class=" border border-dark border-1">$ {set_price}</td>
+					</tr>
+				{/if}
 				<tr>
 					<td
 						style="vertical-align: top;"
