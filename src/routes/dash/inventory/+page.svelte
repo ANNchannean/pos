@@ -119,7 +119,7 @@
 			<th scope="col">ឈ្មោះទំនិញ</th>
 			<th scope="col">បាកូដ</th>
 			<th scope="col">តម្លៃទិញចូល</th>
-			<th scope="col">ខ្នាត</th>
+			<th scope="col">សរុប</th>
 			<th scope="col">ប្រភេទទំនិញ</th>
 			<th colspan="2" scope="col">ប្រេនទំនិញ</th>
 		</tr>
@@ -128,15 +128,20 @@
 		{#each get_exspend?.inventory || [] as inventory, index}
 			{@const item = inventory.product}
 			<tr>
-				<td>{index}</td>
+				<td>{index + 1}</td>
 				<td>
-					<img class="img-thumbnail" style="height: 50px;" src="/uploads/{item?.image}" alt="" />
+					<img
+						class="img-thumbnail"
+						style="height: 50px;"
+						src={item.image ? `/uploads/${item.image}` : `/no-image.png`}
+						alt=""
+					/>
 				</td>
 				<td>{item?.name}</td>
 				<td>{item?.barcode}</td>
-				<td>$ {inventory.cost} {inventory.constUnit?.name} </td>
+				<td>$ {inventory.cost} / 1 {inventory.constUnit?.name} </td>
 				<td>
-					{item?.unit.name}
+					$ {inventory.total_expense}
 				</td>
 				<td>{item?.category.name}</td>
 				<td>{item?.brand?.name}</td>

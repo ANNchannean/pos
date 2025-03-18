@@ -79,9 +79,9 @@
 			</div>
 		</div>
 
-		<table class="table table-bordered fs-3 border border-dark border-1">
+		<table class="table table-bordered table-light fs-3">
 			<thead>
-				<tr class="table-active table table-light border border-dark border-1">
+				<tr class="table-active table border border-dark border-1">
 					<td class=" border border-dark border-1" style="width: 3%;">ល.រ</td>
 					<td class=" border border-dark border-1" style="width: 50%;">ឈ្មោះទំនិញ</td>
 					<td class="text-center border border-dark border-1" style="width: 10%;">ចំនួន</td>
@@ -124,13 +124,8 @@
 						<td class=" border border-dark border-1">$ {set_price}</td>
 					</tr>
 				{/if}
-				<tr>
-					<td
-						style="vertical-align: top;"
-						class="border border-bottom-0 border-0"
-						rowspan="3"
-						colspan="2"
-					>
+				<tr class="border-0">
+					<td style="vertical-align: top;" class="border border-0 border-0" rowspan="3" colspan="2">
 						<div class="text-break text-start fs-6">
 							{get_company?.note}
 							{#if get_invoice?.note}
@@ -139,15 +134,13 @@
 							{/if}
 						</div>
 					</td>
-					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
-						ប្រាក់សរុប
-					</td>
+					<td colspan="3" class="text-end border-0 border border-dark border-1"> ប្រាក់សរុប </td>
 					<td class="border border-dark border-1 border border-dark border-1" colspan="1">
 						<div>$ {get_invoice?.amount}</div>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
+				<tr class="border-0">
+					<td colspan="3" class="text-end border-0 border border-dark border-1">
 						បញ្ចុះតម្លៃចុងក្រោយ
 					</td>
 					<td class="border border-dark border-1" colspan="1">
@@ -160,10 +153,8 @@
 						</div>
 					</td>
 				</tr>
-				<tr class="border-bottom-0">
-					<td colspan="3" class="text-end border-bottom-0 border border-dark border-1">
-						សរុបចុងក្រោយ
-					</td>
+				<tr class="border-0">
+					<td colspan="3" class="text-end border-0 border border-dark border-1"> សរុបចុងក្រោយ </td>
 					<td class="border border-dark border-1" colspan="1">
 						$ {get_invoice?.total}
 					</td>

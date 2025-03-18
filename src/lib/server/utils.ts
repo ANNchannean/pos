@@ -43,13 +43,27 @@ export async function calulatorStock(invoice_id: number, type: 'update' | 'creat
 	})
 	if (!get_invoice) return
 	for (const e of get_invoice.productOrders) {
-		const inventory = e.product.inventory
+		const inventories = e.product.inventory
 		let qty_catch_stock = e.quantity
 		const found_unit = e.product?.subUnit?.find((e) => e.unit_id === e.unit_id)
 		if (found_unit) {
 			qty_catch_stock = e.quantity * found_unit.qty_per_unit
 		}
-		console.log(qty_catch_stock)
+
+		for (let index = 0; index < inventories.length; index++) {
+			const element = inventories[index];
+			if (element.is_count_stock) {
+				if (element.qty_available) {
+					if (element.qty_available >= qty_catch_stock) {
+						await db.update(inventory).set({
+							qty_available: element.qty_available - qty_catch_stock
+						}).where(eq(inventory.id, element.id))
+						break
+					}
+				}
+			}
+
+		}
 	}
 
 }

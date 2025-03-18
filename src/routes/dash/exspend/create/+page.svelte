@@ -18,7 +18,6 @@
 
 <h4>បញ្ជូលពត៌មានការចំណាយ</h4>
 <hr />
-{get_exspend?.created_at}
 <!-- មានតួនាទីធ្វើសំណើរទៅកាន់ Server  -->
 <Form action="?/create_exspend" method="POST">
 	<div class="mb-3">

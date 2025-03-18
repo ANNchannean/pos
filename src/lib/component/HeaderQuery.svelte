@@ -2,8 +2,9 @@
 	import { page } from '$app/state';
 	interface Props {
 		children?: import('svelte').Snippet;
+		class: string;
 	}
-	let { children }: Props = $props();
+	let { children, class: klass="row g-1" }: Props = $props();
 
 	let page_: number | string = $derived(page.url.searchParams.get('page') || '');
 	let limit: number | string = $derived(page.url.searchParams.get('limit') || '');
@@ -15,7 +16,7 @@
 	onchange={({ currentTarget }) => {
 		currentTarget.requestSubmit();
 	}}
-	class="row g-1"
+	class={klass}
 >
 	{#if page_}
 		<input type="hidden" name="page" value={page_} />
