@@ -1,10 +1,12 @@
 import 'dotenv/config';
-const { CHAT_ID, TELEGRAM_API_URL, TELEGRAM_BOT_TOKEN } = process.env
+import { db } from './db';
+const TELEGRAM_API_URL = 'https://api.telegram.org/bot'
 export async function sendMessageToTelegram(message: string) {
-   const url = `${TELEGRAM_API_URL}${TELEGRAM_BOT_TOKEN}/sendMessage`;
+   const get_company = await db.query.companyInfo.findFirst();
+   const url = `${TELEGRAM_API_URL}${get_company?.bot_token}/sendMessage`;
 
    const body = {
-      chat_id: CHAT_ID,
+      chat_id: get_company?.chat_id,
       text: message
    };
 

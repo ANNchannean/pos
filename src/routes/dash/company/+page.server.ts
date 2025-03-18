@@ -13,7 +13,8 @@ export const load = (async () => {
 export const actions: Actions = {
 	create: async ({ request }) => {
 		const body = await request.formData();
-		const { name_khmer, name_english, description, contact, address, id, logo, note } =
+		const { name_khmer, name_english, description, contact, address, id, logo, note, chat_id,
+			bot_token } =
 			Object.fromEntries(body) as Record<string, string>;
 		const file = body.get('file') as File;
 		if (id) {
@@ -25,6 +26,8 @@ export const actions: Actions = {
 					description,
 					contact,
 					address,
+					chat_id,
+					bot_token,
 					note,
 					logo: file ? await updateFile(file, logo) : undefined,
 					created_at: localFormat.datetime(new Date())
@@ -37,6 +40,8 @@ export const actions: Actions = {
 				description,
 				contact,
 				note,
+				chat_id,
+				bot_token,
 				address,
 				logo: file ? await uploadFile(file) : null,
 				created_at: localFormat.datetime(new Date())

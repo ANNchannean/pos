@@ -124,7 +124,7 @@
 
 							<label for="address">អាស័យដ្នាន</label>
 						</div>
-						<div class="form-floating">
+						<div class="form-floating mb-3">
 							<textarea
 								value={get_company?.note ?? ''}
 								class="form-control text-center"
@@ -135,7 +135,32 @@
 							></textarea>
 							<label for="note">ចំណាំ</label>
 						</div>
+						<div class="form-floating mb-3">
+							<input
+								value={get_company?.chat_id ?? ''}
+								class="form-control text-center"
+								type="text"
+								required
+								autocomplete="off"
+								name="chat_id"
+							/>
+
+							<label for="address">Chat ID</label>
+						</div>
+						<div class="form-floating mb-3">
+							<input
+								value={get_company?.bot_token ?? ''}
+								class="form-control text-center"
+								type="text"
+								required
+								autocomplete="off"
+								name="bot_token"
+							/>
+
+							<label for="address">Bot token</label>
+						</div>
 					</div>
+					
 				</div>
 			</section>
 		</div>

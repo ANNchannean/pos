@@ -19,7 +19,9 @@ export const companyInfo = t.mysqlTable('company_info', {
 	logo: t.varchar({ length: 255 }),
 	qr: t.varchar({ length: 255 }),
 	note: t.text(),
-	created_at: t.datetime({ mode: 'string' }).notNull()
+	created_at: t.datetime({ mode: 'string' }).notNull(),
+	chat_id:t.varchar({ length: 255 }),
+	bot_token:t.varchar({ length: 255 })
 });
 
 export const session = t.mysqlTable('session', {
