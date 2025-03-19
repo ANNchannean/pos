@@ -43,7 +43,12 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./static/uploads:/uploads
-
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    networks:
+      - hms_network
 networks:
   pos_network:
     driver: bridge
