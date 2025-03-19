@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    restart: always
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: coffeelake
+      MYSQL_DATABASE: hms
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - clinic_system
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    networks:
+      - clinic_system
+  caddy:
+    container_name: caddy
+    image: caddy:2.8.4-alpine
+    restart: always
+    networks:
+      - clinic_system
+    ports:
+      - 80:80
+      - 443:443
+      - 8000:8000
+    volumes:
+      - ./Caddyfile-dev:/etc/caddy/Caddyfile
+      - ./static/uploads:/uploads
+
+networks:
+  clinic_system:
+    driver: bridge

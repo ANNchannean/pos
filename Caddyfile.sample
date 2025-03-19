@@ -1,0 +1,12 @@
+hms.localhost {
+	handle {
+		reverse_proxy svelte:3000
+	}
+	handle_path /uploads* {
+		root * /uploads
+		file_server browse
+	}
+}
+:8080 {
+	reverse_proxy adminer:8080
+}

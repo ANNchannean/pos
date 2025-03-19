@@ -10,7 +10,7 @@ WORKDIR /app
 # ENV NODE_ENV=production
 COPY package.json bun.lock pnpm-lock.yaml ./
 
-# Install dependencies using pnpm
+# Install dependencies 
 RUN bun install --frozen-lockfile
 
 FROM oven/bun:1.2.2 AS release
@@ -22,9 +22,9 @@ COPY --from=base /app/node_modules node_modules
 # Copy the rest of the application code to the working directory
 COPY . .
 
-RUN bun run build
+RUN bun run -r dotenv/config build
 
 # Define the command to run the application
 # CMD bun run start
 EXPOSE 3000
-CMD ["bun","build/index.js" ]
+CMD ["bun", "build/index.js" ]
