@@ -3,6 +3,7 @@
 	import AlertDelete from '$lib/component/AlertDelete.svelte';
 	import Form from '$lib/component/Form.svelte';
 	import SelectParam from '$lib/component/SelectParam.svelte';
+	import { get } from 'svelte/store';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_products, get_exspend, get_inventory } = $derived(data);
@@ -48,62 +49,66 @@
 	<input type="hidden" name="product_id" value={product_id} />
 	<div class="row mb-2">
 		<div class="col-md-6">
-			<label for="cost">តម្លៃទិញចូល</label>
-			<input
-				value={get_inventory?.cost}
-				class="form-control"
-				step="any"
-				type="number"
-				name="cost"
-				id="cost"
-			/>
-		</div>
-		<div class="col-md-6">
-			<label for="qty_bought">ចំនួនទិញចូល</label>
-			<div class="input-group">
-				<input
-					value={get_inventory?.qty_bought}
-					class="form-control"
-					step="any"
-					type="number"
-					name="qty_bought"
-					id="qty_bought"
-				/>
-				<select name="cost_unit_id" id="cost_unit_id" class="form-control">
-					<option
-						selected={get_product?.unit_id === get_inventory?.cost_unit_id}
-						value={get_product?.unit_id}>{get_product?.unit.name}</option
-					>
-					{#each get_product?.subUnit || [] as item}
-						<option selected={item.unit_id === get_inventory?.cost_unit_id} value={item?.unit_id}
-							>{item?.unit.name}</option
-						>
-					{/each}
-				</select>
+			<div class="row g-1">
+				<div class="col-md-6">
+					<label for="cost">តម្លៃទិញចូល</label>
+					<input
+						value={get_inventory?.cost}
+						class="form-control"
+						step="any"
+						type="number"
+						name="cost"
+						id="cost"
+					/>
+				</div>
+				<div class="col-md-6">
+					<label for="qty_bought">ចំនួនទិញចូល</label>
+
+					<input
+						value={get_inventory?.qty_bought}
+						class="form-control"
+						step="any"
+						type="number"
+						name="qty_bought"
+						id="qty_bought"
+					/>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="form-check">
-		<input
-			value="false"
-			class="form-check-input"
-			type="radio"
-			name="count_stock"
-			id="count_stock"
-			checked={get_inventory?.is_count_stock ? true : false}
-		/>
-		<label class="form-check-label" for="count_stock">មិនរាប់ស្តុក</label>
-	</div>
-	<div class="form-check">
-		<input
-			value="true"
-			class="form-check-input"
-			type="radio"
-			name="count_stock"
-			id="not_count_stock"
-			checked={!get_inventory?.is_count_stock ? true : false}
-		/>
-		<label class="form-check-label" for="not_count_stock"> រាប់ស្តុក </label>
+		<div class="col-md-6">
+			<div class="row g-1">
+				<div class="col-md-6">
+					<label for="">ខ្នាត</label>
+					<select name="cost_unit_id" id="cost_unit_id" class="form-control">
+						<option
+							selected={get_product?.unit_id === get_inventory?.cost_unit_id}
+							value={get_product?.unit_id}>{get_product?.unit.name}</option
+						>
+						{#each get_product?.subUnit || [] as item}
+							<option selected={item.unit_id === get_inventory?.cost_unit_id} value={item?.unit_id}
+								>{item?.unit.name}</option
+							>
+						{/each}
+					</select>
+				</div>
+				<div class="col-md-6">
+					<label for="">គ្រីសដើម្បីរាប់ស្តុក</label>
+					<div class="form-control">
+						<div class="form-check py-0 my-0">
+							<input
+								checked={get_inventory?.is_count_stock ? get_inventory?.is_count_stock : true}
+								class="form-check-input"
+								type="checkbox"
+								name="count_stock"
+								value="count_stock"
+								id="count_stock"
+							/>
+							<label class="form-check-label" for="count_stock"> រាប់ស្តុក </label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div>
@@ -143,7 +148,7 @@
 				<td>
 					$ {inventory.total_expense}
 				</td>
-				<td>{item?.category.name}</td>
+				<td>{item?.category?.name}</td>
 				<td>{item?.brand?.name}</td>
 				<td>
 					<div class="row g-1">

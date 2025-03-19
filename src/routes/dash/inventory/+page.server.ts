@@ -66,7 +66,7 @@ export const actions: Actions = {
 		const body = await request.formData();
 		const { cost, qty_bought, cost_unit_id, count_stock, product_id, exspend_id, inventory_id } =
 			Object.fromEntries(body) as Record<string, string>;
-		if (!cost || !qty_bought || !product_id || !cost_unit_id || !count_stock)
+		if (!cost || !qty_bought || !product_id || !cost_unit_id )
 			return fail(400, { validErr: true });
 		const get_product = await db.query.product.findFirst({
 			where: eq(product.id, +product_id),
@@ -141,7 +141,7 @@ interface TCreateINV {
 	qty_bought: string;
 	cost: string;
 	cost_unit_id: string;
-	count_stock: string;
+	count_stock?: string;
 	product_id: string;
 	exspend_id: number;
 	qty_available: number;
@@ -160,7 +160,7 @@ async function createInventory(param: TCreateINV) {
 					qty_bought: +param.qty_bought,
 					qty_available: +param.qty_available,
 					exspend_id: +param.exspend_id,
-					is_count_stock: param.count_stock === 'true' ? true : false,
+					is_count_stock: param.count_stock === 'count_stock' ? true : false,
 					datetime_buy: param.datetime_buy,
 					total_expense: +param.qty_bought * +param.cost
 				})

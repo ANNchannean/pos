@@ -4,6 +4,7 @@ import { and, eq, like, or } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { localFormat } from '$lib/client/helper';
 import { fail, redirect } from '@sveltejs/kit';
+import { calulatorStock, calulatorUpdateStock } from '$lib/server/utils';
 
 export const load = (async ({ url }) => {
 	const search = url.searchParams.get('search') || '';
@@ -160,9 +161,11 @@ export const actions: Actions = {
 					invoice_id: create_invocie[0].id
 				});
 			}
+			await calulatorStock(create_invocie[0].id)
 			redirect(300, `/dash/report/print?invoice_id=${create_invocie[0].id}`);
 		}
 		if (invoice_id) {
+			await calulatorUpdateStock(+invoice_id)
 			const get_invoice = await db.query.invoice.findFirst({
 				where: eq(invoice.id, +invoice_id),
 				with: {
@@ -228,6 +231,7 @@ export const actions: Actions = {
 					await db.delete(productOrder).where(eq(productOrder.id, e.id));
 				}
 			}
+			await calulatorStock(+invoice_id)
 			redirect(300, `/dash/report/print?invoice_id=${invoice_id}`);
 		}
 	}

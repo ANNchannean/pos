@@ -4,9 +4,10 @@ import type { Actions, PageServerLoad } from './$types';
 import { invoice } from '$lib/server/db/schema';
 import { pagination, betweenHelper } from '$lib/server/utils';
 import { fail } from '@sveltejs/kit';
+import { calulatorUpdateStock } from '$lib/server/utils';
 export const load = (async ({ url }) => {
 	const seller_id = url.searchParams.get('seller_id') ?? '';
-	const status = url.searchParams.get('status')  as 'paid' | 'debt' ;
+	const status = url.searchParams.get('status') as 'paid' | 'debt';
 	const customer_id = url.searchParams.get('customer_id') ?? '';
 	const get_invoices = await db.query.invoice.findMany({
 		where: and(
@@ -41,6 +42,7 @@ export const actions: Actions = {
 		const body = await request.formData();
 		const { id } = Object.fromEntries(body) as Record<string, string>;
 		if (!id) return fail(400, { validDelete: true });
+		await calulatorUpdateStock(+id)
 		await db.delete(invoice).where(eq(invoice.id, Number(id)));
 	}
 };

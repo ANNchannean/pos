@@ -104,15 +104,15 @@
 						<li>
 							<a
 								class="dropdown-item"
-								class:text-warning={page.url.pathname.includes('/dash/inventory')}
-								href="/dash/inventory"><i class="fa-solid fa-money-bill-trend-up"></i> ទិញចូល</a
+								class:text-warning={page.url.pathname.includes('/dash/product')}
+								href="/dash/product"><i class="fa-solid fa-cart-shopping"></i> ផលិតផល់</a
 							>
 						</li>
 						<li>
 							<a
 								class="dropdown-item"
-								class:text-warning={page.url.pathname.includes('/dash/product')}
-								href="/dash/product"><i class="fa-solid fa-cart-shopping"></i> ផលិតផល់</a
+								class:text-warning={page.url.pathname.includes('/dash/inventory')}
+								href="/dash/inventory"><i class="fa-solid fa-money-bill-trend-up"></i> ទិញចូល</a
 							>
 						</li>
 						<li>

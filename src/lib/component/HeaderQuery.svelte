@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	interface Props {
 		children?: import('svelte').Snippet;
-		class: string;
+		class?: string;
 	}
 	let { children, class: klass="row g-1" }: Props = $props();
 

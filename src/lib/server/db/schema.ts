@@ -222,8 +222,6 @@ export const inventory = t.mysqlTable('inventory', {
 	is_close_inventory: t.boolean().default(false).notNull(),
 	qty_bought: t.int().default(0),
 	qty_available: t.int().default(0),
-	old_qty_available: t.int().default(0),
-	old_qty_price: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
 	is_count_stock: t.boolean().default(false).notNull(),
 	datetime_expire: t.datetime({ mode: 'string' }),
 	datetime_buy: t.datetime({ mode: 'string' }),
