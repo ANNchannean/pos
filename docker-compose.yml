@@ -48,7 +48,7 @@ services:
     image: adminer
     restart: always
     networks:
-      - hms_network
+      - pos_network
 networks:
   pos_network:
     driver: bridge
