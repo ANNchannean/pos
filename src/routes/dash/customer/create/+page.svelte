@@ -55,10 +55,10 @@
 				class="form-control"
 				name="gender"
 				id="gender"
-				placeholder="បញ្ជូលឈ្មោះអតិថិជន"
+				placeholder="បញ្ជូលភេទទោះអតិថិជន"
 			/>
 			{#if form?.name}
-				<p class="text-danger">សូមបញ្ជូលឈ្មោះអតិថិជន</p>
+				<p class="text-danger">បញ្ជូលភេទទោះអតិថិជន</p>
 			{/if}
 		</div>
 		<div class="mb-2">

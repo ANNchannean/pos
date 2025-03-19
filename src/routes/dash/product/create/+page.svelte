@@ -1,6 +1,8 @@
 <script lang="ts">
 	import CropImage from '$lib/component/CropImage.svelte';
 	import Form from '$lib/component/Form.svelte';
+	import Select from '$lib/component/Select.svelte';
+	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_categories, get_brands, get_units } = $derived(data);
@@ -107,17 +109,13 @@
 		<div class="col-md-6">
 			<div class="mb-2">
 				<label for="category_id" class="form-label">ប្រភេទទំនិញ</label>
-				<select
-					value={get_product?.category_id}
-					class="form-control"
+				<Select
 					name="category_id"
-					id="category_id"
-				>
-					<option class="form-control" value="">None</option>
-					{#each get_categories as item}
-						<option class="form-control" value={item.id}>{item.name}</option>
-					{/each}
-				</select>
+					value={get_product?.category_id}
+					displayName="ស្វែងរកឈ្មោះប្រេនទំនិញ"
+					items={get_categories.map((e) => ({ id: e.id, name: e.name }))}
+				/>
+
 				{#if form?.category_id}
 					<p class="text-danger">ប្រភេទទំនិញត្រូវតែមាន</p>
 				{/if}
@@ -126,12 +124,12 @@
 		<div class="col-md-6">
 			<div class="mb-2">
 				<label for="brand_id" class="form-label">ប្រេនទំនិញ</label>
-				<select value={get_product?.brand_id} class="form-control" name="brand_id" id="brand_id">
-					<option class="form-control" value="">None</option>
-					{#each get_brands as item}
-						<option class="form-control" value={item.id}>{item.name}</option>
-					{/each}
-				</select>
+				<Select
+					name="brand_id"
+					value={get_product?.brand_id}
+					displayName="ស្វែងរកឈ្មោះប្រេនទំនិញ"
+					items={get_brands.map((e) => ({ id: e.id, name: e.name }))}
+				/>
 				{#if form?.brand_id}
 					<p class="text-danger">ប្រេនទំនិញត្រូវតែមាន</p>
 				{/if}

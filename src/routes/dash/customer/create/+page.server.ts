@@ -30,8 +30,6 @@ export const actions: Actions = {
 			adddress: false
 		};
 		if (!customer_name) validCustomer.name = true;
-		if (!customer_contact) validCustomer.contact = true;
-		if (!customer_address) validCustomer.adddress = true;
 		if (Object.values(validCustomer).includes(true)) return fail(400, validCustomer);
 		// បញ្ជប់ការពិនិ្យ
 		if (customer_id) {

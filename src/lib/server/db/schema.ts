@@ -20,8 +20,8 @@ export const companyInfo = t.mysqlTable('company_info', {
 	qr: t.varchar({ length: 255 }),
 	note: t.text(),
 	created_at: t.datetime({ mode: 'string' }).notNull(),
-	chat_id:t.varchar({ length: 255 }),
-	bot_token:t.varchar({ length: 255 })
+	chat_id: t.varchar({ length: 255 }),
+	bot_token: t.varchar({ length: 255 })
 });
 
 export const session = t.mysqlTable('session', {
@@ -58,7 +58,7 @@ export const product = t.mysqlTable('product', {
 	category_id: t
 		.int()
 		.references(() => category.id)
-		.notNull(),
+	,
 	unit_id: t
 		.int()
 		.references(() => unit.id)
