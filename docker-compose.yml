@@ -40,8 +40,6 @@ services:
     container_name: caddy
     image: caddy:2.8.4-alpine
     restart: always
-    environment:
-      - CADDY_EMAIL=ann.channean@gmail.com 
     networks:
       - network_one
     ports:
