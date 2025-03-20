@@ -1,7 +1,6 @@
 FROM oven/bun:1.2.2 AS base
 
 RUN apt-get update && apt-get install default-mysql-client -y
-ENV TZ=Asia/Phnom_Penh
 
 WORKDIR /app
 
@@ -14,6 +13,8 @@ COPY package.json bun.lock pnpm-lock.yaml ./
 RUN bun install --frozen-lockfile
 
 FROM oven/bun:1.2.2 AS release
+
+ENV TZ=Asia/Phnom_Penh
 
 COPY --from=base /app/node_modules node_modules
 # RUN pnpm install
