@@ -22,3 +22,5 @@ vite.config.ts.timestamp-*
 mysql-data
 .env
 Caddyfile
+caddy_data
+caddy_config

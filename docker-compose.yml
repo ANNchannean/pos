@@ -13,7 +13,7 @@ services:
       - ./uploads:/home/bun/app/uploads
       - /app/build
     networks:
-      - hms_network
+      - network_one
   db:
     image: mysql:8.0
     container_name: db
@@ -29,19 +29,21 @@ services:
     volumes:
       - ~/mysql-data:/var/lib/mysql
     networks:
-      - hms_network
+      - network_one
   adminer:
     container_name: adminer
     image: adminer
     restart: always
     networks:
-      - hms_network
+      - network_one
   caddy:
     container_name: caddy
     image: caddy:2.8.4-alpine
     restart: always
+    environment:
+      - CADDY_EMAIL=ann.channean@gmail.com 
     networks:
-      - hms_network
+      - network_one
     ports:
       - 80:80
       - 443:443
@@ -49,7 +51,13 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./uploads:/uploads
+      - caddy_data:/data                  # Caddy storage for certificates
+      - caddy_config:/config   
 
 networks:
-  hms_network:
+  network_one:
     driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

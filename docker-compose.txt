@@ -1,7 +1,23 @@
 services:
+  svelte:
+    container_name: svelte
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+        required: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./uploads:/home/bun/app/uploads
+      - /app/build
+    networks:
+      - network_one
   db:
     image: mysql:8.0
     container_name: db
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     expose:
       - 3306
@@ -11,29 +27,37 @@ services:
       MYSQL_ROOT_PASSWORD: coffeelake
       MYSQL_DATABASE: hms
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ~/mysql-data:/var/lib/mysql
     networks:
-      - clinic_system
+      - network_one
   adminer:
     container_name: adminer
     image: adminer
     restart: always
     networks:
-      - clinic_system
+      - network_one
   caddy:
     container_name: caddy
     image: caddy:2.8.4-alpine
     restart: always
+    environment:
+      - CADDY_EMAIL=ann.channean@gmail.com 
     networks:
-      - clinic_system
+      - network_one
     ports:
       - 80:80
       - 443:443
-      - 8000:8000
+      - 8080:8080
     volumes:
-      - ./Caddyfile-dev:/etc/caddy/Caddyfile
-      - ./static/uploads:/uploads
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./uploads:/uploads
+      - caddy_data:/data                  # Caddy storage for certificates
+      - caddy_config:/config   
 
 networks:
-  clinic_system:
+  network_one:
     driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

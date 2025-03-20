@@ -1,8 +1,18 @@
-hms.localhost {
+ndcomputer.net {
+	email ann.channean@gmail.com
 	handle {
 		reverse_proxy svelte:3000
 	}
 	handle_path /uploads* {
+		root * /uploads
+		file_server browse
+	}
+	handle_path /adminer* {
+		reverse_proxy adminer:8080
+	}
+}
+:80 {
+	handle /uploads* {
 		root * /uploads
 		file_server browse
 	}
