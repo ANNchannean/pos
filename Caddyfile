@@ -1,4 +1,4 @@
-ndcomputer.net {
+ndkpc.store {
 	handle {
 		reverse_proxy svelte:3000
 	}
@@ -9,13 +9,4 @@ ndcomputer.net {
 	handle_path /adminer* {
 		reverse_proxy adminer:8080
 	}
-}
-:80 {
-	handle /uploads* {
-		root * /uploads
-		file_server browse
-	}
-}
-:8080 {
-	reverse_proxy adminer:8080
 }

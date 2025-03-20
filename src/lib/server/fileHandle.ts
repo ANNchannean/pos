@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import path from 'path';
 import sharp from 'sharp';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
-const location = 'static/uploads';
+const location = 'uploads';
 function generateRandomId(bytes: number): string {
 	const randomBytes = crypto.getRandomValues(new Uint8Array(bytes));
 	return encodeBase32LowerCase(randomBytes);
