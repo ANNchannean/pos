@@ -104,12 +104,21 @@
 		}
 	});
 	$effect(() => {
-		if (store.productOrders.some((e) => e.type === 'set')) {
-			set_price = store.productOrders
-				.filter((e) => e.type === 'set')
-				.reduce((s, e) => s + Number(e.total || 0), 0);
+		if (get_invoice?.productOrders.some((e) => e.type !== 'set')) {
+			set_price =
+				get_invoice?.amount -
+				get_invoice?.productOrders
+					.filter((e) => e.type !== 'set')
+					.reduce((s, e) => s + Number(e.total || 0), 0);
 		} else {
-			set_price = 0;
+			// return get_invoice?.amount;
+			if (store.productOrders.some((e) => e.type === 'set')) {
+				set_price = store.productOrders
+					.filter((e) => e.type === 'set')
+					.reduce((s, e) => s + Number(e.total || 0), 0);
+			} else {
+				set_price = 0;
+			}
 		}
 	});
 </script>
