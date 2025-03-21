@@ -63,7 +63,7 @@
 				<th scope="col">ប្រាក់សរុប</th>
 				<th scope="col">បញ្ចុះតម្លៃ</th>
 				<th scope="col">សរុបចុងក្រោយ</th>
-				<th scope="col">ស្ថានភាព</th>
+				<th scope="col">ប្រាក់ជំពាក់</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -85,7 +85,7 @@
 					<td> $ {invoice.total}</td>
 					<td>
 						{#if invoice.status === 'debt'}
-							<a href="/dash/pos?invoice_id={invoice.id}" class="btn btn-link">ជំពាក់</a>
+							<a href="/dash/pos?invoice_id={invoice.id}" class="btn btn-link"> $ {invoice.total - Number(invoice.amount_paid)} </a> 
 						{:else}
 							មិនជំពាក់
 						{/if}

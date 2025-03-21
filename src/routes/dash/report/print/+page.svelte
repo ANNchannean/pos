@@ -159,6 +159,24 @@
 						$ {get_invoice?.total}
 					</td>
 				</tr>
+				{#if get_invoice?.status === 'debt'}
+					<tr class="border-0">
+						<td colspan="5" class="text-end border-0 border border-dark border-1">
+							ប្រាក់ជំពាក់
+						</td>
+						<td class="border border-dark border-1" colspan="1">
+							$ {get_invoice?.total - Number(get_invoice?.amount_paid)}
+						</td>
+					</tr>
+				{/if}
+				{#if Number(get_invoice?.amount_paid) > Number(get_invoice?.total)}
+					<tr class="border-0">
+						<td colspan="5" class="text-end border-0 border border-dark border-1"> ប្រាក់អាប់ </td>
+						<td class="border border-dark border-1" colspan="1">
+							$ {Number(get_invoice?.total) - Number(get_invoice?.amount_paid)}
+						</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
 

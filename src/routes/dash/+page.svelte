@@ -145,8 +145,14 @@
 				</div>
 				<div class="col-auto">
 					<Form action="?/telegram" method="post">
-						<button type="button" onclick={(e) =>  confirm('ផ្ញើរបាយការណ៌ទៅTelegram?') ? e.currentTarget.form?.requestSubmit() : undefined } aria-label="telegram" class="btn btn-outline-warning"
-							>Telegram <i class="fa-brands fa-telegram"></i></button
+						<button
+							type="button"
+							onclick={(e) =>
+								confirm('ផ្ញើរបាយការណ៌ទៅTelegram?')
+									? e.currentTarget.form?.requestSubmit()
+									: undefined}
+							aria-label="telegram"
+							class="btn btn-outline-warning">Telegram <i class="fa-brands fa-telegram"></i></button
 						>
 						<input type="hidden" value={income} name="income" />
 						<input type="hidden" value={exspend} name="exspend" />
@@ -154,7 +160,6 @@
 						<input type="hidden" value={start} name="start" />
 						<input type="hidden" value={end} name="end" />
 						{#each get_exspends as item}
-					
 							<input type="hidden" value={item.reason} name="reason" />
 							<input type="hidden" value={item.amount} name="amount" />
 						{/each}
@@ -192,10 +197,15 @@
 									{product.unit?.name}
 								</td>
 								<td>
-									$ {product.total}
+									{#if product.type === 'set'}
+										"set"
+									{:else}
+										$ {product.total}
+									{/if}
 								</td>
 							</tr>
 						{/each}
+
 						<tr class="border-bottom-0">
 							<td class=" border-0" colspan="2"></td>
 							<td class="border border-1 border-secondary-subtle table-active">សរុប</td>
