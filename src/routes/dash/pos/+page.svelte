@@ -9,6 +9,8 @@
 	import { addProduct, modalDiscount, calulatorDiscount } from '$lib/client/addProduct';
 	import HandleQ from '$lib/component/HandleQ.svelte';
 	import ListProductOrder from '$lib/component/ListProductOrder.svelte';
+	import Qrcode from '$lib/component/Qrcode.svelte';
+	import { goto } from '$app/navigation';
 	let { data }: { data: PageServerData } = $props();
 	let {
 		get_customers,
@@ -121,11 +123,93 @@
 			}
 		}
 	});
+	function pushParam(name: string, value: string) {
+		const newUrl = new URL(page.url);
+		newUrl?.searchParams?.set(name, value);
+		goto(newUrl, { keepFocus: true, noScroll: true });
+	}
+	let value = $state('');
 </script>
 
 <div class="row g-1 w-100">
-	<div class="col-md-5">
-		<div style="height:90vh;overflow-y: scroll;" class="card rounded-0 bg-light">
+	<div class="col-md-8">
+		<div class="card rounded-0">
+			<div class="card-header">
+				<HeaderQuery>
+					{#if get_invoice?.id}
+						<input type="hidden" name="invoice_id" value={get_invoice?.id} />
+					{/if}
+					{#if get_sample_invoice?.id}
+						<input type="hidden" name="sample_invoice_id" value={get_sample_invoice?.id} />
+					{/if}
+
+					<div class="row g-1">
+						<div class="col-3">
+							<SelectParam name="brand_id" placeholder="ប្រេនទំនិញ" items={get_brands} />
+						</div>
+						<div class="col-3">
+							<SelectParam name="category_id" placeholder="ប្រភេទទំនិញ" items={get_categories} />
+						</div>
+						<div class="col-4">
+							<HandleQ value={value} q_name="search" />
+						</div>
+						<div class="col-2 float-end">
+							<Qrcode scan_type="br" bind:value />
+						</div>
+					</div>
+				</HeaderQuery>
+			</div>
+			<div style="height: {innerHeight - 120}px; " class="card-body overflow-scroll">
+				<div class="row">
+					{#each get_products as product}
+						{@const subUnit = [
+							{ unit_id: product.unit_id, name: product.unit.name, price: product.price },
+							...product.subUnit.map((e) => ({
+								unit_id: e.unit_id,
+								name: e.unit.name,
+								price: e.price
+							}))
+						]}
+
+						<div class="col-md-3 col-lg-3 mb-4 col-sm-4">
+							<div class="card">
+								<img
+									src={product?.image ? `/uploads/${product?.image}` : `/no-image.png`}
+									class="card-img-top"
+									alt=""
+								/>
+								<div class="card-body">
+									<!-- <h5 class="card-title">Card title</h5> -->
+									<p class="card-text text-truncate">
+										{product.name}
+									</p>
+									<button
+										type="button"
+										onclick={() =>
+											addProduct({
+												product_id: product.id,
+												name: product.name,
+												price: product.price,
+												qty: 1,
+												type: null,
+												total: product.price,
+												amount: product.price,
+												discount: null,
+												unit_id: product.unit_id,
+												subUnit: subUnit
+											})}
+										class="btn btn-warning w-100">តម្លៃ $ {product.price}</button
+									>
+								</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div style="height:94vh;overflow-y: scroll;" class="card rounded-0 bg-light">
 			<div class="card-header">
 				<div class="input-group mb-1">
 					<SelectParam
@@ -140,12 +224,6 @@
 						>
 					{/if}
 				</div>
-				<SearchProductSubmit
-					name="product_id"
-					q_name="product_q"
-					placeholder="ស្វែងរកផលិតផល ឫស្កែនបាកូដ"
-					items={get_product_scan.map((e) => ({ id: e.id, name: e.name, price: e.price }))}
-				/>
 			</div>
 			<div class="card-body table-responsive p-0">
 				<table class="table table-sm">
@@ -231,72 +309,6 @@
 						</div>
 					</div>
 				</fieldset>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-7">
-		<div class="card rounded-0">
-			<div class="card-header">
-				<HeaderQuery>
-					<div class="row">
-						<div class="col-4">
-							<SelectParam name="brand_id" placeholder="ប្រេនទំនិញ" items={get_brands} />
-						</div>
-						<div class="col-4">
-							<SelectParam name="category_id" placeholder="ប្រភេទទំនិញ" items={get_categories} />
-						</div>
-						<div class="col-4">
-							<HandleQ q_name="search" />
-						</div>
-					</div>
-				</HeaderQuery>
-			</div>
-			<div style="height: {innerHeight - 148}px; " class="card-body overflow-scroll">
-				<div class="row">
-					{#each get_products as product}
-						{@const subUnit = [
-							{ unit_id: product.unit_id, name: product.unit.name, price: product.price },
-							...product.subUnit.map((e) => ({
-								unit_id: e.unit_id,
-								name: e.unit.name,
-								price: e.price
-							}))
-						]}
-
-						<div class="col-md-3 col-lg-3 mb-4 col-sm-4">
-							<div class="card">
-								<img
-									src={product?.image ? `/uploads/${product?.image}` : `/no-image.png`}
-									class="card-img-top"
-									alt=""
-								/>
-								<div class="card-body">
-									<!-- <h5 class="card-title">Card title</h5> -->
-									<p class="card-text text-truncate">
-										{product.name}
-									</p>
-									<button
-										type="button"
-										onclick={() =>
-											addProduct({
-												product_id: product.id,
-												name: product.name,
-												price: product.price,
-												qty: 1,
-												type: null,
-												total: product.price,
-												amount: product.price,
-												discount: null,
-												unit_id: product.unit_id,
-												subUnit: subUnit
-											})}
-										class="btn btn-warning w-100">តម្លៃ $ {product.price}</button
-									>
-								</div>
-							</div>
-						</div>
-					{/each}
-				</div>
 			</div>
 		</div>
 	</div>

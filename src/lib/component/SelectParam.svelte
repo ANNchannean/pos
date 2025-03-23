@@ -53,13 +53,13 @@
 	}
 	let plan_rest_q = $state('');
 </script>
-
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	onclick={() => document.getElementById(name)?.focus()}
 	class="dropdown form-control m-0 p-0 shadow-none border-0"
 >
+<input {value} type="hidden" {name} />
 	<button
 		data-bs-auto-close={outside ? 'outside' : 'true'}
 		type="button"

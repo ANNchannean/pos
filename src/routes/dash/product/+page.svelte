@@ -105,7 +105,7 @@
 					</td>
 					<td>
 						<div class="text-truncate" style="width: 10rem;">
-							{item.category.name}
+							{item?.category?.name}
 						</div>
 					</td>
 					<td>

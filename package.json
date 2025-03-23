@@ -54,6 +54,7 @@
 		"dotenv": "^16.4.7",
 		"drizzle-orm": "^0.38.4",
 		"eslint-plugin-drizzle": "^0.2.3",
+		"html5-qrcode": "^2.3.8",
 		"jsbarcode": "^3.11.6",
 		"mysql2": "^3.12.0",
 		"qrcode": "^1.5.4",
