@@ -87,7 +87,7 @@
 					{item?.quantity}
 					{item?.unit?.name}
 				</td>
-				<td>{item?.product?.category.name}</td>
+				<td>{item?.product?.category?.name}</td>
 				<td>{item?.product?.brand?.name}</td>
 				<td>
 					<div class="row g-1">
