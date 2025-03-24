@@ -12,6 +12,7 @@
 	let report: 'sale' | 'exspend' | 'out_stock' = $state('sale');
 	let start = $derived(page.url.searchParams.get('start') || '');
 	let end = $derived(page.url.searchParams.get('end') || '');
+	let prompt_data = $state('');
 </script>
 
 <div class="container">
@@ -147,22 +148,18 @@
 					<Form action="?/telegram" method="post">
 						<button
 							type="button"
-							onclick={(e) =>
-								confirm('ផ្ញើរបាយការណ៌ទៅTelegram?')
-									? e.currentTarget.form?.requestSubmit()
-									: undefined}
+							onclick={(e) => {
+								prompt_data = prompt('ផ្ញើរបាយការណ៌ទៅTelegram?',"") ?? '';
+								if(prompt_data) e.currentTarget.form?.requestSubmit()
+							}}
 							aria-label="telegram"
 							class="btn btn-outline-warning">Telegram <i class="fa-brands fa-telegram"></i></button
 						>
 						<input type="hidden" value={income} name="income" />
 						<input type="hidden" value={exspend} name="exspend" />
-						<input type="hidden" value={exspend} name="exspend" />
+						<input type="hidden" value={prompt_data} name="prompt_data" />
 						<input type="hidden" value={start} name="start" />
 						<input type="hidden" value={end} name="end" />
-						{#each get_exspends as item}
-							<input type="hidden" value={item.reason} name="reason" />
-							<input type="hidden" value={item.amount} name="amount" />
-						{/each}
 					</Form>
 				</div>
 				<div class="col-auto">
@@ -259,53 +256,4 @@
 		{/if}
 	</div>
 </div>
-<div class="row g-1">
-	<!-- <div class="col-6">
-		<Graphs
-			type="bar"
-			labels={[locale.T('opd'), locale.T('ipd'), locale.T('laboratory'), locale.T('imagerie')]}
-			title=""
-			datasets={list}
-		/>
-	</div>
-	<div class="col-6">
-		<Graphs
-			type="pie"
-			labels={[locale.T('opd'), locale.T('ipd'), locale.T('laboratory'), locale.T('imagerie')]}
-			title=""
-			datasets={list}
-		/>
-	</div> -->
-</div>
-<!-- 
-<Form enctype="multipart/form-data" action="?/test" method="POST">
-	<CropImage submit={false} name="file" />
-	<input type="hidden" name="id" value={id ?? ''} />
-	<input type="time" name="time" bind:value={time} id="" />
-	<input type="date" name="date" bind:value={date} id="" />
-	<input type="datetime-local" name="datetime" value={datetime} id="" />
 
-	{date} <br />
-	{localFormat.date(date).length}
-	<button type="submit">Submit</button>
-</Form>
-
-<hr />
-{#each get_tests as item}
-	<Form reset={true} action="?/d_test" method="POST">
-		
-		<h3 onclick={() => (id === Number(item.id) ? (id = null) : (id = item.id))}>
-			<button class="btn btn-sm btn-light fs-3 text-danger" value={item.id} type="submit" name="id"
-				>X {item.id ?? ''}</button
-			>
-			<DateTimeFormat date={item.date} timeStyle={false} />
-			<DateTimeFormat date={item.datetime} />
-		</h3>
-	</Form>
-{/each}
-<h1 id="one" class="m-0">Dashbaord</h1>
-<ol class="breadcrumb float-sm-right">
-	<li class="breadcrumb-item"><a href="/">Home</a></li>
-	<li class="breadcrumb-item active">Dashboard</li>
-</ol>
-/> -->

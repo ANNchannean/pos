@@ -35,7 +35,6 @@ export async function calulatorStock(invoice_id: number) {
 							subUnit: true,
 							inventory: {
 								where: eq(inventory.is_outstock, false),
-
 							},
 						}
 					}

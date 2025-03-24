@@ -59,12 +59,13 @@ export const load = (async ({ url, locals }) => {
 }) satisfies PageServerLoad;
 export const actions: Actions = {
     // សម្រាប់កង្កើតប្រេនថ្មី
-    telegram: async ({ request }) => {
+    telegram: async ({ request, locals }) => {
+        const user = locals?.user
         const body = await request.formData();
-        const { income, exspend, start, end } = Object.fromEntries(body) as Record<string, string>;
-        let date = `របាយការណ៌ថ្ងៃ ${localFormat.date(start)} រហូតដល់ ${localFormat.date(end)}`;
+        const { income, exspend, start, end, prompt_data } = Object.fromEntries(body) as Record<string, string>;
+        let date = ` របាយការណ៌ថ្ងៃ ${localFormat.date(start)} រហូតដល់ ${localFormat.date(end)}`;
         if (!start && !end) date = `របាយការណ៌ថ្ងៃ ${localFormat.date(new Date())}`
-        const message = `${date} \n ចំណូល  = $ ${income} \n ចំណាយ = $ ${exspend} \n ចំណេញ = $ ${+income - +exspend}`
+        const message = `អ្នកធ្វើរបាយការណ៌ ${user?.username} \n ${date} \n ចំណូល  = $ ${income} \n ចំណាយ = $ ${exspend} \n ចំណេញ = $ ${+income - +exspend} \n Note# \n ${prompt_data} `
         await sendMessageToTelegram(message)
     }
 };
