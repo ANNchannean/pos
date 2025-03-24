@@ -462,7 +462,7 @@
 						<input
 							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
 							class="form-control"
-							value={final_total}
+							value={get_invoice?.amount_paid ? get_invoice?.amount_paid : plan_input_amount} 
 							type="number"
 							step="any"
 							name="get_amount"
