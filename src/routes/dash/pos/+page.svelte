@@ -37,15 +37,16 @@
 	);
 	let total_amount = $state(0);
 	let set_price = $state(0);
-	let plan_input_amount = $state(0);
+	let plan_input_amount = $state(data.get_invoice?.amount_paid || 0);
 	$effect(() => {
 		total_amount = +null_price + set_price;
 	});
 	$effect(() => {
-		if (total_amount) {
+		if (!get_invoice?.id) {
 			plan_input_amount = +total_amount;
 		}
 	});
+
 	let final_discount: string = $state(data.get_invoice?.discount || '');
 	let final_total = $derived(
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
@@ -460,9 +461,9 @@
 							>ប្រាក់ទទួល</label
 						>
 						<input
-							oninput={(e) => (plan_input_amount = +e.currentTarget.value)}
+			
 							class="form-control"
-							value={get_invoice?.amount_paid ? get_invoice?.amount_paid : plan_input_amount} 
+							bind:value={plan_input_amount} 
 							type="number"
 							step="any"
 							name="get_amount"
