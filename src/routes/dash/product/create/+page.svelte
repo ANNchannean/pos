@@ -1,11 +1,13 @@
 <script lang="ts">
 	import CropImage from '$lib/component/CropImage.svelte';
 	import Form from '$lib/component/Form.svelte';
+	import Qrcode from '$lib/component/Qrcode.svelte';
 	import Select from '$lib/component/Select.svelte';
 	import SelectParam from '$lib/component/SelectParam.svelte';
 	import type { PageServerData, ActionData } from './$types';
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let { get_product, get_categories, get_brands, get_units } = $derived(data);
+	let br = $state(data?.get_product?.barcode ?? '');
 </script>
 
 <h4>បង្កើតផលិតផលថ្មី</h4>
@@ -33,16 +35,19 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="mb-2">
-				<label for="barcode" class="form-label">បាកូដ</label>
+			<label for="barcode" class="form-label">បាកូដ</label>
+			<div class="mb-2 input-group">
 				<input
-					value={get_product?.barcode}
+					bind:value={br}
 					type="text"
 					class="form-control"
 					name="barcode"
 					id="barcode"
 					placeholder="បញ្ជូលបាកូដ(មិនអាចដូចគ្នា)"
 				/>
+				<div class="ms-2">
+					<Qrcode bind:value={br} scan_type="br" />
+				</div>
 				{#if form?.barcode}
 					<p class="text-danger">បាកូដត្រូវតែមាន</p>
 				{/if}
