@@ -144,6 +144,7 @@
 											class="form-check-input"
 											type="checkbox"
 											name="type"
+											checked={product?.type === 'set' ? true : false}
 											value={product?.type === 'set' ? 'set' : null}
 											id={`type${product_id}`}
 										/>

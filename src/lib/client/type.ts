@@ -1,0 +1,1 @@
+export {type TproperyItem} from '$lib/server/db/schema'

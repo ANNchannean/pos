@@ -45,6 +45,9 @@ export const category = t.mysqlTable('category', {
 	id: t.int().primaryKey().autoincrement(),
 	name: t.varchar({ length: 50 }).unique()
 });
+export const categoryRelations = relations(category, ({ many }) => ({
+	properyItem: many(properyItem)
+}));
 export const unit = t.mysqlTable('unit', {
 	id: t.int().primaryKey().autoincrement(),
 	name: t.varchar({ length: 50 }).unique()
@@ -263,5 +266,56 @@ export const subUnitRelations = relations(subUnit, ({ one }) => ({
 	product: one(product, {
 		fields: [subUnit.product_id],
 		references: [product.id]
+	})
+}));
+
+
+export const tableOrder = t.mysqlTable('table_order', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 255 }).notNull(),
+	invoice_id: t.int().references(() => invoice.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade'
+	})
+});
+export const tableOrderRelations = relations(tableOrder, ({ one }) => ({
+	invoice: one(invoice, {
+		fields: [tableOrder.invoice_id],
+		references: [invoice.id]
+	})
+}));
+
+
+export const propery = t.mysqlTable('propery', {
+	id: t.int().primaryKey().autoincrement(),
+	product_order_id: t.int().references(() => productOrder.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade'
+	}),
+	price: t.decimal({ precision: 10, scale: 2 }).notNull().$type<number>(),
+	include: t.text()
+});
+export const properyRelations = relations(propery, ({ one }) => ({
+	productOrder: one(productOrder, {
+		fields: [propery.product_order_id],
+		references: [productOrder.id]
+	})
+}));
+
+
+export const properyItem = t.mysqlTable('propery_item', {
+	id: t.int().primaryKey().autoincrement(),
+	name: t.varchar({ length: 255 }).notNull(),
+	price: t.decimal({ precision: 18, scale: 2 }).$type<number>(),
+	category_id: t.int().references(() => category.id, {
+		onDelete: 'cascade',
+		onUpdate: 'cascade'
+	})
+});
+export type TproperyItem = typeof properyItem.$inferSelect;
+export const properyItemRelations = relations(properyItem, ({ one }) => ({
+	category: one(category, {
+		fields: [properyItem.category_id],
+		references: [category.id]
 	})
 }));

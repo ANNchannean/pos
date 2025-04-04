@@ -11,6 +11,7 @@
 	import ListProductOrder from '$lib/component/ListProductOrder.svelte';
 	import Qrcode from '$lib/component/Qrcode.svelte';
 	import { goto } from '$app/navigation';
+	import type { TproperyItem } from '$lib/client/type';
 	let { data }: { data: PageServerData } = $props();
 	let {
 		get_customers,
@@ -47,8 +48,8 @@
 		}
 	});
 	$effect(() => {
-		if(!store.productOrders.some((e) => e.type === 'set' )) set_price = 0
-	} )
+		if (!store.productOrders.some((e) => e.type === 'set')) set_price = 0;
+	});
 	let final_discount: string = $state(data.get_invoice?.discount || '');
 	let final_total = $derived(
 		final_discount ? calulatorDiscount(1, Number(total_amount), final_discount) : total_amount
@@ -132,6 +133,15 @@
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
 	let value = $state('');
+	// Proteryies Function
+	interface TproductProperty {
+		product_id: number;
+		price: number;
+		qty: number;
+		product_name: string;
+		property_item: TproperyItem[] | [];
+	}
+	let product_property: TproductProperty | null = $state(null);
 </script>
 
 <div class="row g-1 w-100">
@@ -145,21 +155,6 @@
 					{#if get_sample_invoice?.id}
 						<input type="hidden" name="sample_invoice_id" value={get_sample_invoice?.id} />
 					{/if}
-
-					<div class="row g-1">
-						<div class="col-3">
-							<SelectParam name="brand_id" placeholder="ប្រេនទំនិញ" items={get_brands} />
-						</div>
-						<div class="col-3">
-							<SelectParam name="category_id" placeholder="ប្រភេទទំនិញ" items={get_categories} />
-						</div>
-						<div class="col-4">
-							<HandleQ {value} q_name="search" />
-						</div>
-						<div class="col-2 float-end">
-							<Qrcode scan_type="br" bind:value />
-						</div>
-					</div>
 				</HeaderQuery>
 			</div>
 			<div style="height: {innerHeight - 120}px; " class="card-body overflow-scroll">
@@ -188,19 +183,17 @@
 									</p>
 									<button
 										type="button"
-										onclick={() =>
-											addProduct({
+										onclick={() => {
+											product_property = {
 												product_id: product.id,
-												name: product.name,
 												price: product.price,
 												qty: 1,
-												type: null,
-												total: product.price,
-												amount: product.price,
-												discount: null,
-												unit_id: product.unit_id,
-												subUnit: subUnit
-											})}
+												product_name: product.name,
+												property_item: product.category?.properyItem || []
+											};
+										}}
+										data-bs-toggle="modal"
+										data-bs-target="#propertyModal"
 										class="btn btn-warning w-100">តម្លៃ $ {product.price}</button
 									>
 								</div>
@@ -493,6 +486,136 @@
 					</button>
 				</div>
 			</Form>
+		</div>
+	</div>
+</div>
+
+<!-- Properyies Modal -->
+<div
+	class="modal fade"
+	id="propertyModal"
+	tabindex="-1"
+	aria-labelledby="exampleModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-title">
+					<h1 class="my-0 py-0 text-truncate text-warning">
+						<i class="fa-solid fa-cart-plus"></i> ពត៌មានការកម្មុង
+					</h1>
+				</div>
+				<button
+					id="close_modal_property"
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<!-- <div class="alert alert-primary">
+					{product_property?.product_name} 1 x $ {product_property?.price}
+				</div> -->
+				<h3 class="text-decoration-underline">#ទំហំ</h3>
+				<div class="row g-2">
+					{#each product_property?.property_item || [] as item}
+						{#if item.name.toLowerCase().includes('size')}
+							<div class="col-auto">
+								<div class="form-control">
+									<div class="form-check py-0 my-0">
+										<input
+											class="form-check-input"
+											type="radio"
+											name="size"
+											id={`size${item?.name}`}
+											value={item?.price}
+											checked={Number(item.price) === Number(product_property?.price)
+												? true
+												: false}
+										/>
+										<label class="form-check-label" for={`size${item?.name}`}>
+											{#if item.price}
+												$ {item?.price}
+											{/if}
+											{item?.name}
+										</label>
+									</div>
+								</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+				<h3 class="text-decoration-underline">#ស្ករ</h3>
+				<div class="row g-2">
+					{#each product_property?.property_item || [] as item}
+						{#if item.name.toLowerCase().includes('surgar')}
+							<div class="col-auto">
+								<div class="form-control">
+									<div class="form-check py-0 my-0">
+										<input
+											class="form-check-input"
+											type="radio"
+											name="surgar"
+											id={`surgar${item?.name}`}
+											value={item?.price}
+											checked={Number(item.price) === Number(product_property?.price)
+												? true
+												: false}
+										/>
+										<label class="form-check-label" for={`surgar${item?.name}`}>
+											{#if item.price}
+												$ {item?.price}
+											{/if}
+											{item?.name}
+										</label>
+									</div>
+								</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+				<div class="row g-2">
+					{#each product_property?.property_item.filter((e) => e.name.toLowerCase() === 'surgar') || [] as item, index}
+						{#if !item.name.toLowerCase().includes('surgar') && !item.name
+								.toLowerCase()
+								.includes('surgar')}
+							{#if index === 0}
+								<h3 class="text-decoration-underline">#ផ្សេងៗ</h3>
+							{/if}
+							{index}
+							<div class="col-auto">
+								<div class="form-control">
+									<div class="form-check py-0 my-0">
+										<input
+											class="form-check-input"
+											type="radio"
+											name="surgar"
+											id={`surgar${item?.name}`}
+											value={item?.price}
+											checked={Number(item.price) === Number(product_property?.price)
+												? true
+												: false}
+										/>
+										<label class="form-check-label" for={`surgar${item?.name}`}>
+											{#if item.price}
+												$ {item?.price}
+											{/if}
+											{item?.name}
+										</label>
+									</div>
+								</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button disabled={!store.productOrders.length} type="submit" class="btn btn-warning">
+					<i class="fa-solid fa-file-export"></i> រក្សាទុក្ខ
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
